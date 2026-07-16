@@ -1713,11 +1713,30 @@
     "walletTokens": "/api/v1/wallet/tokens",
     "walletPortfolio": "/api/v1/wallet/portfolio/:address",
     "walletImport": "/api/v1/wallet/ecosystem/import",
+    "walletsList": "/api/v1/wallets",
+    "transfersByAccount": "/api/v1/transfers/by-account",
+    "adminWalletsRepair": "/api/v1/admin/wallets/repair",
+    "adminWalletsHealth": "/api/v1/admin/wallets/health",
     "bridgeAdapters": "/api/v1/chains/nova-one/bridge-adapters",
     "ecosystemTokens": "/api/v1/chains/ecosystem/tokens",
     "novaChainStatus": "/api/v1/nova-chain/status",
     "chainsStatus": "/api/v1/chains/status",
     "publicDocs": "/api/v1/public/docs/:slug"
+  },
+  "walletIntegrity": {
+    "status": "patch-ready",
+    "diagnosisDoc": "docs/wallet-integrity-diagnosis.md",
+    "apiPatch": "patches/nova-bank-api/wallet-integrity",
+    "host": "railway",
+    "railwayApi": "https://nova-bank-api-production-7311.up.railway.app",
+    "vpsWalletService": {
+      "host": "51.75.64.28",
+      "port": 3100,
+      "role": "not-custodial-transfer-path",
+      "note": "Bridge relayer VPS; transfer wallet lookups run on Railway NestJS, not :3100"
+    },
+    "affectedAccountNumbers": ["6379", "9873", "5017"],
+    "rootCause": "fromAccountId accepts UUID only; 4-digit account numbers 404 Wallet not found. Ledger import / Real Fiat may also omit wallet rows."
   },
   "docs": {
     "index": "docs/ECOSYSTEM-INDEX.md",
