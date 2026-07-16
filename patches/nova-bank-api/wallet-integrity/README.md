@@ -75,7 +75,9 @@ Repair/health routes use the existing `X-Admin-Key` guard (same as ledger import
 
 ## Deploy
 
-Ship this with the Railway Nova Bank API service (`nova-bank-api-production-7311`). VPS `51.75.64.28:3100` is not the custodial wallet host.
+Ship this with the Railway Nova Bank API service (`nova-bank-api-production-7311`).
+
+**Ops note:** AnakaBank’s spend path also depends on **Anaka Connect** at `ANAKA_CONNECT_BASE=http://51.75.64.28` (`novaBankVPS`). If that VPS app stack is down, AnakaBank sees Wallet not found even when Railway ledger balances exist — restart the VPS first (`docs/anaka-connect-vps.md`). This NestJS patch fixes Railway’s UUID-only `fromAccountId` quirk.
 
 ## Verify after deploy
 

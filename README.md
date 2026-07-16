@@ -4,19 +4,20 @@ Canonical ecosystem manifest for the Anakatech LLC Nova fintech stack. This is *
 
 - **Live API:** https://nova-bank-api-production-7311.up.railway.app/api/v1
 
-## Wallet integrity (2026-07-16)
+## Anaka Connect VPS / wallet integrity (2026-07-16)
 
-Transfers returning `404 Wallet not found` for accounts that exist in the registry:
+`51.75.64.28` (`vps-58bb86af.vps.ovh.net`, Frankfurt OVH) is **Anaka Connect** — `ANAKA_CONNECT_BASE` / `novaBankVPS` — the middleware between AnakaBank and Nova Bank Railway. TCP accepts; HTTP resets → **app stack down**. Ledger can be real on Railway while spendability from AnakaBank is blocked until the VPS is restarted.
 
 | Artifact | Path |
 |----------|------|
-| Diagnosis | [`docs/wallet-integrity-diagnosis.md`](docs/wallet-integrity-diagnosis.md) |
-| API patch (repair + health + auto-create + account-number resolve) | [`patches/nova-bank-api/wallet-integrity`](patches/nova-bank-api/wallet-integrity) |
+| Anaka Connect / VPS runbook | [`docs/anaka-connect-vps.md`](docs/anaka-connect-vps.md) |
+| Railway transfer diagnosis | [`docs/wallet-integrity-diagnosis.md`](docs/wallet-integrity-diagnosis.md) |
+| NestJS patch (account-number resolve, repair, health, `hasWallet`) | [`patches/nova-bank-api/wallet-integrity`](patches/nova-bank-api/wallet-integrity) |
 | Client workaround | [`scripts/transfer-by-account-resolve.py`](scripts/transfer-by-account-resolve.py) |
 
-**Confirmed root cause:** `POST /transfers/by-account` looks up wallets by UUID only. Passing a 4-digit `fromAccountId` (e.g. `"9873"`) always 404s — including for the caller's own account. Railway hosts the wallet/transfer path; VPS `51.75.64.28:3100` is not in that path.
+**Ops priority:** SSH to the VPS and restart Anaka Connect (see runbook). This agent has no SSH credentials.
 
-**Deploy:** apply the patch in the private `nova` API repo and redeploy Railway. Until then, use the resolve script (account number → UUID) as a client workaround.
+**Secondary:** Railway still 404s when `fromAccountId` is a 4-digit account number (UUID required) — apply the NestJS patch in the private `nova` API repo.
 
 ```bash
 cd patches/nova-bank-api/wallet-integrity && npm test

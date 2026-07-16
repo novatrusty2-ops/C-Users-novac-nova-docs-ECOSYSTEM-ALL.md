@@ -64,15 +64,17 @@ OpenAPI marks `TransferByAccount.fromAccountId` as `format: uuid`, but clients (
 | PIN `0000` | `Invalid PIN format` (rejected before wallet auth) |
 | Other wrong PIN | `Invalid banking PIN` |
 
-## 4. Is the wallet service on VPS `:3100` vs Railway?
+## 4. VPS (`novaBankVPS` / Anaka Connect) vs Railway
 
 | Target | Result from this agent |
 |--------|------------------------|
-| Railway primary | **Running.** `GET /api/v1/health` 200; transfers executed here. |
-| `51.75.64.28:3100` | **Unreachable** (connection reset / timeout on `:3100` and other probed ports from this environment). |
-| ECOSYSTEM `deployed.bridgeRelayerVps` | `51.75.64.28` is the **bridge relayer** host (`/opt/nova-bridge-adapter`), not the custodial wallet/transfer API. |
+| Railway primary | **Running.** `GET /api/v1/health` 200; direct transfer API answers here. |
+| `51.75.64.28` → `vps-58bb86af.vps.ovh.net` | DNS OK. TCP accepts (22/80/3100/…). **HTTP connection reset** — Anaka Connect app stack not serving. |
+| Role | **Anaka Connect** (`ANAKA_CONNECT_BASE=http://51.75.64.28`, alias `novaBankVPS`) — middleware for AnakaBank → Railway (ledger bridge, SWIFT, settlement, custody, officer auth, etc.). |
 
-**Conclusion:** Transfer wallet lookups run on the **Railway** Nova Bank API. There is no separate wallet microservice on `:3100` in the live path we exercised.
+**For AnakaBank:** the VPS being down is the blocking failure — balances can sit on Railway’s ledger while the bridge that makes them spendable is offline. See [`anaka-connect-vps.md`](anaka-connect-vps.md).
+
+**Independently:** calling Railway *directly* with a 4-digit `fromAccountId` still 404s (section 3). That NestJS quirk remains even when Anaka Connect is healthy.
 
 ## Source-code constraint
 

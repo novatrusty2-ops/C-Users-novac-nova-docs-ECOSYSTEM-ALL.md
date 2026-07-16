@@ -1702,10 +1702,45 @@
   ],
   "deployed": {
     "bridgeRelayerVps": "51.75.64.28",
+    "bridgeRelayerHostname": "vps-58bb86af.vps.ovh.net",
+    "bridgeRelayerLocation": "Frankfurt, OVH SAS",
     "bridgeRelayerPath": "/opt/nova-bridge-adapter",
+    "anakaConnectBase": "http://51.75.64.28",
+    "novaBankVPS": "http://51.75.64.28",
     "novaOneWrappedTokenBridge": "0x227a6f3EEF2df576bc127dF0326D1F4B6f0ce9Cb",
     "ethereumSourceBridge": null,
     "bridgeDeployer": "0x66d64Fd15552968f42db54532b095b3B4aA60d3c"
+  },
+  "anakaConnect": {
+    "role": "middleware between AnakaBank services and Nova Bank Railway",
+    "envVar": "ANAKA_CONNECT_BASE",
+    "baseUrl": "http://51.75.64.28",
+    "alias": "novaBankVPS",
+    "host": "51.75.64.28",
+    "hostname": "vps-58bb86af.vps.ovh.net",
+    "location": "Frankfurt, OVH SAS",
+    "docs": "docs/anaka-connect-vps.md",
+    "surfaces": [
+      "ledger-bridge",
+      "swift",
+      "settlement",
+      "custody",
+      "trade-finance",
+      "cross-chain-bridge",
+      "multi-fiat",
+      "crypto-vaults",
+      "rwa-tokenization",
+      "super-bridge",
+      "external-banking",
+      "officer-auth"
+    ],
+    "statusProbe": {
+      "probedAt": "2026-07-16T16:28:00Z",
+      "dns": "ok",
+      "tcpAccept": true,
+      "http": "connection-reset",
+      "interpretation": "host up; Anaka Connect app stack not serving — restart required on VPS"
+    }
   },
   "api": {
     "globalStatus": "/api/v1/global/status",
@@ -1726,17 +1761,12 @@
   "walletIntegrity": {
     "status": "patch-ready",
     "diagnosisDoc": "docs/wallet-integrity-diagnosis.md",
+    "anakaConnectDoc": "docs/anaka-connect-vps.md",
     "apiPatch": "patches/nova-bank-api/wallet-integrity",
-    "host": "railway",
     "railwayApi": "https://nova-bank-api-production-7311.up.railway.app",
-    "vpsWalletService": {
-      "host": "51.75.64.28",
-      "port": 3100,
-      "role": "not-custodial-transfer-path",
-      "note": "Bridge relayer VPS; transfer wallet lookups run on Railway NestJS, not :3100"
-    },
-    "affectedAccountNumbers": ["6379", "9873", "5017"],
-    "rootCause": "fromAccountId accepts UUID only; 4-digit account numbers 404 Wallet not found. Ledger import / Real Fiat may also omit wallet rows."
+    "primaryOpsFix": "Restart Anaka Connect on 51.75.64.28 (novaBankVPS) — bridge offline blocks spendability from AnakaBank",
+    "railwayApiQuirk": "Direct Railway calls with 4-digit fromAccountId still 404 Wallet not found (UUID required) — separate NestJS patch",
+    "affectedAccountNumbers": ["6379", "9873", "5017"]
   },
   "docs": {
     "index": "docs/ECOSYSTEM-INDEX.md",
