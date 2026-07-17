@@ -123,10 +123,29 @@ def merge_tokens(tokens: list[dict]) -> list[dict]:
 
 def main() -> None:
     eco = load_json(ECO_PATH)
+    preserved = {
+        key: deepcopy(eco[key])
+        for key in ("tyganPay", "anakaConnect", "walletIntegrity")
+        if key in eco
+    }
     wallet_api = load_json(API_DIR / "wallet-networks.json")
     tokens_api = load_json(API_DIR / "ecosystem-tokens.json")
-    nova_chain = load_json(API_DIR / "nova-chain-status.json")
     onex = load_json(API_DIR / "onex-ecosystem.json")
+    status_path = API_DIR / "global-status.json"
+    status = load_json(status_path) if status_path.exists() else {}
+    nova_chain_path = API_DIR / "nova-chain-status.json"
+    if nova_chain_path.exists():
+        nova_chain = load_json(nova_chain_path)
+    else:
+        # Keep existing connection metadata when the live status route times out.
+        nova_chain = {
+            "connectionInfo": eco.get("novaOne", {}).get("connection", {}),
+            "rpcUrl": eco.get("novaOne", {}).get("rpc"),
+            "rpcFallbackUrls": eco.get("productionUrls", {}).get(
+                "novaOneRpcFallbacks", NOVAONE_RPC_FALLBACKS
+            ),
+        }
+        print("WARN: nova-chain-status.json missing — preserving existing novaOne connection")
 
     eco["generatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
@@ -163,8 +182,10 @@ def main() -> None:
                 "fallback": NOVA_BANK_API,
             },
             "51.75.64.28": {
-                "status": "ok",
-                "role": "NovaONE RPC, Nova Swap, OneX node",
+                "status": "degraded",
+                "error": "TCP accept; HTTP connection reset (Anaka Connect / NovaONE RPC)",
+                "role": "Anaka Connect + NovaONE RPC + Nova Swap VPS fallback",
+                "runbook": "docs/anaka-connect-vps.md",
             },
             "nrw-world-chain-production-6029.up.railway.app": {
                 "status": "ok",
@@ -182,7 +203,7 @@ def main() -> None:
     conn["rpcEndpoints"] = [
         {
             "id": "vps-primary",
-            "label": "VPS primary (verified working)",
+            "label": "VPS primary (Anaka Connect — may reset when app stack down)",
             "url": NOVAONE_RPC_PRIMARY,
         },
         {
@@ -207,9 +228,10 @@ def main() -> None:
     ]
     quirks.extend(
         [
-            "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (verified July 2026)",
+            "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (Anaka Connect; HTTP may reset)",
             "novablockchainsystem.com currently down (521) — wallet API still advertises it",
             "HTTPS fallbacks: novablockchain.it.com, anakatech.llc (may need recovery)",
+            "When VPS resets, Railway Nova Bank ledger can still be healthy — restart Anaka Connect",
         ]
     )
     conn["quirks"] = quirks
@@ -265,10 +287,31 @@ def main() -> None:
         "ecosystemTokensEndpoint": f"{NOVA_BANK_UI}/api/v1/chains/ecosystem/tokens",
     }
 
+    # Preserve ops / partner blocks that are not derived from wallet APIs.
+    for key in ("tyganPay", "anakaConnect", "walletIntegrity"):
+        if key in preserved:
+            eco[key] = preserved[key]
+
+    malta = status.get("features", {}).get("malta") or {}
+    if malta and "novaBankOnline" in eco.get("products", {}):
+        product = eco["products"]["novaBankOnline"]
+        if malta.get("entityName"):
+            product["legalEntity"] = malta["entityName"]
+        if malta.get("emiPartner"):
+            product["emiPartner"] = malta["emiPartner"]
+        if "vfaLicensed" in malta:
+            product["vfaLicensed"] = malta["vfaLicensed"]
+
+    if "tyganPay" in eco and malta.get("entityName"):
+        eco["tyganPay"]["clientEntityFromNovaApi"] = malta["entityName"]
+        eco["tyganPay"]["platformOperator"] = eco.get("organization")
+
     ECO_PATH.write_text(json.dumps(eco, indent=2) + "\n")
     print(f"Updated {ECO_PATH}")
     print(f"  walletNetworks: {len(eco['walletNetworks'])}")
     print(f"  tradableTokens: {len(eco['tradableTokens'])}")
+    for key in ("tyganPay", "anakaConnect", "walletIntegrity"):
+        print(f"  preserved {key}: {key in eco}")
 
 
 if __name__ == "__main__":

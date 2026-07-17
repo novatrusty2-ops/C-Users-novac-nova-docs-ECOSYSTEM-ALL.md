@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-07-13T10:13:28.514Z",
+  "generatedAt": "2026-07-17T13:45:33.939Z",
   "generatedFrom": "nova",
   "organization": "Anakatech LLC",
   "products": {
@@ -126,12 +126,27 @@
         {
           "id": "fallback-1",
           "label": "Fallback",
-          "url": "https://anakatech.llc/novaone-rpc/"
+          "url": "https://novablockchain.it.com/novaone-rpc/"
         },
         {
           "id": "fallback-2",
           "label": "Fallback",
-          "url": "http://51.75.64.28/novaone-rpc/"
+          "url": "https://novaone-rpc.novablockchain.it.com"
+        },
+        {
+          "id": "fallback-3",
+          "label": "Fallback",
+          "url": "https://anakatech.llc/novaone-rpc/"
+        },
+        {
+          "id": "fallback-4",
+          "label": "Fallback",
+          "url": "https://novablockchainsystem.com/novaone-rpc/"
+        },
+        {
+          "id": "fallback-5",
+          "label": "Fallback",
+          "url": "https://novaone-rpc.novablockchainsystem.com"
         }
       ],
       "rpcApis": [
@@ -165,6 +180,9 @@
         "Permissioned QBFT \u2014 only validators propose; add/remove via qbft_proposeValidatorVote",
         "HTTP JSON-RPC only \u2014 no WebSocket subscriptions",
         "Public RPC \u2014 no auth; Cloudflare \u2192 nginx \u2192 socat \u2192 node1",
+        "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (verified July 2026)",
+        "novablockchainsystem.com currently down (521) \u2014 wallet API still advertises it",
+        "HTTPS fallbacks: novablockchain.it.com, anakatech.llc (may need recovery)",
         "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (verified July 2026)",
         "novablockchainsystem.com currently down (521) \u2014 wallet API still advertises it",
         "HTTPS fallbacks: novablockchain.it.com, anakatech.llc (may need recovery)",
@@ -972,7 +990,7 @@
     {
       "symbol": "GLD1111",
       "name": "11::11 1/1000 1 Oz Gold",
-      "decimals": 8,
+      "decimals": 18,
       "assetClass": "crypto",
       "chains": [
         "alltra-mainnet",
@@ -1441,8 +1459,7 @@
       "assetClass": "crypto",
       "chains": [
         "nova-one",
-        "nrw-world",
-        "alltra-mainnet"
+        "nrw-world"
       ],
       "networks": [
         "nova-one",
@@ -1451,8 +1468,69 @@
         "anaka-bridge",
         "ethereum",
         "solana",
-        "tron",
+        "tron"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT-BNB",
+      "name": "Tether USD (BNB / BEP20)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
         "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT-LEGACY",
+      "name": "USD Token (Legacy)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT-TRC20",
+      "name": "Tether USD (TRC20)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
         "nova-bank"
       ],
       "tradable": true,
@@ -1523,6 +1601,27 @@
       "decentralized": true
     },
     {
+      "symbol": "WBNB",
+      "name": "Wrapped BNB (ALLTRA)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
       "symbol": "WBTC",
       "name": "Alltra Wrapped BTC Token",
       "decimals": 8,
@@ -1565,6 +1664,27 @@
       "decentralized": true
     },
     {
+      "symbol": "WTRX",
+      "name": "Wrapped TRX (ALLTRA)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
       "symbol": "XRP",
       "name": "XRP",
       "decimals": 6,
@@ -1578,6 +1698,48 @@
         "nrw-world",
         "nova-bank",
         "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ZARA",
+      "name": "Zaragoza USD Peg",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ZRG",
+      "name": "Zaragoza",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
       ],
       "tradable": true,
       "swappable": true,
@@ -2369,7 +2531,7 @@
       "dns": "ok",
       "tcpAccept": true,
       "http": "connection-reset",
-      "interpretation": "host up; Anaka Connect app stack not serving — restart required on VPS"
+      "interpretation": "host up; Anaka Connect app stack not serving \u2014 restart required on VPS"
     }
   },
   "api": {
@@ -2394,9 +2556,13 @@
     "anakaConnectDoc": "docs/anaka-connect-vps.md",
     "apiPatch": "patches/nova-bank-api/wallet-integrity",
     "railwayApi": "https://nova-bank-api-production-7311.up.railway.app",
-    "primaryOpsFix": "Restart Anaka Connect on 51.75.64.28 (novaBankVPS) — bridge offline blocks spendability from AnakaBank",
-    "railwayApiQuirk": "Direct Railway calls with 4-digit fromAccountId still 404 Wallet not found (UUID required) — separate NestJS patch",
-    "affectedAccountNumbers": ["6379", "9873", "5017"]
+    "primaryOpsFix": "Restart Anaka Connect on 51.75.64.28 (novaBankVPS) \u2014 bridge offline blocks spendability from AnakaBank",
+    "railwayApiQuirk": "Direct Railway calls with 4-digit fromAccountId still 404 Wallet not found (UUID required) \u2014 separate NestJS patch",
+    "affectedAccountNumbers": [
+      "6379",
+      "9873",
+      "5017"
+    ]
   },
   "docs": {
     "index": "docs/ECOSYSTEM-INDEX.md",
@@ -2413,7 +2579,7 @@
     ]
   },
   "urlHealth": {
-    "checkedAt": "2026-07-13T10:13:28.514Z",
+    "checkedAt": "2026-07-17T13:45:33.939Z",
     "notes": [
       "novablockchainsystem.com returns Cloudflare 521 \u2014 use Railway and VPS fallbacks below",
       "anakatech.llc/novaone-rpc redirects without JSON-RPC \u2014 use VPS primary",
@@ -2431,8 +2597,10 @@
         "fallback": "https://nova-bank-api-production-7311.up.railway.app/api/v1"
       },
       "51.75.64.28": {
-        "status": "ok",
-        "role": "NovaONE RPC, Nova Swap, OneX node"
+        "status": "degraded",
+        "error": "TCP accept; HTTP connection reset (Anaka Connect / NovaONE RPC)",
+        "role": "Anaka Connect + NovaONE RPC + Nova Swap VPS fallback",
+        "runbook": "docs/anaka-connect-vps.md"
       },
       "nrw-world-chain-production-6029.up.railway.app": {
         "status": "ok",
@@ -2497,10 +2665,11 @@
     "onboardingPackPath": "tyganpay/nova-onboarding-pack.json",
     "onboardingGuidePath": "docs/tyganpay-onboarding.md",
     "formPayloadPath": "tyganpay/form-payload.json",
-    "statusAsOf": "2026-07-17T13:45:00.000Z",
+    "statusAsOf": "2026-07-17T13:45:33.939Z",
     "inviteStatus": "onboarding_link_view_limit_blocked",
     "clientEntityFromNovaApi": "Nova Bank Malta Ltd",
     "platformOperator": "Anakatech LLC",
-    "notes": "Invite exhausted 15 client views without a submitted change. Optional document slots observed PENDING on the UI. Pack values sourced from Nova Bank live global/status + this manifest. Reset required from TyganPay admin/Sylvain."
+    "notes": "Invite exhausted 15 client views without a submitted change. Use form-payload.json + drafts after TyganPay resets the invite.",
+    "draftsPath": "tyganpay/drafts"
   }
 }

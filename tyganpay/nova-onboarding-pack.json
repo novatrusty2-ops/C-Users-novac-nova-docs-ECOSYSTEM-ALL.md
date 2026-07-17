@@ -12,8 +12,9 @@
     "inviteStatus": {
       "httpStatus": 423,
       "error": "onboarding_link_view_limit_blocked",
-      "reason": "The fixed 15-view client onboarding-link limit was exhausted without a submitted change. Two reserved internal review views are held for TyganPay admin and Sylvain.",
-      "actionRequired": "Request TyganPay admin/Sylvain to reset or re-issue the onboarding invite before any further form submission."
+      "reason": "The fixed 15-view client onboarding-link limit was exhausted without a submitted change. Two reserved internal review views are held for TyganPay admin and Sylvain. This protects the sender, intermediaries, identity documents, and transaction confidentiality.",
+      "ok": false,
+      "actionRequired": "Request TyganPay admin/Sylvain to reset or re-issue the invite."
     }
   },
   "clientProfile": {
@@ -101,5 +102,7 @@
     "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
     "fineract": "https://fineract.hybxfinance.com",
     "privacyContact": "privacy@anakatech.llc"
-  }
+  },
+  "formPayloadPath": "tyganpay/form-payload.json",
+  "draftsPath": "tyganpay/drafts"
 }

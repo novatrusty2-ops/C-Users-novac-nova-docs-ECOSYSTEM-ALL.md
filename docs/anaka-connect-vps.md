@@ -29,15 +29,18 @@ AnakaBank services
    nova-bank-api-production-7311
 ```
 
-## Live status (2026-07-16, from cloud agent)
+## Live status (rechecked 2026-07-17)
 
 | Check | Result |
 |-------|--------|
 | DNS / reverse | `51.75.64.28` ↔ `vps-58bb86af.vps.ovh.net` ✓ |
 | TCP ports (22, 80, 443, 3000–3100, 9338, 13000, …) | **Accept** (SYN/ACK) |
-| HTTP `http://51.75.64.28/` and `:3100/health` | **Connection reset by peer** |
-| HTTPS | SSL timeout |
-| Railway `/api/v1/health` | **ok** (DB up) |
+| HTTP `http://51.75.64.28/novaone-rpc/` | **Connection reset by peer** |
+| HTTP `http://51.75.64.28:28545/rpc` | **Connection reset by peer** |
+| Railway `GET /api/v1/global/status` | **ok** |
+| NRW World RPC (Railway) | **ok** |
+
+Same failure mode as 2026-07-16: TCP up, HTTP app stack down. Restart Anaka Connect on the VPS.
 
 Interpretation: the **machine is up**, but the **Anaka Connect app stack is not serving** (process down, reverse-proxy misconfig, or firewall half-open). That matches “bridge offline → Wallet not found / officer login dead / all `novaBankVPS` callers stuck.”
 

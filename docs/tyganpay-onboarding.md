@@ -1,6 +1,12 @@
 # TyganPay × Nova Bank — Client Onboarding Pack
 
-Machine-readable field values: [`tyganpay/nova-onboarding-pack.json`](../tyganpay/nova-onboarding-pack.json)
+| Artifact | Path |
+|----------|------|
+| Field pack | [`tyganpay/nova-onboarding-pack.json`](../tyganpay/nova-onboarding-pack.json) |
+| Paste-ready form | [`tyganpay/form-payload.json`](../tyganpay/form-payload.json) |
+| Draft SOF | [`tyganpay/drafts/SOURCE_OF_FUNDS_DECLARATION.md`](../tyganpay/drafts/SOURCE_OF_FUNDS_DECLARATION.md) |
+| Draft compliance cover | [`tyganpay/drafts/COMPLIANCE_PACK.md`](../tyganpay/drafts/COMPLIANCE_PACK.md) |
+| Invite probe | [`scripts/check-tyganpay-invite.py`](../scripts/check-tyganpay-invite.py) |
 
 ## Invite status (blocked)
 
@@ -11,7 +17,11 @@ Machine-readable field values: [`tyganpay/nova-onboarding-pack.json`](../tyganpa
 | API | `GET /api/public/client-onboarding/{token}` → **423** `onboarding_link_view_limit_blocked` |
 | Reason | 15 client views used without a submitted change; 2 views reserved for TyganPay admin / Sylvain |
 
-**Next step with TyganPay:** ask admin or Sylvain to **reset or re-issue** the invite. Do not keep opening the link — each view consumes the quota.
+```bash
+python3 scripts/check-tyganpay-invite.py
+```
+
+**Next step with TyganPay:** ask admin or Sylvain to **reset or re-issue** the invite. Do not keep opening the link.
 
 Optional uploads observed on the UI (all **PENDING** / **OPTIONAL**):
 
@@ -20,14 +30,12 @@ Optional uploads observed on the UI (all **PENDING** / **OPTIONAL**):
 - `COMPLIANCE_PACK`
 - `OPTIONAL_SUPPORTING_DOCUMENTS`
 
-TyganPay’s UI also treats these as typical **mandatory** uploads before pack completion:
+Typical **mandatory** uploads before pack completion:
 
 - `AUTHORIZED_REPRESENTATIVE_PASSPORT`
 - `COMPANY_REGISTRATION_DOCUMENTS`
 
 ## Values taken from Nova Bank (live API + ECOSYSTEM)
-
-Sourced 2026-07-17 from `GET /api/v1/global/status` and this repo’s `ECOSYSTEM.json`.
 
 | TyganPay field | Suggested value | Source |
 |----------------|-----------------|--------|
@@ -40,14 +48,15 @@ Sourced 2026-07-17 from `GET /api/v1/global/status` and this repo’s `ECOSYSTEM
 | Preferred language | English | Default |
 | Product | Nova Bank Online | `global/status.name` |
 | Proposed endpoint | `https://nova-bank-api-production-7311.up.railway.app/api/v1` | Live API |
-| Callback URL | `https://nova-bank-api-production-7311.up.railway.app/api/v1/webhooks/tyganpay` | Convention (confirm deploy) |
+| Callback URL | `…/api/v1/webhooks/tyganpay` | Convention (confirm deploy) |
 | Currency | EUR | EU / Malta posture |
 | Bank region | EUROPE | Malta / EU |
 | Account jurisdiction | Malta | Malta entity |
+| Bank name (select) | Other / not listed | Confirm real IBAN with compliance |
 | EMI / banking partner | OpenPayd | `features.malta.emiPartner` |
-| Core banking | Hybx Fineract (`fineract.hybxfinance.com`) | Ecosystem products |
+| Core banking | Hybx Fineract | Ecosystem products |
 | VFA licensed | `true` (API signal) | `features.malta.vfaLicensed` |
-| Source of funds (draft text) | Operating capital and client settlement flows of Nova Bank Online / Anakatech LLC; fiat via OpenPayd EMI + Hybx/Fineract; no retail branch cash deposits | Derived from public KYC + malta features |
+| Transaction types | `swift_iso20022,s2s_api` | TyganPay rail defaults |
 
 ### Regulatory signals from Nova API (`features.malta`)
 
@@ -59,28 +68,26 @@ Sourced 2026-07-17 from `GET /api/v1/global/status` and this repo’s `ECOSYSTEM
 
 ## Still required from your side (not in public API)
 
-Do **not** invent these. Attach real documents after the invite is reset:
+1. Company registration number + registered office  
+2. Incorporation date as on the certificate  
+3. Authorized representative identity + passport scan  
+4. Company registration PDFs  
+5. Bank account ownership proof (settlement IBAN)  
+6. Sign the draft SOF / compliance cover (or replace with counsel-approved PDFs)  
+7. TyganPay invite reset  
 
-1. Company registration number + registered office (Anakatech LLC and/or Nova Bank Malta Ltd)  
-2. Incorporation date / company type as on the certificate  
-3. Authorized representative full legal name, role, citizenship, DOB, passport  
-4. Passport scan (`AUTHORIZED_REPRESENTATIVE_PASSPORT`)  
-5. Company registration PDFs (`COMPANY_REGISTRATION_DOCUMENTS`)  
-6. Bank account ownership proof for the settlement account  
-7. Signed source-of-funds / compliance pack if TyganPay requires wet or digital signature  
+## How to finish after reset
 
-## How to finish onboarding after reset
-
-1. Open the **new** invite once; accept engagement rules and client copy.  
-2. Paste company fields from `tyganpay/nova-onboarding-pack.json` → `clientProfile` + `proposedIntegration`.  
-3. Fill banking block (region EUROPE, jurisdiction Malta, bank OpenPayd or “Other / not listed” with real IBAN details).  
-4. Upload mandatory passport + company registration docs.  
-5. Upload optional SOF / ownership / compliance pack if available.  
-6. Sign and **Submit onboarding pack** in one session so views are not wasted.
+1. Run `python3 scripts/check-tyganpay-invite.py` — expect HTTP 200 / `ok: true`.  
+2. Open the **new** invite once; accept engagement rules and client copy.  
+3. Paste non-null fields from `tyganpay/form-payload.json` → `fields`.  
+4. Fill banking IBAN details under bank “Other / not listed” if OpenPayd is not listed.  
+5. Upload passport + company registration; attach signed drafts for optional slots.  
+6. Sign and **Submit onboarding pack** in one session.
 
 ## Related Nova Bank references
 
 - API docs: https://nova-bank-api-production-7311.up.railway.app/api/v1/docs  
 - OpenAPI: https://nova-bank-api-production-7311.up.railway.app/api/v1/openapi.json  
-- KYC program: `GET /api/v1/public/docs/kyc` (operator Anakatech LLC)  
+- KYC program: `GET /api/v1/public/docs/kyc`  
 - Privacy contact: privacy@anakatech.llc  

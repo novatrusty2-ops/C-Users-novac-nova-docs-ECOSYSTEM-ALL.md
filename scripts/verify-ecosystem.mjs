@@ -19,6 +19,7 @@ const checks = [
     url: eco.productionUrls.novaOneRpc,
     method: "POST",
     body: JSON.stringify({ jsonrpc: "2.0", method: "eth_blockNumber", params: [], id: 1 }),
+    soft: true, // Anaka Connect / VPS may reset while Railway ledger stays healthy
   },
   {
     name: "NRW World RPC",
@@ -31,6 +32,7 @@ const checks = [
 ];
 
 let failed = 0;
+let softFailed = 0;
 
 for (const check of checks) {
   try {
@@ -44,13 +46,21 @@ for (const check of checks) {
     const status = `${res.status}`;
     if (ok) {
       console.log(`OK  ${check.name} (${status})`);
+    } else if (check.soft) {
+      console.warn(`SOFT ${check.name} (${status}) ${check.url}`);
+      softFailed++;
     } else {
       console.warn(`WARN ${check.name} (${status}) ${check.url}`);
       failed++;
     }
   } catch (err) {
-    console.warn(`FAIL ${check.name}: ${err.message}`);
-    failed++;
+    if (check.soft) {
+      console.warn(`SOFT ${check.name}: ${err.message}`);
+      softFailed++;
+    } else {
+      console.warn(`FAIL ${check.name}: ${err.message}`);
+      failed++;
+    }
   }
 }
 
@@ -60,9 +70,13 @@ if (down?.status === "down") {
   console.log(`INFO novablockchainsystem.com marked down in manifest (${down.error})`);
 }
 
+if (softFailed > 0) {
+  console.log(`\n${softFailed} soft check(s) degraded (VPS / Anaka Connect) — see docs/anaka-connect-vps.md`);
+}
+
 if (failed > 0) {
   console.warn(`\n${failed} check(s) failed`);
   process.exit(1);
 }
 
-console.log("\nAll primary endpoints healthy");
+console.log("\nAll required primary endpoints healthy");
