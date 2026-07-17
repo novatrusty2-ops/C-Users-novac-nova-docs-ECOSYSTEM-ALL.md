@@ -59,21 +59,6 @@
     "dbisRpc": "https://rpc.defi-oracle.io",
     "anakaBridge": "https://bridge.anakachain.com"
   },
-  "onexLocal": {
-    "bridgeBase": "http://127.0.0.1:9338",
-    "nodeBase": "http://127.0.0.1:8545",
-    "bridge": {
-      "walletUi": "http://127.0.0.1:9338/wallet/",
-      "health": "http://127.0.0.1:9338/health",
-      "rpc": "http://127.0.0.1:9338/rpc"
-    },
-    "node": {
-      "explorer": "http://127.0.0.1:8545/explorer/",
-      "rpc": "http://127.0.0.1:8545/rpc",
-      "status": "http://127.0.0.1:8545/api/v1/status",
-      "health": "http://127.0.0.1:8545/health"
-    }
-  },
   "novaOne": {
     "chainId": 22016,
     "rpc": "https://anakatech.llc/novaone-rpc/",
