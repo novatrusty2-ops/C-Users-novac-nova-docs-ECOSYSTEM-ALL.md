@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-06-27T21:48:31.714Z",
+  "generatedAt": "2026-07-17T15:16:17Z",
   "generatedFrom": "nova",
   "organization": "Anakatech LLC",
   "products": {
@@ -1705,7 +1705,60 @@
     "bridgeRelayerPath": "/opt/nova-bridge-adapter",
     "novaOneWrappedTokenBridge": "0x227a6f3EEF2df576bc127dF0326D1F4B6f0ce9Cb",
     "ethereumSourceBridge": null,
-    "bridgeDeployer": "0x66d64Fd15552968f42db54532b095b3B4aA60d3c"
+    "bridgeDeployer": "0x66d64Fd15552968f42db54532b095b3B4aA60d3c",
+    "bridgeRelayerHostname": "vps-58bb86af.vps.ovh.net",
+    "bridgeRelayerLocation": "Frankfurt, OVH SAS",
+    "anakaConnectBase": "http://51.75.64.28",
+    "novaBankVPS": "http://51.75.64.28"
+  },
+  "anakaConnect": {
+    "role": "middleware between AnakaBank services and Nova Bank Railway",
+    "envVar": "ANAKA_CONNECT_BASE",
+    "baseUrl": "http://51.75.64.28",
+    "alias": "novaBankVPS",
+    "host": "51.75.64.28",
+    "hostname": "vps-58bb86af.vps.ovh.net",
+    "location": "Frankfurt, OVH SAS",
+    "docs": "docs/anaka-connect-vps.md",
+    "surfaces": [
+      "ledger-bridge",
+      "swift",
+      "settlement",
+      "custody",
+      "trade-finance",
+      "cross-chain-bridge",
+      "multi-fiat",
+      "crypto-vaults",
+      "rwa-tokenization",
+      "super-bridge",
+      "external-banking",
+      "officer-auth"
+    ],
+    "statusProbe": {
+      "probedAt": "2026-07-17T15:16:17Z",
+      "dns": "ok",
+      "tcpAccept": true,
+      "portsOpen": [
+        22,
+        2222,
+        80,
+        443,
+        3000,
+        3100,
+        9338,
+        28545
+      ],
+      "ssh": "kex-connection-reset",
+      "http": "connection-reset",
+      "httpEndpoints": {
+        "http://51.75.64.28/health": "connection-reset",
+        "http://51.75.64.28:3100/health": "connection-reset",
+        "http://51.75.64.28:3000/health": "connection-reset"
+      },
+      "interpretation": "host up; SSH and HTTP app stack not serving — restart via OVH KVM/console (docs/anaka-connect-vps.md); remote SSH from cloud agents resets at kex",
+      "restartScript": "scripts/restart-anaka-connect.sh",
+      "primaryRecovery": "ovh-kvm-console"
+    }
   },
   "api": {
     "globalStatus": "/api/v1/global/status",
@@ -1731,6 +1784,32 @@
       "dbis-138",
       "anakachain",
       "protocol"
+    ]
+  },
+  "urlHealth": {
+    "checkedAt": "2026-07-17T15:16:17Z",
+    "notes": [
+      "Anaka Connect VPS (51.75.64.28) TCP accept; HTTP+SSH connection reset — OVH console restart required (docs/anaka-connect-vps.md)"
+    ],
+    "domains": {
+      "51.75.64.28": {
+        "status": "down",
+        "error": "HTTP/SSH reset",
+        "role": "Anaka Connect + NovaONE RPC",
+        "probedAt": "2026-07-17T15:16:17Z"
+      }
+    },
+    "outages": [
+      {
+        "id": "anaka-connect-vps",
+        "host": "51.75.64.28",
+        "status": "down",
+        "error": "TCP accept; HTTP/SSH connection reset",
+        "runbook": "docs/anaka-connect-vps.md",
+        "scripts": "scripts/restart-anaka-connect.sh",
+        "primaryRecovery": "ovh-kvm-console",
+        "probedAt": "2026-07-17T15:16:17Z"
+      }
     ]
   }
 }
