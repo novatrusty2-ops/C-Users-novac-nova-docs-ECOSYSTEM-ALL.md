@@ -3,6 +3,72 @@
   "generatedAt": "2026-06-27T21:48:31.714Z",
   "generatedFrom": "nova",
   "organization": "Anakatech LLC",
+  "github": {
+    "primaryAccount": "zaragoza444",
+    "profileUrl": "https://github.com/zaragoza444",
+    "email": "zardashtways44@gmail.com",
+    "docsCatalog": "novatrusty2-ops/C-Users-novac-nova-docs-ECOSYSTEM-ALL.md",
+    "repos": [
+      {
+        "id": "nova-trust",
+        "url": "https://github.com/zaragoza444/nova-trust",
+        "role": "Nova banking + blockchain ecosystem monorepo (apps, services, contracts, deploy)",
+        "defaultBranch": "main",
+        "pushFromPc": true
+      },
+      {
+        "id": "nova-plus-wallet",
+        "url": "https://github.com/zaragoza444/nova-plus-wallet",
+        "role": "Nova Plus Wallet web — novabank.uk/plus/",
+        "defaultBranch": "main",
+        "homepage": "https://novabank.uk/plus/",
+        "pushFromPc": true
+      },
+      {
+        "id": "nova-wallet",
+        "url": "https://github.com/zaragoza444/nova-wallet",
+        "role": "Nova Plus Wallet Signet fork (web + mobile)",
+        "defaultBranch": "master",
+        "pushFromPc": true
+      },
+      {
+        "id": "onex",
+        "url": "https://github.com/zaragoza444/onex",
+        "role": "OneX blockchain — PoW node, wallet bridge, DeFi, ledger",
+        "defaultBranch": "main",
+        "pushFromPc": true
+      },
+      {
+        "id": "alltra-plus-blockchain",
+        "url": "https://github.com/zaragoza444/alltra-plus-blockchain",
+        "role": "Alltra Plus EVM chain 651941 — DEX, bridge, wallets",
+        "defaultBranch": "master",
+        "homepage": "https://novabank.uk/plus/",
+        "pushFromPc": true
+      },
+      {
+        "id": "https-github.com-zaragoza444-onex",
+        "url": "https://github.com/zaragoza444/https-github.com-zaragoza444-onex",
+        "role": "OneX mirror/alias repo",
+        "defaultBranch": "main",
+        "pushFromPc": false
+      },
+      {
+        "id": "onix",
+        "url": "https://github.com/zaragoza444/onix",
+        "role": "Onix production platform",
+        "defaultBranch": "main",
+        "pushFromPc": false
+      },
+      {
+        "id": "shiva-blockchain",
+        "url": "https://github.com/zaragoza444/shiva-blockchain",
+        "role": "Shiva / Onex-related blockchain",
+        "defaultBranch": "main",
+        "pushFromPc": false
+      }
+    ]
+  },
   "products": {
     "novaBankOnline": {
       "name": "Nova Bank Online",
@@ -1776,10 +1842,12 @@
       "option2CutoverCurrentStack": "deploy/cutover-from-pc.sh",
       "option3HetznerMigrate": "deploy/hetzner-migrate.sh (requires NEW_HOST + SSH to old and new)",
       "option4LocalPc": "deploy/local-from-pc.sh (optional SYNC_RELAYER=1)",
+      "option5PushZaragoza444": "deploy/push-zaragoza444-from-pc.ps1 (push Nova repos to github.com/zaragoza444)",
       "commands": [
         "./deploy/cutover-from-pc.sh",
         "NEW_HOST=<hetzner-ipv4> ./deploy/hetzner-migrate.sh",
-        "SYNC_RELAYER=1 ./deploy/local-from-pc.sh"
+        "SYNC_RELAYER=1 ./deploy/local-from-pc.sh",
+        "powershell -ExecutionPolicy Bypass -File deploy/push-zaragoza444-from-pc.ps1"
       ]
     }
   },
@@ -1787,8 +1855,11 @@
     "scripts": {
       "cutoverFromPc": "deploy/cutover-from-pc.sh",
       "hetznerMigrate": "deploy/hetzner-migrate.sh",
-      "localFromPc": "deploy/local-from-pc.sh"
+      "localFromPc": "deploy/local-from-pc.sh",
+      "pushZaragoza444FromPc": "deploy/push-zaragoza444-from-pc.ps1"
     },
+    "githubAccount": "zaragoza444",
+    "primaryMonorepo": "https://github.com/zaragoza444/nova-trust",
     "currentRelayer": {
       "host": "51.75.64.28",
       "path": "/opt/nova-bridge-adapter"
