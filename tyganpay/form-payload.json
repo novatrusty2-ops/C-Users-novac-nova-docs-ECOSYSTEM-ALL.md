@@ -1,0 +1,85 @@
+{
+  "description": "Ready-to-paste TyganPay client-onboarding fields sourced from Nova Bank live API + ECOSYSTEM.json. Leave nulls blank until you have certificate/passport data. Submit only after invite reset.",
+  "inviteToken": "nova-660c3e14ec7fbc9b7f57ed68a7046b0dd759d466b3a876f2",
+  "submitEndpoint": "POST /api/public/client-onboarding/{token} (multipart FormData)",
+  "gateAcceptances": {
+    "engagementRulesAcceptance": "accepted",
+    "clientCopyAcceptance": "accepted",
+    "preferredLanguage": "English",
+    "penaltyPaymentMethod": "FILL_AFTER_RESET"
+  },
+  "fields": {
+    "companyLegalName": "Nova Bank Malta Ltd",
+    "registrationNumber": null,
+    "jurisdiction": "Malta",
+    "companyAddress": null,
+    "companyPostalCode": null,
+    "companyType": "Limited company",
+    "companyIncorporationDate": null,
+    "companyEmail": "privacy@anakatech.llc",
+    "clientReviewEmail": "novatrusty2@gmail.com",
+    "recordsCopyEmail": "privacy@anakatech.llc",
+    "complianceEmail": "privacy@anakatech.llc",
+    "technicalEmail": "novatrusty2@gmail.com",
+    "preferredLanguage": "English",
+    "authorizedRepresentative": null,
+    "authorizedRepresentativeRole": null,
+    "authorizedRepresentativeCitizenship": null,
+    "authorizedRepresentativePassportNumber": null,
+    "authorizedRepresentativePassportIssueDate": null,
+    "authorizedRepresentativePassportExpiryDate": null,
+    "authorizedRepresentativeDateOfBirth": null,
+    "authorizedRepresentativePlaceOfBirth": null,
+    "clientMandateRepresentative": null,
+    "mandateAuthorityAcceptance": "accepted",
+    "amlCftDeclarationAcceptance": "accepted",
+    "sanctionsDeclarationAcceptance": "accepted",
+    "termsAndConditionsAcceptance": "accepted",
+    "bankRegion": "EUROPE",
+    "accountJurisdiction": "Malta",
+    "bankName": "Other / not listed",
+    "senderPlatform": "Nova Bank Online",
+    "proposedEndpoint": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
+    "callbackUrl": "https://nova-bank-api-production-7311.up.railway.app/api/v1/webhooks/tyganpay",
+    "clientReference": "NOVA-BANK-ANAKATECH",
+    "transactionReference": null,
+    "expectedMonthlyVolume": null,
+    "transactionTypes": "swift_iso20022,s2s_api",
+    "currency": "EUR",
+    "initialOnboardingAmount": null,
+    "sourceOfFundsDescription": "Operating capital and client settlement flows of Nova Bank Online operated by Anakatech LLC; fiat rails via OpenPayd EMI partner and Hybx/Fineract institutional core banking; no retail branch cash deposits.",
+    "expectedTransactionProfile": "Institutional payment-rail onboarding for Nova Bank Online (Anakatech LLC) with Malta entity Nova Bank Malta Ltd; SWIFT/ISO 20022 and S2S API rails; OpenPayd EMI partner.",
+    "sanctionsExposureNotes": "Nova Bank Online maintains a published KYC/AML/CFT program. No intentional sanctions exposure. Screening applies per platform compliance controls.",
+    "authorizedRepresentativeSignatureText": null,
+    "signatureDate": null,
+    "signatureAcceptance": "accepted"
+  },
+  "documentSlots": {
+    "mandatory": [
+      "AUTHORIZED_REPRESENTATIVE_PASSPORT",
+      "COMPANY_REGISTRATION_DOCUMENTS"
+    ],
+    "optionalPendingOnUi": [
+      "SOURCE_OF_FUNDS_DECLARATION",
+      "BANK_ACCOUNT_OWNERSHIP_PROOF",
+      "COMPLIANCE_PACK",
+      "OPTIONAL_SUPPORTING_DOCUMENTS"
+    ],
+    "draftTextPaths": {
+      "SOURCE_OF_FUNDS_DECLARATION": "tyganpay/drafts/SOURCE_OF_FUNDS_DECLARATION.md",
+      "COMPLIANCE_PACK": "tyganpay/drafts/COMPLIANCE_PACK.md",
+      "OPTIONAL_SUPPORTING_DOCUMENTS": "tyganpay/drafts/OPTIONAL_SUPPORTING_DOCUMENTS.md"
+    }
+  },
+  "novaApiEvidence": {
+    "entityName": "Nova Bank Malta Ltd",
+    "platformOperator": "Anakatech LLC",
+    "emiPartner": "openpayd",
+    "vfaLicensed": true,
+    "liveRailsEnabled": true,
+    "institutionApiLive": true,
+    "bankingProvider": "fineract",
+    "fineractUrl": "https://fineract.hybxfinance.com",
+    "novaBankApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1"
+  }
+}

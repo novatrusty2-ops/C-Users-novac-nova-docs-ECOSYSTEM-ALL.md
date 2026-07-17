@@ -1,0 +1,12 @@
+{
+  "name": "@nova/wallet-integrity-patch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Drop-in NestJS wallet integrity patch for Nova Bank API",
+  "scripts": {
+    "test": "node --test test/wallet-integrity.test.mjs"
+  },
+  "peerDependencies": {
+    "@nestjs/common": ">=10"
+  }
+}
