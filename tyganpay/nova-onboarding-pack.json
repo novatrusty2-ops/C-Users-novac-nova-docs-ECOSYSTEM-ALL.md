@@ -1,0 +1,105 @@
+{
+  "generatedAt": "2026-07-17T13:35:00.000Z",
+  "source": {
+    "novaBankApi": "https://nova-bank-api-production-7311.up.railway.app",
+    "globalStatusPath": "/api/v1/global/status",
+    "ecosystemOrganization": "Anakatech LLC",
+    "tyganPayInviteToken": "nova-660c3e14ec7fbc9b7f57ed68a7046b0dd759d466b3a876f2",
+    "tyganPayInviteUrls": [
+      "https://api.tyganpay.com/client-onboarding/nova-660c3e14ec7fbc9b7f57ed68a7046b0dd759d466b3a876f2",
+      "https://test.tyganpay.com/client-onboarding/nova-660c3e14ec7fbc9b7f57ed68a7046b0dd759d466b3a876f2"
+    ],
+    "inviteStatus": {
+      "httpStatus": 423,
+      "error": "onboarding_link_view_limit_blocked",
+      "reason": "The fixed 15-view client onboarding-link limit was exhausted without a submitted change. Two reserved internal review views are held for TyganPay admin and Sylvain.",
+      "actionRequired": "Request TyganPay admin/Sylvain to reset or re-issue the onboarding invite before any further form submission."
+    }
+  },
+  "clientProfile": {
+    "clientName": "Nova Bank",
+    "companyLegalName": "Nova Bank Malta Ltd",
+    "platformOperator": "Anakatech LLC",
+    "productName": "Nova Bank Online",
+    "jurisdiction": "Malta",
+    "companyType": "Limited company (fintech / VFA-related entity per live API malta.features)",
+    "companyEmail": "privacy@anakatech.llc",
+    "clientReviewEmail": "novatrusty2@gmail.com",
+    "recordsCopyEmail": "privacy@anakatech.llc",
+    "complianceEmail": "privacy@anakatech.llc",
+    "technicalEmail": "novatrusty2@gmail.com",
+    "preferredLanguage": "English",
+    "registrationNumber": null,
+    "companyAddress": null,
+    "companyPostalCode": null,
+    "companyIncorporationDate": null
+  },
+  "regulatorySignalsFromNovaApi": {
+    "entityName": "Nova Bank Malta Ltd",
+    "vfaLicensed": true,
+    "liveRailsEnabled": true,
+    "institutionApiLive": true,
+    "emiPartner": "openpayd",
+    "cryptoLiveEnabled": false,
+    "bankingProvider": "fineract",
+    "fineractUrl": "https://fineract.hybxfinance.com",
+    "realMoney": true,
+    "liveActive": true
+  },
+  "proposedIntegration": {
+    "senderPlatform": "Nova Bank Online",
+    "proposedEndpoint": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
+    "callbackUrl": "https://nova-bank-api-production-7311.up.railway.app/api/v1/webhooks/tyganpay",
+    "transactionTypes": "API_TO_API,BANK_OR_WALLET,SWIFT",
+    "currency": "EUR",
+    "expectedTransactionProfile": "Institutional payment-rail onboarding for Nova Bank Online (Anakatech LLC operator) with Malta entity Nova Bank Malta Ltd; OpenPayd EMI partner; Hybx/Fineract core banking; SWIFT sandbox readiness.",
+    "sourceOfFundsDescription": "Operating capital and client settlement flows of Nova Bank Online / Anakatech LLC fintech platform; fiat rails via licensed EMI partner (OpenPayd) and institutional Fineract (Hybx Finance); no retail cash deposits at Nova branches.",
+    "sanctionsExposureNotes": "Nova Bank Online runs KYC/AML/CFT program (public docs slug kyc). Sanctions screening is part of the platform compliance posture; no intentional sanctions exposure.",
+    "bankRegion": "EUROPE",
+    "accountJurisdiction": "Malta",
+    "bankName": "OpenPayd (EMI partner) / Other \u2014 confirm settlement account with compliance"
+  },
+  "documentsObservedOnInviteUi": [
+    {
+      "code": "SOURCE_OF_FUNDS_DECLARATION",
+      "required": false,
+      "statusObserved": "PENDING"
+    },
+    {
+      "code": "BANK_ACCOUNT_OWNERSHIP_PROOF",
+      "required": false,
+      "statusObserved": "PENDING"
+    },
+    {
+      "code": "COMPLIANCE_PACK",
+      "required": false,
+      "statusObserved": "PENDING"
+    },
+    {
+      "code": "OPTIONAL_SUPPORTING_DOCUMENTS",
+      "required": false,
+      "statusObserved": "PENDING"
+    }
+  ],
+  "mandatoryUploadsTypicallyRequiredByTyganPayUi": [
+    "AUTHORIZED_REPRESENTATIVE_PASSPORT",
+    "COMPANY_REGISTRATION_DOCUMENTS"
+  ],
+  "missingBeforeSubmission": [
+    "Company registration number and registered address (Anakatech LLC and/or Nova Bank Malta Ltd)",
+    "Authorized representative legal identity + passport scan",
+    "Company registration documents PDF",
+    "Bank account ownership proof for the settlement account",
+    "Signed source-of-funds declaration",
+    "TyganPay invite reset (current token view-limit blocked)"
+  ],
+  "productionUrls": {
+    "novaBank": "https://nova-bank-api-production-7311.up.railway.app",
+    "novaBankApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
+    "openapi": "https://nova-bank-api-production-7311.up.railway.app/api/v1/openapi.json",
+    "docs": "https://nova-bank-api-production-7311.up.railway.app/api/v1/docs",
+    "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
+    "fineract": "https://fineract.hybxfinance.com",
+    "privacyContact": "privacy@anakatech.llc"
+  }
+}

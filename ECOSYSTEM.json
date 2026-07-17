@@ -8,7 +8,7 @@
       "name": "Nova Bank Online",
       "url": "https://nova-bank-api-production-7311.up.railway.app",
       "api": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
-      "role": "custodial neobank — ledger, cards, fiat/crypto vaults"
+      "role": "custodial neobank \u2014 ledger, cards, fiat/crypto vaults"
     },
     "novaSwap": {
       "name": "Nova Swap",
@@ -18,7 +18,7 @@
     "novaWallet": {
       "name": "Nova Wallet",
       "bundleId": "llc.anakatech.novawallet",
-      "role": "non-custodial mobile signer — NovaONE + NRW World",
+      "role": "non-custodial mobile signer \u2014 NovaONE + NRW World",
       "repoPath": "apps/wallet"
     },
     "novaOneExplorer": {
@@ -30,7 +30,7 @@
       "name": "NRW Nova World Central Bank",
       "url": "https://nrw-central-bank-api-production.up.railway.app",
       "api": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
-      "role": "virtual central bank — pools, settlement, wires"
+      "role": "virtual central bank \u2014 pools, settlement, wires"
     },
     "nrwWorldChain": {
       "name": "NRW World Chain",
@@ -108,7 +108,7 @@
         },
         {
           "id": "lan-primary",
-          "label": "LAN primary (socat → node1)",
+          "label": "LAN primary (socat \u2192 node1)",
           "url": "http://192.168.1.50:8554"
         },
         {
@@ -154,10 +154,10 @@
         }
       ],
       "quirks": [
-        "Zero gas — eth_gasPrice returns 0x0; some libraries reject gasPrice: 0",
-        "Permissioned QBFT — only validators propose; add/remove via qbft_proposeValidatorVote",
-        "HTTP JSON-RPC only — no WebSocket subscriptions",
-        "Public RPC — no auth; Cloudflare → nginx → socat → node1",
+        "Zero gas \u2014 eth_gasPrice returns 0x0; some libraries reject gasPrice: 0",
+        "Permissioned QBFT \u2014 only validators propose; add/remove via qbft_proposeValidatorVote",
+        "HTTP JSON-RPC only \u2014 no WebSocket subscriptions",
+        "Public RPC \u2014 no auth; Cloudflare \u2192 nginx \u2192 socat \u2192 node1",
         "Subdomain novaone-rpc.anakatech.llc may still be propagating; path URL is live"
       ]
     }
@@ -1408,7 +1408,7 @@
   "bridgeAdapters": [
     {
       "id": "novaone-defi-oracle-138",
-      "name": "NovaONE ↔ DeFi Oracle",
+      "name": "NovaONE \u2194 DeFi Oracle",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 138,
@@ -1421,7 +1421,7 @@
     },
     {
       "id": "novaone-ethereum",
-      "name": "NovaONE ↔ Ethereum",
+      "name": "NovaONE \u2194 Ethereum",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 1,
@@ -1434,7 +1434,7 @@
     },
     {
       "id": "novaone-anaka-mesh",
-      "name": "NovaONE ↔ AnakaChain Mesh",
+      "name": "NovaONE \u2194 AnakaChain Mesh",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 11013,
@@ -1447,7 +1447,7 @@
     },
     {
       "id": "novaone-nrw-world",
-      "name": "NovaONE ↔ NRW World",
+      "name": "NovaONE \u2194 NRW World",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 33001,
@@ -1460,7 +1460,7 @@
     },
     {
       "id": "superbridge-ethereum",
-      "name": "Super Bridge — Ethereum ↔ NovaONE",
+      "name": "Super Bridge \u2014 Ethereum \u2194 NovaONE",
       "sourceChainId": 1,
       "sourceChainName": "Ethereum",
       "destChainId": 22016,
@@ -1473,7 +1473,7 @@
     },
     {
       "id": "superbridge-bsc",
-      "name": "Super Bridge — BNB Chain ↔ NovaONE",
+      "name": "Super Bridge \u2014 BNB Chain \u2194 NovaONE",
       "sourceChainId": 56,
       "sourceChainName": "BNB Smart Chain",
       "destChainId": 22016,
@@ -1486,7 +1486,7 @@
     },
     {
       "id": "superbridge-tron",
-      "name": "Super Bridge — TRON ↔ NovaONE",
+      "name": "Super Bridge \u2014 TRON \u2194 NovaONE",
       "sourceChainId": 728126428,
       "sourceChainName": "TRON",
       "destChainId": 22016,
@@ -1513,7 +1513,7 @@
         "nova-one",
         "nrw-world"
       ],
-      "addressHint": "Copy deposit address from Binance → Withdraw → select matching network."
+      "addressHint": "Copy deposit address from Binance \u2192 Withdraw \u2192 select matching network."
     },
     {
       "id": "okx",
@@ -1529,7 +1529,7 @@
         "nova-one",
         "nrw-world"
       ],
-      "addressHint": "OKX → Assets → Withdraw → paste the address for the selected chain."
+      "addressHint": "OKX \u2192 Assets \u2192 Withdraw \u2192 paste the address for the selected chain."
     },
     {
       "id": "bybit",
@@ -1543,7 +1543,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Bybit → Withdraw → choose network, then copy deposit address."
+      "addressHint": "Bybit \u2192 Withdraw \u2192 choose network, then copy deposit address."
     },
     {
       "id": "bitget",
@@ -1557,7 +1557,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Bitget → Withdraw → match network before sending."
+      "addressHint": "Bitget \u2192 Withdraw \u2192 match network before sending."
     },
     {
       "id": "coinbase",
@@ -1570,7 +1570,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Coinbase → Receive/Withdraw → use address for the correct network."
+      "addressHint": "Coinbase \u2192 Receive/Withdraw \u2192 use address for the correct network."
     },
     {
       "id": "kraken",
@@ -1583,7 +1583,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Kraken → Funding → Withdraw → select chain."
+      "addressHint": "Kraken \u2192 Funding \u2192 Withdraw \u2192 select chain."
     },
     {
       "id": "crypto-com",
@@ -1597,7 +1597,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Crypto.com app → Transfer → Withdraw → copy on-chain address."
+      "addressHint": "Crypto.com app \u2192 Transfer \u2192 Withdraw \u2192 copy on-chain address."
     },
     {
       "id": "metamask",
@@ -1611,7 +1611,7 @@
         "nrw-world",
         "anaka-bridge"
       ],
-      "addressHint": "Your MetaMask account address (0x…) on the selected network."
+      "addressHint": "Your MetaMask account address (0x\u2026) on the selected network."
     },
     {
       "id": "trust-wallet",
@@ -1627,7 +1627,7 @@
         "nova-one",
         "nrw-world"
       ],
-      "addressHint": "Trust Wallet → Receive → copy address for the asset network."
+      "addressHint": "Trust Wallet \u2192 Receive \u2192 copy address for the asset network."
     },
     {
       "id": "coinbase-wallet",
@@ -1640,7 +1640,7 @@
         "solana",
         "nova-one"
       ],
-      "addressHint": "Coinbase Wallet → Receive on the selected chain."
+      "addressHint": "Coinbase Wallet \u2192 Receive on the selected chain."
     },
     {
       "id": "okx-wallet",
@@ -1666,7 +1666,7 @@
         "solana",
         "ethereum"
       ],
-      "addressHint": "Phantom → Receive → Solana or EVM address."
+      "addressHint": "Phantom \u2192 Receive \u2192 Solana or EVM address."
     },
     {
       "id": "ledger",
@@ -1680,7 +1680,7 @@
         "solana",
         "tron"
       ],
-      "addressHint": "Ledger Live → Receive → verify address on device."
+      "addressHint": "Ledger Live \u2192 Receive \u2192 verify address on device."
     },
     {
       "id": "other",
@@ -1732,5 +1732,22 @@
       "anakachain",
       "protocol"
     ]
+  },
+  "tyganPay": {
+    "role": "Institutional payments / client onboarding rail partner",
+    "inviteToken": "nova-660c3e14ec7fbc9b7f57ed68a7046b0dd759d466b3a876f2",
+    "inviteUrls": [
+      "https://api.tyganpay.com/client-onboarding/nova-660c3e14ec7fbc9b7f57ed68a7046b0dd759d466b3a876f2",
+      "https://test.tyganpay.com/client-onboarding/nova-660c3e14ec7fbc9b7f57ed68a7046b0dd759d466b3a876f2"
+    ],
+    "publicApiBase": "https://api.tyganpay.com",
+    "testHost": "https://test.tyganpay.com",
+    "onboardingPackPath": "tyganpay/nova-onboarding-pack.json",
+    "onboardingGuidePath": "docs/tyganpay-onboarding.md",
+    "statusAsOf": "2026-07-17T13:35:00.000Z",
+    "inviteStatus": "onboarding_link_view_limit_blocked",
+    "clientEntityFromNovaApi": "Nova Bank Malta Ltd",
+    "platformOperator": "Anakatech LLC",
+    "notes": "Invite exhausted 15 client views without a submitted change. Optional document slots observed PENDING on the UI. Pack values sourced from Nova Bank live global/status + this manifest."
   }
 }
