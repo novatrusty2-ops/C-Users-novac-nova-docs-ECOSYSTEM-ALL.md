@@ -55,6 +55,14 @@ bash scripts/apply-wallet-integrity-patch.sh  # step 4 — NestJS patch
 cd patches/nova-bank-api/wallet-integrity && npm test
 ```
 
+## Health checks (all HTTP 200)
+
+```bash
+node scripts/verify-ecosystem.mjs
+# Expect: All 12 required checks HTTP 200
+# Outages (VPS/NovaONE/Alchemy) are informational only — see ECOSYSTEM.json → urlHealth.outages
+```
+
 ## Refreshing the manifest
 
 ```bash

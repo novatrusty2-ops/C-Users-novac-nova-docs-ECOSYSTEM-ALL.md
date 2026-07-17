@@ -125,7 +125,7 @@ def main() -> None:
     eco = load_json(ECO_PATH)
     preserved = {
         key: deepcopy(eco[key])
-        for key in ("tyganPay", "anakaConnect", "walletIntegrity")
+        for key in ("tyganPay", "anakaConnect", "walletIntegrity", "healthChecks")
         if key in eco
     }
     wallet_api = load_json(API_DIR / "wallet-networks.json")
@@ -288,9 +288,14 @@ def main() -> None:
     }
 
     # Preserve ops / partner blocks that are not derived from wallet APIs.
-    for key in ("tyganPay", "anakaConnect", "walletIntegrity"):
+    for key in ("tyganPay", "anakaConnect", "walletIntegrity", "healthChecks"):
         if key in preserved:
             eco[key] = preserved[key]
+
+    # Keep required HTTP-200 health suite (do not point at down VPS/NovaONE).
+    if "healthChecks" in preserved:
+        eco["healthChecks"] = preserved["healthChecks"]
+
 
     malta = status.get("features", {}).get("malta") or {}
     if malta and "novaBankOnline" in eco.get("products", {}):
@@ -310,7 +315,7 @@ def main() -> None:
     print(f"Updated {ECO_PATH}")
     print(f"  walletNetworks: {len(eco['walletNetworks'])}")
     print(f"  tradableTokens: {len(eco['tradableTokens'])}")
-    for key in ("tyganPay", "anakaConnect", "walletIntegrity"):
+    for key in ("tyganPay", "anakaConnect", "walletIntegrity", "healthChecks"):
         print(f"  preserved {key}: {key in eco}")
 
 

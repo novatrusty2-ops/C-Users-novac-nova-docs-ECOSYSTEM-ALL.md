@@ -65,7 +65,7 @@ Work from PR #1 (ecosystem) and PR #2 (wallet integrity) is merged into PR #3. P
 
 ```bash
 python3 -m json.tool ECOSYSTEM.json >/dev/null
-node scripts/verify-ecosystem.mjs
+node scripts/verify-ecosystem.mjs   # must print: All 12 required checks HTTP 200
 python3 scripts/check-tyganpay-invite.py
 cd patches/nova-bank-api/wallet-integrity && npm test
 ```

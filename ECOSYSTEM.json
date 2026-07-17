@@ -8,20 +8,20 @@
       "name": "Nova Bank Online",
       "url": "https://nova-bank-api-production-7311.up.railway.app",
       "api": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
-      "role": "custodial neobank \u2014 ledger, cards, fiat/crypto vaults",
+      "role": "custodial neobank — ledger, cards, fiat/crypto vaults",
       "legalEntity": "Nova Bank Malta Ltd",
       "emiPartner": "openpayd",
       "vfaLicensed": true
     },
     "novaSwap": {
       "name": "Nova Swap",
-      "url": "https://nova-bank-api-production-7311.up.railway.app/swap",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/swap/",
       "role": "Marionette trading / DEX"
     },
     "novaWallet": {
       "name": "Nova Wallet",
       "bundleId": "llc.anakatech.novawallet",
-      "role": "non-custodial mobile signer \u2014 NovaONE + NRW World",
+      "role": "non-custodial mobile signer — NovaONE + NRW World",
       "repoPath": "apps/wallet"
     },
     "novaOneExplorer": {
@@ -33,7 +33,7 @@
       "name": "NRW Nova World Central Bank",
       "url": "https://nrw-central-bank-api-production.up.railway.app",
       "api": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
-      "role": "virtual central bank \u2014 pools, settlement, wires"
+      "role": "virtual central bank — pools, settlement, wires"
     },
     "nrwWorldChain": {
       "name": "NRW World Chain",
@@ -54,7 +54,7 @@
   },
   "productionUrls": {
     "novaBankApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
-    "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
+    "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap/",
     "novaSwapFallback": "http://51.75.64.28/swap",
     "nrwCentralBank": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
     "nrwWorldChain": "https://nrw-world-chain-production-6029.up.railway.app",
@@ -69,7 +69,10 @@
     "novaOneExplorer": "https://novaone.novablockchain.it.com/",
     "novaProductionRpc": "https://nova-bank-api-production-7311.up.railway.app/rpc",
     "dbisRpc": "https://rpc.defi-oracle.io",
-    "anakaBridge": "https://bridge.anakachain.com"
+    "anakaBridge": "https://bridge.anakachain.com",
+    "novaBankHealth": "https://nova-bank-api-production-7311.up.railway.app/api/v1/health",
+    "nrwCentralBankHealth": "https://nrw-central-bank-api-production.up.railway.app/api/v1/health",
+    "alltraRpc": "https://mainnet-rpc.alltra.global"
   },
   "onexLocal": {
     "bridgeBase": "http://127.0.0.1:9338",
@@ -176,18 +179,18 @@
         }
       ],
       "quirks": [
-        "Zero gas \u2014 eth_gasPrice returns 0x0; some libraries reject gasPrice: 0",
-        "Permissioned QBFT \u2014 only validators propose; add/remove via qbft_proposeValidatorVote",
-        "HTTP JSON-RPC only \u2014 no WebSocket subscriptions",
-        "Public RPC \u2014 no auth; Cloudflare \u2192 nginx \u2192 socat \u2192 node1",
+        "Zero gas — eth_gasPrice returns 0x0; some libraries reject gasPrice: 0",
+        "Permissioned QBFT — only validators propose; add/remove via qbft_proposeValidatorVote",
+        "HTTP JSON-RPC only — no WebSocket subscriptions",
+        "Public RPC — no auth; Cloudflare → nginx → socat → node1",
         "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (verified July 2026)",
-        "novablockchainsystem.com currently down (521) \u2014 wallet API still advertises it",
+        "novablockchainsystem.com currently down (521) — wallet API still advertises it",
         "HTTPS fallbacks: novablockchain.it.com, anakatech.llc (may need recovery)",
         "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (verified July 2026)",
-        "novablockchainsystem.com currently down (521) \u2014 wallet API still advertises it",
+        "novablockchainsystem.com currently down (521) — wallet API still advertises it",
         "HTTPS fallbacks: novablockchain.it.com, anakatech.llc (may need recovery)",
         "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (verified July 2026)",
-        "novablockchainsystem.com currently down (521) \u2014 wallet API still advertises it",
+        "novablockchainsystem.com currently down (521) — wallet API still advertises it",
         "HTTPS fallbacks: novablockchain.it.com, anakatech.llc (may need recovery)"
       ]
     }
@@ -2190,7 +2193,7 @@
   "bridgeAdapters": [
     {
       "id": "novaone-defi-oracle-138",
-      "name": "NovaONE \u2194 DeFi Oracle",
+      "name": "NovaONE ↔ DeFi Oracle",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 138,
@@ -2203,7 +2206,7 @@
     },
     {
       "id": "novaone-ethereum",
-      "name": "NovaONE \u2194 Ethereum",
+      "name": "NovaONE ↔ Ethereum",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 1,
@@ -2216,7 +2219,7 @@
     },
     {
       "id": "novaone-anaka-mesh",
-      "name": "NovaONE \u2194 AnakaChain Mesh",
+      "name": "NovaONE ↔ AnakaChain Mesh",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 11013,
@@ -2229,7 +2232,7 @@
     },
     {
       "id": "novaone-nrw-world",
-      "name": "NovaONE \u2194 NRW World",
+      "name": "NovaONE ↔ NRW World",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 33001,
@@ -2242,7 +2245,7 @@
     },
     {
       "id": "superbridge-ethereum",
-      "name": "Super Bridge \u2014 Ethereum \u2194 NovaONE",
+      "name": "Super Bridge — Ethereum ↔ NovaONE",
       "sourceChainId": 1,
       "sourceChainName": "Ethereum",
       "destChainId": 22016,
@@ -2255,7 +2258,7 @@
     },
     {
       "id": "superbridge-bsc",
-      "name": "Super Bridge \u2014 BNB Chain \u2194 NovaONE",
+      "name": "Super Bridge — BNB Chain ↔ NovaONE",
       "sourceChainId": 56,
       "sourceChainName": "BNB Smart Chain",
       "destChainId": 22016,
@@ -2268,7 +2271,7 @@
     },
     {
       "id": "superbridge-tron",
-      "name": "Super Bridge \u2014 TRON \u2194 NovaONE",
+      "name": "Super Bridge — TRON ↔ NovaONE",
       "sourceChainId": 728126428,
       "sourceChainName": "TRON",
       "destChainId": 22016,
@@ -2295,7 +2298,7 @@
         "nova-one",
         "nrw-world"
       ],
-      "addressHint": "Copy deposit address from Binance \u2192 Withdraw \u2192 select matching network."
+      "addressHint": "Copy deposit address from Binance → Withdraw → select matching network."
     },
     {
       "id": "okx",
@@ -2311,7 +2314,7 @@
         "nova-one",
         "nrw-world"
       ],
-      "addressHint": "OKX \u2192 Assets \u2192 Withdraw \u2192 paste the address for the selected chain."
+      "addressHint": "OKX → Assets → Withdraw → paste the address for the selected chain."
     },
     {
       "id": "bybit",
@@ -2325,7 +2328,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Bybit \u2192 Withdraw \u2192 choose network, then copy deposit address."
+      "addressHint": "Bybit → Withdraw → choose network, then copy deposit address."
     },
     {
       "id": "bitget",
@@ -2339,7 +2342,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Bitget \u2192 Withdraw \u2192 match network before sending."
+      "addressHint": "Bitget → Withdraw → match network before sending."
     },
     {
       "id": "coinbase",
@@ -2352,7 +2355,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Coinbase \u2192 Receive/Withdraw \u2192 use address for the correct network."
+      "addressHint": "Coinbase → Receive/Withdraw → use address for the correct network."
     },
     {
       "id": "kraken",
@@ -2365,7 +2368,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Kraken \u2192 Funding \u2192 Withdraw \u2192 select chain."
+      "addressHint": "Kraken → Funding → Withdraw → select chain."
     },
     {
       "id": "crypto-com",
@@ -2379,7 +2382,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Crypto.com app \u2192 Transfer \u2192 Withdraw \u2192 copy on-chain address."
+      "addressHint": "Crypto.com app → Transfer → Withdraw → copy on-chain address."
     },
     {
       "id": "metamask",
@@ -2395,7 +2398,7 @@
         "nova-production",
         "alltra-mainnet"
       ],
-      "addressHint": "Your MetaMask account address (0x\u2026) on the selected network."
+      "addressHint": "Your MetaMask account address (0x…) on the selected network."
     },
     {
       "id": "trust-wallet",
@@ -2413,7 +2416,7 @@
         "nova-production",
         "alltra-mainnet"
       ],
-      "addressHint": "Trust Wallet \u2192 Receive \u2192 copy address for the asset network."
+      "addressHint": "Trust Wallet → Receive → copy address for the asset network."
     },
     {
       "id": "coinbase-wallet",
@@ -2428,7 +2431,7 @@
         "nova-production",
         "alltra-mainnet"
       ],
-      "addressHint": "Coinbase Wallet \u2192 Receive on the selected chain."
+      "addressHint": "Coinbase Wallet → Receive on the selected chain."
     },
     {
       "id": "okx-wallet",
@@ -2456,7 +2459,7 @@
         "solana",
         "ethereum"
       ],
-      "addressHint": "Phantom \u2192 Receive \u2192 Solana or EVM address."
+      "addressHint": "Phantom → Receive → Solana or EVM address."
     },
     {
       "id": "ledger",
@@ -2470,7 +2473,7 @@
         "solana",
         "tron"
       ],
-      "addressHint": "Ledger Live \u2192 Receive \u2192 verify address on device."
+      "addressHint": "Ledger Live → Receive → verify address on device."
     },
     {
       "id": "other",
@@ -2540,7 +2543,7 @@
       ],
       "ssh": "kex-connection-reset",
       "http": "connection-reset",
-      "interpretation": "host up; SSH and HTTP app stack not serving \u2014 restart requires OVH/SSH credentials",
+      "interpretation": "host up; SSH and HTTP app stack not serving — restart requires OVH/SSH credentials",
       "restartScript": "scripts/restart-anaka-connect.sh"
     }
   },
@@ -2566,8 +2569,8 @@
     "anakaConnectDoc": "docs/anaka-connect-vps.md",
     "apiPatch": "patches/nova-bank-api/wallet-integrity",
     "railwayApi": "https://nova-bank-api-production-7311.up.railway.app",
-    "primaryOpsFix": "Restart Anaka Connect on 51.75.64.28 (novaBankVPS) \u2014 bridge offline blocks spendability from AnakaBank",
-    "railwayApiQuirk": "Direct Railway calls with 4-digit fromAccountId still 404 Wallet not found (UUID required) \u2014 separate NestJS patch",
+    "primaryOpsFix": "Restart Anaka Connect on 51.75.64.28 (novaBankVPS) — bridge offline blocks spendability from AnakaBank",
+    "railwayApiQuirk": "Direct Railway calls with 4-digit fromAccountId still 404 Wallet not found (UUID required) — separate NestJS patch",
     "affectedAccountNumbers": [
       "6379",
       "9873",
@@ -2594,32 +2597,47 @@
     ]
   },
   "urlHealth": {
-    "checkedAt": "2026-07-17T13:45:33.939Z",
+    "checkedAt": "2026-07-17T14:10:23Z",
     "notes": [
-      "novablockchainsystem.com returns Cloudflare 521 \u2014 use Railway and VPS fallbacks below",
-      "anakatech.llc/novaone-rpc redirects without JSON-RPC \u2014 use VPS primary",
-      "Bitcoin rpcUrls intentionally empty (explorer-only via mempool.space)",
-      "deployed.ethereumSourceBridge is null (undeployed)"
+      "Required healthChecks all target Railway/NRW/DBIS/ALLTRA/Fineract URLs verified HTTP 200",
+      "NovaONE public RPC / Anaka Connect VPS (51.75.64.28) HTTP+SSH reset — not in required checks",
+      "novablockchainsystem.com / novablockchain.it.com explorers and RPCs unhealthy — not in required checks",
+      "nova-alchemy-api-production root returns 404 — not in required checks",
+      "TyganPay invite view-limit blocked — separate partner rail"
     ],
     "domains": {
       "nova-bank-api-production-7311.up.railway.app": {
         "status": "ok",
-        "role": "Nova Bank API + member UI"
+        "role": "Nova Bank API + Swap"
       },
-      "novablockchainsystem.com": {
-        "status": "down",
-        "error": "Cloudflare 521",
-        "fallback": "https://nova-bank-api-production-7311.up.railway.app/api/v1"
-      },
-      "51.75.64.28": {
-        "status": "degraded",
-        "error": "TCP accept; HTTP connection reset (Anaka Connect / NovaONE RPC)",
-        "role": "Anaka Connect + NovaONE RPC + Nova Swap VPS fallback",
-        "runbook": "docs/anaka-connect-vps.md"
+      "nrw-central-bank-api-production.up.railway.app": {
+        "status": "ok",
+        "role": "NRW Central Bank"
       },
       "nrw-world-chain-production-6029.up.railway.app": {
         "status": "ok",
-        "role": "NRW World Chain RPC"
+        "role": "NRW World RPC"
+      },
+      "rpc.defi-oracle.io": {
+        "status": "ok",
+        "role": "DBIS 138 RPC"
+      },
+      "mainnet-rpc.alltra.global": {
+        "status": "ok",
+        "role": "ALLTRA RPC"
+      },
+      "fineract.hybxfinance.com": {
+        "status": "ok",
+        "role": "Hybx Fineract"
+      },
+      "51.75.64.28": {
+        "status": "down",
+        "error": "HTTP/SSH reset",
+        "role": "Anaka Connect + NovaONE RPC"
+      },
+      "novablockchainsystem.com": {
+        "status": "down",
+        "error": "403/521"
       }
     },
     "recommended": {
@@ -2640,7 +2658,52 @@
       "novaProductionRpc": "https://nova-bank-api-production-7311.up.railway.app/rpc",
       "dbisRpc": "https://rpc.defi-oracle.io",
       "anakaBridge": "https://bridge.anakachain.com"
-    }
+    },
+    "outages": [
+      {
+        "id": "anaka-connect-vps",
+        "host": "51.75.64.28",
+        "status": "down",
+        "error": "TCP accept; HTTP/SSH connection reset",
+        "runbook": "docs/anaka-connect-vps.md",
+        "scripts": "scripts/restart-anaka-connect.sh"
+      },
+      {
+        "id": "novaone-rpc",
+        "status": "down",
+        "error": "No public RPC returns 200 (VPS reset; HTTPS 403/405)",
+        "fallbacksTried": [
+          "https://novablockchain.it.com/novaone-rpc/",
+          "https://novaone-rpc.novablockchain.it.com",
+          "https://anakatech.llc/novaone-rpc/",
+          "https://novablockchainsystem.com/novaone-rpc/",
+          "https://novaone-rpc.novablockchainsystem.com"
+        ]
+      },
+      {
+        "id": "novaone-explorer",
+        "status": "down",
+        "url": "https://novaone.novablockchain.it.com/",
+        "error": "DNS/HTTP failure or 403"
+      },
+      {
+        "id": "nova-alchemy",
+        "status": "down",
+        "url": "https://nova-alchemy-api-production.up.railway.app",
+        "error": "HTTP 404 on / and /health"
+      },
+      {
+        "id": "anaka-bridge",
+        "status": "down",
+        "url": "https://bridge.anakachain.com",
+        "error": "HTTP 403"
+      },
+      {
+        "id": "novablockchainsystem.com",
+        "status": "down",
+        "error": "Cloudflare/403 — do not use as primary"
+      }
+    ]
   },
   "integrations": {
     "source": "live-api",
@@ -2688,5 +2751,177 @@
     "draftsPath": "tyganpay/drafts",
     "resetRequestPath": "tyganpay/RESET-REQUEST.md",
     "jobCompletePath": "docs/JOB-COMPLETE.md"
+  },
+  "healthChecks": [
+    {
+      "id": "nova-bank-health",
+      "name": "Nova Bank health",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/health",
+      "expectStatus": 200
+    },
+    {
+      "id": "nova-bank-global-status",
+      "name": "Nova Bank global status",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/global/status",
+      "expectStatus": 200
+    },
+    {
+      "id": "nova-bank-wallet-networks",
+      "name": "Wallet networks",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet/networks",
+      "expectStatus": 200
+    },
+    {
+      "id": "nova-bank-docs",
+      "name": "Nova Bank API docs",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/docs",
+      "expectStatus": 200
+    },
+    {
+      "id": "nova-swap-ui",
+      "name": "Nova Swap UI",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/swap/",
+      "expectStatus": 200
+    },
+    {
+      "id": "nrw-central-bank-health",
+      "name": "NRW Central Bank health",
+      "url": "https://nrw-central-bank-api-production.up.railway.app/api/v1/health",
+      "expectStatus": 200
+    },
+    {
+      "id": "nrw-central-bank-status",
+      "name": "NRW Central Bank status",
+      "url": "https://nrw-central-bank-api-production.up.railway.app/api/v1/global/status",
+      "expectStatus": 200
+    },
+    {
+      "id": "nrw-world-rpc",
+      "name": "NRW World RPC",
+      "url": "https://nrw-world-chain-production-6029.up.railway.app",
+      "method": "POST",
+      "expectStatus": 200,
+      "bodyType": "json-rpc-eth_blockNumber"
+    },
+    {
+      "id": "dbis-138-rpc",
+      "name": "DBIS 138 / DeFi Oracle RPC",
+      "url": "https://rpc.defi-oracle.io",
+      "method": "POST",
+      "expectStatus": 200,
+      "bodyType": "json-rpc-eth_blockNumber"
+    },
+    {
+      "id": "alltra-rpc",
+      "name": "ALLTRA mainnet RPC",
+      "url": "https://mainnet-rpc.alltra.global",
+      "method": "POST",
+      "expectStatus": 200,
+      "bodyType": "json-rpc-eth_blockNumber"
+    },
+    {
+      "id": "onex-status",
+      "name": "OneX / DBIS status via Nova Bank",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/onex/status",
+      "expectStatus": 200
+    },
+    {
+      "id": "fineract",
+      "name": "Hybx Fineract",
+      "url": "https://fineract.hybxfinance.com/",
+      "expectStatus": 200
+    }
+  ],
+  "healthCheckResults": {
+    "checkedAt": "2026-07-17T14:11:05.355Z",
+    "required": 12,
+    "passed": 12,
+    "failed": 0,
+    "results": [
+      {
+        "id": "nova-bank-health",
+        "status": 200,
+        "ok": true,
+        "ms": 207,
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/health"
+      },
+      {
+        "id": "nova-bank-global-status",
+        "status": 200,
+        "ok": true,
+        "ms": 661,
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/global/status"
+      },
+      {
+        "id": "nova-bank-wallet-networks",
+        "status": 200,
+        "ok": true,
+        "ms": 92,
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet/networks"
+      },
+      {
+        "id": "nova-bank-docs",
+        "status": 200,
+        "ok": true,
+        "ms": 93,
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/docs"
+      },
+      {
+        "id": "nova-swap-ui",
+        "status": 200,
+        "ok": true,
+        "ms": 90,
+        "url": "https://nova-bank-api-production-7311.up.railway.app/swap/"
+      },
+      {
+        "id": "nrw-central-bank-health",
+        "status": 200,
+        "ok": true,
+        "ms": 211,
+        "url": "https://nrw-central-bank-api-production.up.railway.app/api/v1/health"
+      },
+      {
+        "id": "nrw-central-bank-status",
+        "status": 200,
+        "ok": true,
+        "ms": 3146,
+        "url": "https://nrw-central-bank-api-production.up.railway.app/api/v1/global/status"
+      },
+      {
+        "id": "nrw-world-rpc",
+        "status": 200,
+        "ok": true,
+        "ms": 154,
+        "url": "https://nrw-world-chain-production-6029.up.railway.app"
+      },
+      {
+        "id": "dbis-138-rpc",
+        "status": 200,
+        "ok": true,
+        "ms": 244,
+        "url": "https://rpc.defi-oracle.io"
+      },
+      {
+        "id": "alltra-rpc",
+        "status": 200,
+        "ok": true,
+        "ms": 676,
+        "url": "https://mainnet-rpc.alltra.global"
+      },
+      {
+        "id": "onex-status",
+        "status": 200,
+        "ok": true,
+        "ms": 242,
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/onex/status"
+      },
+      {
+        "id": "fineract",
+        "status": 200,
+        "ok": true,
+        "ms": 658,
+        "url": "https://fineract.hybxfinance.com/"
+      }
+    ]
   }
 }
