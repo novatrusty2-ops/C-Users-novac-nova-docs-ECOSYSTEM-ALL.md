@@ -1784,7 +1784,35 @@
       "Verify JSON-RPC eth_blockNumber (and related) through the public path URL",
       "Update deployed.bridgeRelayerVps in ECOSYSTEM.json to the new IP",
       "Decommission or firewall the old OVH-class host after traffic has drained"
-    ]
+    ],
+    "deployFromPc": {
+      "note": "Run these on your PC. This cloud agent has no SSH/API credentials for live hosts.",
+      "option1Docs": "Catalog + infraAlternatives in ECOSYSTEM.json (this branch / PR)",
+      "option2CutoverCurrentStack": "deploy/cutover-from-pc.sh",
+      "option3HetznerMigrate": "deploy/hetzner-migrate.sh (requires NEW_HOST + SSH to old and new)",
+      "option4LocalPc": "deploy/local-from-pc.sh (optional SYNC_RELAYER=1)",
+      "commands": [
+        "./deploy/cutover-from-pc.sh",
+        "NEW_HOST=<hetzner-ipv4> ./deploy/hetzner-migrate.sh",
+        "SYNC_RELAYER=1 ./deploy/local-from-pc.sh"
+      ]
+    }
+  },
+  "deploy": {
+    "scripts": {
+      "cutoverFromPc": "deploy/cutover-from-pc.sh",
+      "hetznerMigrate": "deploy/hetzner-migrate.sh",
+      "localFromPc": "deploy/local-from-pc.sh"
+    },
+    "currentRelayer": {
+      "host": "51.75.64.28",
+      "path": "/opt/nova-bridge-adapter"
+    },
+    "publicRpc": {
+      "pathUrl": "https://anakatech.llc/novaone-rpc/",
+      "subdomainUrl": "https://novaone-rpc.anakatech.llc"
+    },
+    "lanRpc": "http://192.168.1.50:8551"
   },
   "api": {
     "globalStatus": "/api/v1/global/status",
