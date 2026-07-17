@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "generatedAt": "2026-07-13T10:13:28.514Z",
+  "version": "1.0.1",
+  "generatedAt": "2026-07-17T14:24:54.884Z",
   "generatedFrom": "nova",
   "organization": "Anakatech LLC",
   "products": {
@@ -13,7 +13,8 @@
     "novaSwap": {
       "name": "Nova Swap",
       "url": "https://nova-bank-api-production-7311.up.railway.app/swap",
-      "role": "Marionette trading / DEX"
+      "role": "Marionette trading / DEX",
+      "fallbackUrl": "http://51.75.64.28/swap"
     },
     "novaWallet": {
       "name": "Nova Wallet",
@@ -47,6 +48,15 @@
       "name": "Hybx Fineract",
       "url": "https://fineract.hybxfinance.com",
       "role": "core banking / settlement middleware"
+    },
+    "novaProductionNode": {
+      "name": "Nova Production Node",
+      "chainId": 9001,
+      "rpc": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+      "publicRpc": "https://nova-bank-api-production-7311.up.railway.app/rpc",
+      "status": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/status",
+      "role": "custody EVM node (currently degraded \u2014 edge/upstream disconnected)",
+      "health": "degraded"
     }
   },
   "productionUrls": {
@@ -64,9 +74,11 @@
       "https://novaone-rpc.novablockchainsystem.com"
     ],
     "novaOneExplorer": "https://novaone.novablockchain.it.com/",
-    "novaProductionRpc": "https://nova-bank-api-production-7311.up.railway.app/rpc",
+    "novaProductionRpc": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+    "novaProductionRpcPublic": "https://nova-bank-api-production-7311.up.railway.app/rpc",
     "dbisRpc": "https://rpc.defi-oracle.io",
-    "anakaBridge": "https://bridge.anakachain.com"
+    "anakaBridge": "https://bridge.anakachain.com",
+    "alltraRpc": "https://mainnet-rpc.alltra.global"
   },
   "onexLocal": {
     "bridgeBase": "http://127.0.0.1:9338",
@@ -106,29 +118,40 @@
       "permissioned": true,
       "rpcEndpoints": [
         {
-          "id": "vps-primary",
-          "label": "VPS primary (verified working)",
-          "url": "http://51.75.64.28/novaone-rpc/"
+          "id": "rpc-0",
+          "label": "Unhealthy candidate #1",
+          "url": "http://51.75.64.28/novaone-rpc/",
+          "health": "down"
         },
         {
-          "id": "public-https",
-          "label": "Public HTTPS (novablockchain.it.com)",
-          "url": "https://novablockchain.it.com/novaone-rpc/"
+          "id": "rpc-1",
+          "label": "Unhealthy candidate #2",
+          "url": "https://novablockchain.it.com/novaone-rpc/",
+          "health": "down"
         },
         {
-          "id": "subdomain",
-          "label": "Subdomain RPC",
-          "url": "https://novaone-rpc.novablockchain.it.com"
+          "id": "rpc-2",
+          "label": "Unhealthy candidate #3",
+          "url": "https://novaone-rpc.novablockchain.it.com",
+          "health": "down"
         },
         {
-          "id": "fallback-1",
-          "label": "Fallback",
-          "url": "https://anakatech.llc/novaone-rpc/"
+          "id": "rpc-3",
+          "label": "Unhealthy candidate #4",
+          "url": "https://anakatech.llc/novaone-rpc/",
+          "health": "down"
         },
         {
-          "id": "fallback-2",
-          "label": "Fallback",
-          "url": "http://51.75.64.28/novaone-rpc/"
+          "id": "rpc-4",
+          "label": "Unhealthy candidate #5",
+          "url": "https://novablockchainsystem.com/novaone-rpc/",
+          "health": "down"
+        },
+        {
+          "id": "rpc-5",
+          "label": "Unhealthy candidate #6",
+          "url": "https://novaone-rpc.novablockchainsystem.com",
+          "health": "down"
         }
       ],
       "rpcApis": [
@@ -162,14 +185,12 @@
         "Permissioned QBFT \u2014 only validators propose; add/remove via qbft_proposeValidatorVote",
         "HTTP JSON-RPC only \u2014 no WebSocket subscriptions",
         "Public RPC \u2014 no auth; Cloudflare \u2192 nginx \u2192 socat \u2192 node1",
-        "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (verified July 2026)",
-        "novablockchainsystem.com currently down (521) \u2014 wallet API still advertises it",
-        "HTTPS fallbacks: novablockchain.it.com, anakatech.llc (may need recovery)",
-        "Primary public RPC: VPS http://51.75.64.28/novaone-rpc/ (verified July 2026)",
-        "novablockchainsystem.com currently down (521) \u2014 wallet API still advertises it",
-        "HTTPS fallbacks: novablockchain.it.com, anakatech.llc (may need recovery)"
+        "Primary RPC candidate after health probe: http://51.75.64.28/novaone-rpc/",
+        "novablockchainsystem.com unreliable \u2014 wallet API may still advertise it",
+        "VPS 51.75.64.28 and HTTPS public RPCs may be down; re-run scripts/sync-ecosystem.py"
       ]
-    }
+    },
+    "health": "down"
   },
   "defiOracle": {
     "chainId": 138,
@@ -201,7 +222,9 @@
         "https://anakatech.llc/novaone-rpc/",
         "https://novablockchainsystem.com/novaone-rpc/",
         "https://novaone-rpc.novablockchainsystem.com"
-      ]
+      ],
+      "defaultExplorerUrl": "https://novaone.novablockchain.it.com/",
+      "health": "down"
     },
     {
       "id": "dbis-138",
@@ -217,7 +240,8 @@
       "defaultRpcUrls": [
         "https://rpc.defi-oracle.io"
       ],
-      "defaultExplorerUrl": "https://explorer.defi-oracle.io"
+      "defaultExplorerUrl": "https://explorer.defi-oracle.io",
+      "health": "ok"
     },
     {
       "id": "anaka-bridge",
@@ -229,7 +253,8 @@
       ],
       "defaultRpcUrls": [
         "https://bridge.anakachain.com"
-      ]
+      ],
+      "health": "ok"
     },
     {
       "id": "alltra-mainnet",
@@ -238,10 +263,36 @@
       "role": "external",
       "defaultRpcUrls": [
         "https://mainnet-rpc.alltra.global",
-        "https://alltra-rpc.novablockchainsystem.com/",
         "http://103.42.59.54:8545",
-        "http://103.42.59.55:8545"
-      ]
+        "http://103.42.59.55:8545",
+        "https://alltra-rpc.novablockchainsystem.com/"
+      ],
+      "health": "ok"
+    },
+    {
+      "id": "nova-production",
+      "label": "Nova Production Node",
+      "chainId": 9001,
+      "role": "custody",
+      "defaultRpcUrls": [
+        "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+        "https://nova-bank-api-production-7311.up.railway.app/rpc",
+        "http://51.75.64.28:28545/rpc"
+      ],
+      "defaultExplorerUrl": "http://51.75.64.28:28545/explorer/",
+      "health": "degraded"
+    },
+    {
+      "id": "nrw-world",
+      "label": "NRW World Chain",
+      "chainId": 33001,
+      "role": "settlement",
+      "defaultRpcUrls": [
+        "https://nrw-world-chain-production-6029.up.railway.app",
+        "https://novablockchainsystem.com/nrw-rpc/"
+      ],
+      "explorerUrl": "https://nrw-central-bank-api-production.up.railway.app",
+      "health": "ok"
     }
   ],
   "walletNetworks": [
@@ -265,7 +316,8 @@
       "tradable": true,
       "transferable": true,
       "decentralized": true,
-      "ecosystemRole": "trading"
+      "ecosystemRole": "trading",
+      "health": "degraded"
     },
     {
       "id": "nova-production",
@@ -275,6 +327,7 @@
       "nativeSymbol": "NOVA",
       "decimals": 18,
       "rpcUrls": [
+        "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
         "https://nova-bank-api-production-7311.up.railway.app/rpc",
         "http://51.75.64.28:28545/rpc"
       ],
@@ -283,7 +336,9 @@
       "tradable": true,
       "transferable": true,
       "decentralized": true,
-      "ecosystemRole": "custody"
+      "ecosystemRole": "custody",
+      "health": "degraded",
+      "healthNote": "production-node edge/upstream disconnected; /rpc 404; VPS 51.75.64.28 down"
     },
     {
       "id": "nrw-world",
@@ -301,7 +356,9 @@
       "tradable": true,
       "transferable": true,
       "decentralized": true,
-      "ecosystemRole": "settlement"
+      "ecosystemRole": "settlement",
+      "health": "ok",
+      "explorerNote": "NRW uses central bank API as status surface (no dedicated explorer)"
     },
     {
       "id": "dbis-138",
@@ -345,8 +402,8 @@
       "nativeSymbol": "ETH",
       "decimals": 18,
       "rpcUrls": [
-        "https://side-rough-telescope.ethereum-mainnet.quiknode.pro/b36288d4817e418d1d30c2f69ee917d1c829de34",
-        "https://eth.llamarpc.com"
+        "https://eth.llamarpc.com",
+        "https://side-rough-telescope.ethereum-mainnet.quiknode.pro/b36288d4817e418d1d30c2f69ee917d1c829de34"
       ],
       "explorerUrl": "https://etherscan.io",
       "swapEnabled": true,
@@ -416,7 +473,8 @@
       "tradable": true,
       "transferable": true,
       "decentralized": true,
-      "ecosystemRole": "external"
+      "ecosystemRole": "external",
+      "healthNote": "Explorer-only \u2014 rpcUrls intentionally empty"
     },
     {
       "id": "alltra-mainnet",
@@ -427,16 +485,17 @@
       "decimals": 18,
       "rpcUrls": [
         "https://mainnet-rpc.alltra.global",
-        "https://alltra-rpc.novablockchainsystem.com/",
         "http://103.42.59.54:8545",
-        "http://103.42.59.55:8545"
+        "http://103.42.59.55:8545",
+        "https://alltra-rpc.novablockchainsystem.com/"
       ],
       "explorerUrl": "https://alltra.global/",
       "swapEnabled": true,
       "tradable": true,
       "transferable": true,
       "decentralized": true,
-      "ecosystemRole": "trading"
+      "ecosystemRole": "trading",
+      "health": "ok"
     },
     {
       "id": "nova-bank",
@@ -969,7 +1028,7 @@
     {
       "symbol": "GLD1111",
       "name": "11::11 1/1000 1 Oz Gold",
-      "decimals": 8,
+      "decimals": 18,
       "assetClass": "crypto",
       "chains": [
         "alltra-mainnet",
@@ -1458,6 +1517,69 @@
       "decentralized": true
     },
     {
+      "symbol": "USDT-BNB",
+      "name": "Tether USD (BNB / BEP20)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT-LEGACY",
+      "name": "USD Token (Legacy)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT-TRC20",
+      "name": "Tether USD (TRC20)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
       "symbol": "VCE",
       "name": "VOICE",
       "decimals": 18,
@@ -1520,6 +1642,27 @@
       "decentralized": true
     },
     {
+      "symbol": "WBNB",
+      "name": "Wrapped BNB (ALLTRA)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
       "symbol": "WBTC",
       "name": "Alltra Wrapped BTC Token",
       "decimals": 8,
@@ -1562,6 +1705,27 @@
       "decentralized": true
     },
     {
+      "symbol": "WTRX",
+      "name": "Wrapped TRX (ALLTRA)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
       "symbol": "XRP",
       "name": "XRP",
       "decimals": 6,
@@ -1575,6 +1739,48 @@
         "nrw-world",
         "nova-bank",
         "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ZARA",
+      "name": "Zaragoza USD Peg",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ZRG",
+      "name": "Zaragoza",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
       ],
       "tradable": true,
       "swappable": true,
@@ -2337,14 +2543,22 @@
   "api": {
     "globalStatus": "/api/v1/global/status",
     "walletNetworks": "/api/v1/wallet/networks",
-    "walletTokens": "/api/v1/wallet/tokens",
+    "walletTokens": "/api/v1/chains/ecosystem/tokens",
     "walletPortfolio": "/api/v1/wallet/portfolio/:address",
     "walletImport": "/api/v1/wallet/ecosystem/import",
     "bridgeAdapters": "/api/v1/chains/nova-one/bridge-adapters",
     "ecosystemTokens": "/api/v1/chains/ecosystem/tokens",
     "novaChainStatus": "/api/v1/nova-chain/status",
     "chainsStatus": "/api/v1/chains/status",
-    "publicDocs": "/api/v1/public/docs/:slug"
+    "publicDocs": "/api/v1/public/docs/:slug",
+    "productionNodeStatus": "/api/v1/production-node/status",
+    "productionNodeRpc": "/api/v1/production-node/rpc",
+    "openapi": "/api/v1/openapi.json",
+    "proofOfFunds": "/api/v1/global/proof-of-funds/nova-bank",
+    "brokenPaths": {
+      "/api/v1/wallet-ecosystem": "404 Not Found \u2014 use wallet/networks + chains/ecosystem/tokens",
+      "/rpc": "404 Not Found \u2014 production node edge disconnected"
+    }
   },
   "docs": {
     "index": "docs/ECOSYSTEM-INDEX.md",
@@ -2361,30 +2575,181 @@
     ]
   },
   "urlHealth": {
-    "checkedAt": "2026-07-13T10:13:28.514Z",
+    "checkedAt": "2026-07-17T14:24:54.884Z",
+    "summary": {
+      "novaBankApi": "ok",
+      "novaOneRpc": "down",
+      "nrwWorldChain": "ok",
+      "nrwCentralBank": "ok",
+      "novaSwap": "ok",
+      "vps51": "down",
+      "novablockchainsystem": "down",
+      "novaProductionNode": "down",
+      "alltra": "ok",
+      "defiOracle": "ok",
+      "anakaBridge": "ok"
+    },
     "notes": [
-      "novablockchainsystem.com returns Cloudflare 521 \u2014 use Railway and VPS fallbacks below",
-      "anakatech.llc/novaone-rpc redirects without JSON-RPC \u2014 use VPS primary",
+      "Prefer Railway and verified RPC endpoints; do not trust wallet/networks hostnames blindly",
+      "novablockchainsystem.com is unreliable (521/timeout/403) \u2014 kept only as last-resort fallback",
+      "VPS 51.75.64.28 may flap; probe before relying on it for NovaONE / swap / production node",
+      "Nova Production Node edge/upstream currently disconnected (Railway /rpc 404, proxy 500)",
       "Bitcoin rpcUrls intentionally empty (explorer-only via mempool.space)",
-      "deployed.ethereumSourceBridge is null (undeployed)"
+      "deployed.ethereumSourceBridge is null (undeployed)",
+      "Live /api/v1/wallet-ecosystem returns 404 \u2014 use /api/v1/wallet/networks and /chains/ecosystem/tokens",
+      "See docs/PRODUCTION-ISSUES.md for API-source fixes that cannot be done in this repo"
     ],
+    "probes": {
+      "novaBankApi": {
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/global/status",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": false,
+        "error": null
+      },
+      "novaOneRpcCandidates": [
+        {
+          "url": "http://51.75.64.28/novaone-rpc/",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "ConnectionResetError: [Errno 104] Connection reset by peer"
+        },
+        {
+          "url": "https://novablockchain.it.com/novaone-rpc/",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "HTTPError: HTTP Error 405: Method Not Allowed"
+        },
+        {
+          "url": "https://novaone-rpc.novablockchain.it.com",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "URLError: <urlopen error [Errno -2] Name or service not known>"
+        },
+        {
+          "url": "https://anakatech.llc/novaone-rpc/",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "HTTPError: HTTP Error 308: Permanent Redirect"
+        },
+        {
+          "url": "https://novablockchainsystem.com/novaone-rpc/",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "TimeoutError: The read operation timed out"
+        },
+        {
+          "url": "https://novaone-rpc.novablockchainsystem.com",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "URLError: <urlopen error [Errno -2] Name or service not known>"
+        }
+      ],
+      "nrwWorldChain": {
+        "url": "https://nrw-world-chain-production-6029.up.railway.app",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": true,
+        "error": null
+      },
+      "nrwCentralBank": {
+        "url": "https://nrw-central-bank-api-production.up.railway.app/api/v1/global/status",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": false,
+        "error": null
+      },
+      "novaSwap": {
+        "url": "https://nova-bank-api-production-7311.up.railway.app/swap",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": false,
+        "error": null
+      },
+      "vpsNovaOne": {
+        "url": "http://51.75.64.28/novaone-rpc/",
+        "status": "down",
+        "httpStatus": null,
+        "rpcOk": false,
+        "error": "ConnectionResetError: [Errno 104] Connection reset by peer"
+      },
+      "novablockchainsystem": {
+        "url": "https://novablockchainsystem.com/api/v1/global/status",
+        "status": "down",
+        "httpStatus": null,
+        "rpcOk": false,
+        "error": "TimeoutError: The read operation timed out"
+      },
+      "novaProductionRpc": {
+        "url": "https://nova-bank-api-production-7311.up.railway.app/rpc",
+        "status": "down",
+        "httpStatus": null,
+        "rpcOk": false,
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "novaProductionProxy": {
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+        "status": "down",
+        "httpStatus": null,
+        "rpcOk": false,
+        "error": "HTTPError: HTTP Error 500: Internal Server Error"
+      },
+      "alltra": {
+        "url": "https://mainnet-rpc.alltra.global",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": true,
+        "error": null
+      },
+      "defiOracle": {
+        "url": "https://rpc.defi-oracle.io",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": true,
+        "error": null
+      },
+      "anakaBridge": {
+        "url": "https://bridge.anakachain.com",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": true,
+        "error": null
+      },
+      "productionNodeApi": {
+        "edgeConnected": false,
+        "upstreamConnected": false,
+        "edgeError": "fetch failed",
+        "upstreamError": "fetch failed"
+      }
+    },
     "domains": {
       "nova-bank-api-production-7311.up.railway.app": {
         "status": "ok",
-        "role": "Nova Bank API + member UI"
+        "role": "Nova Bank API + member UI + Swap"
       },
       "novablockchainsystem.com": {
         "status": "down",
-        "error": "Cloudflare 521",
+        "error": "TimeoutError: The read operation timed out",
         "fallback": "https://nova-bank-api-production-7311.up.railway.app/api/v1"
       },
       "51.75.64.28": {
-        "status": "ok",
-        "role": "NovaONE RPC, Nova Swap, OneX node"
+        "status": "down",
+        "role": "NovaONE RPC, Nova Swap, OneX node",
+        "error": "ConnectionResetError: [Errno 104] Connection reset by peer"
       },
       "nrw-world-chain-production-6029.up.railway.app": {
         "status": "ok",
         "role": "NRW World Chain RPC"
+      },
+      "nrw-central-bank-api-production.up.railway.app": {
+        "status": "ok",
+        "role": "NRW Central Bank API"
       }
     },
     "recommended": {
@@ -2402,13 +2767,15 @@
         "https://novaone-rpc.novablockchainsystem.com"
       ],
       "novaOneExplorer": "https://novaone.novablockchain.it.com/",
-      "novaProductionRpc": "https://nova-bank-api-production-7311.up.railway.app/rpc",
+      "novaProductionRpc": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+      "novaProductionRpcPublic": "https://nova-bank-api-production-7311.up.railway.app/rpc",
       "dbisRpc": "https://rpc.defi-oracle.io",
-      "anakaBridge": "https://bridge.anakachain.com"
+      "anakaBridge": "https://bridge.anakachain.com",
+      "alltraRpc": "https://mainnet-rpc.alltra.global"
     }
   },
   "integrations": {
-    "source": "live-api",
+    "source": "live-api-health-adjusted",
     "novaBank": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
     "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
     "novaSwapFallback": "http://51.75.64.28/swap",
@@ -2418,19 +2785,66 @@
     "novaOneExplorer": "https://novaone.novablockchain.it.com/",
     "onexEcosystem": {
       "novaBank": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
-      "novaSwap": "http://51.75.64.28/swap",
-      "walletApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet-ecosystem",
-      "nrwCentralBank": "https://novablockchainsystem.com/api/v1",
-      "nrwWorldChain": "https://novablockchainsystem.com/nrw-rpc/",
-      "novaOneRpc": "https://novablockchainsystem.com/novaone-rpc/",
-      "novaOneExplorer": "https://novaone.novablockchainsystem.com/",
+      "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
+      "walletApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet/networks",
+      "nrwCentralBank": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
+      "nrwWorldChain": "https://nrw-world-chain-production-6029.up.railway.app",
+      "novaOneRpc": "http://51.75.64.28/novaone-rpc/",
+      "novaOneExplorer": "https://novaone.novablockchain.it.com/",
       "defiOracleRpc": "https://rpc.defi-oracle.io",
       "defiOracleExplorer": "https://explorer.defi-oracle.io",
       "defiOracleWallet": "https://wallet.defi-oracle.io/wallet/",
       "anakaBridge": "https://bridge.anakachain.com",
-      "bridgeProject": "/bridge-project"
+      "bridgeProject": "/bridge-project",
+      "novaSwapFallback": "http://51.75.64.28/swap",
+      "walletTokens": "https://nova-bank-api-production-7311.up.railway.app/api/v1/chains/ecosystem/tokens"
     },
     "walletNetworksEndpoint": "https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet/networks",
-    "ecosystemTokensEndpoint": "https://nova-bank-api-production-7311.up.railway.app/api/v1/chains/ecosystem/tokens"
-  }
+    "ecosystemTokensEndpoint": "https://nova-bank-api-production-7311.up.railway.app/api/v1/chains/ecosystem/tokens",
+    "productionNodeStatus": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/status"
+  },
+  "knownIssues": [
+    {
+      "id": "nbs-domain-down",
+      "severity": "high",
+      "component": "novablockchainsystem.com",
+      "summary": "Primary public domain returns 521/timeout/403; wallet API still advertises it",
+      "fixIn": "Nova Bank API source + Cloudflare origin"
+    },
+    {
+      "id": "novaone-rpc-outage",
+      "severity": "critical",
+      "component": "NovaONE RPC",
+      "summary": "No healthy NovaONE JSON-RPC endpoint",
+      "fixIn": "VPS / Cloudflare / Besu node ops"
+    },
+    {
+      "id": "production-node-disconnected",
+      "severity": "high",
+      "component": "Nova Production Node",
+      "summary": "edge and upstream RPC disconnected; public /rpc 404",
+      "fixIn": "Nova Bank API deployment (host.docker.internal / 28545 upstream)"
+    },
+    {
+      "id": "wallet-ecosystem-404",
+      "severity": "medium",
+      "component": "API routes",
+      "summary": "/api/v1/wallet-ecosystem returns 404; docs still reference it",
+      "fixIn": "Nova Bank API source"
+    },
+    {
+      "id": "chains-status-timeout",
+      "severity": "medium",
+      "component": "/api/v1/chains/status",
+      "summary": "Endpoint often times out; uses broken anakatech / internal nrw-world RPCs",
+      "fixIn": "Nova Bank API source"
+    },
+    {
+      "id": "ethereum-source-bridge-null",
+      "severity": "low",
+      "component": "deployed.ethereumSourceBridge",
+      "summary": "Ethereum source bridge address not deployed",
+      "fixIn": "Bridge deployment"
+    }
+  ]
 }

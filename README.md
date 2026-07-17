@@ -1,79 +1,83 @@
 # Nova Bank Ecosystem Manifest
 
-This repository holds the **canonical ecosystem manifest** for the Anakatech LLC Nova fintech stack. It is a configuration snapshot — not the Nova Bank application source.
+Canonical ecosystem manifest for the Anakatech LLC Nova fintech stack.
+This repo is **configuration + docs**, not the Nova Bank application source.
 
 - **Live Nova Bank:** https://nova-bank-api-production-7311.up.railway.app
 - **API base:** https://nova-bank-api-production-7311.up.railway.app/api/v1
 - **Nova Swap:** https://nova-bank-api-production-7311.up.railway.app/swap
-
-The manifest was originally generated from the `nova` monorepo (`generatedFrom: "nova"`). Application code, wallet app (`apps/wallet`), and deployment configs live in that separate repository.
+- **Production issues:** [docs/PRODUCTION-ISSUES.md](docs/PRODUCTION-ISSUES.md)
 
 ## Contents
 
 | Path | Purpose |
 |------|---------|
-| [`ECOSYSTEM.json`](ECOSYSTEM.json) | Networks, tokens, products, bridges, wallet providers |
-| [`docs/ECOSYSTEM-INDEX.md`](docs/ECOSYSTEM-INDEX.md) | Index of mirrored public documentation |
-| [`scripts/sync-ecosystem.py`](scripts/sync-ecosystem.py) | Regenerate manifest from live API |
-| [`scripts/verify-ecosystem.mjs`](scripts/verify-ecosystem.mjs) | Health-check key endpoints |
+| [`ECOSYSTEM.json`](ECOSYSTEM.json) | Networks, tokens, products, bridges, health, known issues |
+| [`docs/ECOSYSTEM-INDEX.md`](docs/ECOSYSTEM-INDEX.md) | Mirrored public documentation index |
+| [`docs/PRODUCTION-ISSUES.md`](docs/PRODUCTION-ISSUES.md) | Live outages that need API/infra repos |
+| [`scripts/sync-ecosystem.py`](scripts/sync-ecosystem.py) | Health-probe + regenerate manifest |
+| [`scripts/verify-ecosystem.mjs`](scripts/verify-ecosystem.mjs) | CI-friendly endpoint checks |
 
-## Refreshing the manifest
+## Quick verify
 
 ```bash
-# 1. Fetch live API data into tmp/api/
+node scripts/verify-ecosystem.mjs
+```
+
+Required checks cover Railway bank/swap, NRW chain + central bank, DeFi Oracle, Anaka Bridge, and Alltra. NovaONE VPS / `novablockchainsystem.com` are optional warnings when flaky.
+
+## Refresh the manifest
+
+```bash
 mkdir -p tmp/api
 BASE=https://nova-bank-api-production-7311.up.railway.app/api/v1
 curl -sS "$BASE/global/status" -o tmp/api/global-status.json
 curl -sS "$BASE/wallet/networks" -o tmp/api/wallet-networks.json
 curl -sS "$BASE/chains/ecosystem/tokens" -o tmp/api/ecosystem-tokens.json
-curl -sS "$BASE/nova-chain/status" -o tmp/api/nova-chain-status.json
 curl -sS "$BASE/onex/ecosystem" -o tmp/api/onex-ecosystem.json
+curl -sS "$BASE/production-node/status" -o tmp/api/production-node-status.json
 
-# 2. Regenerate ECOSYSTEM.json (applies working-URL policy)
 python3 scripts/sync-ecosystem.py
-
-# 3. Validate
 python3 -m json.tool ECOSYSTEM.json > /dev/null
 node scripts/verify-ecosystem.mjs
 ```
 
-## URL health and fallbacks
+`sync-ecosystem.py` probes RPC candidates and orders NovaONE URLs by live health. It does **not** blindly copy dead hostnames from `/wallet/networks`.
 
-As of July 2026, some domains advertised by the live wallet API are **down** while Railway and VPS endpoints work. The manifest uses **verified working URLs as primary** and documents fallbacks in `ECOSYSTEM.json` → `urlHealth`.
+## URL policy
 
-| Service | Primary (working) | Known issue |
-|---------|-------------------|-------------|
-| Nova Bank API | `nova-bank-api-production-7311.up.railway.app` | — |
-| NovaONE RPC | `http://51.75.64.28/novaone-rpc/` | `novablockchainsystem.com` returns 521 |
-| NRW World RPC | `nrw-world-chain-production-6029.up.railway.app` | `novablockchainsystem.com/nrw-rpc/` down |
-| Nova Swap UI | Railway `/swap` | VPS fallback: `http://51.75.64.28/swap` |
-| Bitcoin | Explorer only (`mempool.space`) | `rpcUrls` intentionally empty |
+| Service | Primary | Notes |
+|---------|---------|-------|
+| Nova Bank API | Railway | Working |
+| Nova Swap UI | Railway `/swap` | VPS fallback may be down |
+| NRW World RPC | Railway NRW chain | Working |
+| NRW Central Bank | Railway | Working |
+| NovaONE RPC | Health-probed candidates | Often degraded — see `urlHealth` |
+| Nova Production Node | `/api/v1/production-node/rpc` | Currently disconnected |
+| Bitcoin | Explorer only | `rpcUrls` empty by design |
 
-### Undeployed / intentional gaps
+See `ECOSYSTEM.json` → `urlHealth` and `knownIssues` for the latest probe results.
 
-- **`deployed.ethereumSourceBridge`** is `null` — Ethereum source bridge not yet deployed.
-- **NRW World `explorerUrl`** points at the NRW Central Bank API (status surface); no dedicated block explorer is configured.
-- Production API bugs (wallet/networks advertising dead domains, `/chains/status` broken RPCs) require fixes in the **Nova Bank API source repo**, not this manifest.
+## Intentional gaps
+
+- **`deployed.ethereumSourceBridge`** is `null` (undeployed).
+- **NRW explorer** points at the central bank API status surface.
+- **API source bugs** (dead domain ads, production-node networking, `/wallet-ecosystem` 404) are tracked in [docs/PRODUCTION-ISSUES.md](docs/PRODUCTION-ISSUES.md).
 
 ## Documentation
 
-Public docs are served by the API at `/api/v1/public/docs/:slug` and mirrored under [`docs/`](docs/):
+Mirrored from `/api/v1/public/docs/:slug`:
 
-- [`ecosystem`](docs/ecosystem.md) — Ecosystem whitepaper
-- [`nova-one`](docs/nova-one.md) — NovaONE chain
-- [`nrw-world`](docs/nrw-world.md) — NRW World Chain
-- [`kyc`](docs/kyc.md), [`privacy`](docs/privacy.md), [`whitepaper`](docs/whitepaper.md)
-- [`dbis-138`](docs/dbis-138.md), [`anakachain`](docs/anakachain.md), [`protocol`](docs/protocol.md)
+- [Ecosystem](docs/ecosystem.md) · [NovaONE](docs/nova-one.md) · [NRW World](docs/nrw-world.md)
+- [KYC](docs/kyc.md) · [Privacy](docs/privacy.md) · [Whitepaper](docs/whitepaper.md)
+- [DBIS 138](docs/dbis-138.md) · [AnakaChain](docs/anakachain.md) · [Protocol](docs/protocol.md)
 
-## Products in the ecosystem
+## Products
 
-- **Nova Bank Online** — custodial neobank (ledger, cards, fiat/crypto vaults)
-- **Nova Swap** — Marionette trading / DEX
-- **Nova Wallet** — non-custodial mobile signer (`apps/wallet` in nova monorepo)
-- **NovaONE** — QBFT EVM chain (22016)
-- **NRW World Chain** — settlement chain (33001)
-- **DeFi Oracle (DBIS 138)** — custody chain
-- **AnakaChain Bridge** — cross-chain bridge (11013)
+- **Nova Bank Online** — custodial neobank (ledger, cards, vaults)
+- **Nova Swap** — Marionette DEX
+- **Nova Wallet** — non-custodial signer (`apps/wallet` in nova monorepo)
+- **NovaONE** (22016) · **NRW World** (33001) · **DBIS 138** · **AnakaChain Bridge** (11013)
 
 ## License
 

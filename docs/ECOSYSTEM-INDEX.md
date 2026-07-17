@@ -4,6 +4,10 @@ Canonical public docs mirrored from the live Nova Bank API.
 
 Live API: https://nova-bank-api-production-7311.up.railway.app
 
+## Operations
+
+- [Production Issues](PRODUCTION-ISSUES.md) — live outages and API-source fixes
+
 ## Documents
 
 - [Ecosystem Whitepaper](ecosystem.md) — `/api/v1/public/docs/ecosystem`
