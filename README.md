@@ -22,14 +22,14 @@ Canonical ecosystem manifest for the Anakatech LLC Nova fintech stack. This is *
 
 ## TyganPay onboarding (current blocker)
 
-Invite token `nova-660c3e14…` returns **423** `onboarding_link_view_limit_blocked`. Ask TyganPay admin/Sylvain to reset the link, then submit using:
+Invite token `nova-660c3e14…` returns **423** `onboarding_link_view_limit_blocked`. Ask TyganPay admin/Sylvain to reset the link (template: [`tyganpay/RESET-REQUEST.md`](tyganpay/RESET-REQUEST.md)), then submit using:
 
 ```bash
 python3 scripts/check-tyganpay-invite.py
 # After reset: paste fields from tyganpay/form-payload.json
 ```
 
-See [`docs/tyganpay-onboarding.md`](docs/tyganpay-onboarding.md).
+Job checklist: [`docs/JOB-COMPLETE.md`](docs/JOB-COMPLETE.md) · Guide: [`docs/tyganpay-onboarding.md`](docs/tyganpay-onboarding.md).
 
 ## Anaka Connect VPS / wallet integrity
 

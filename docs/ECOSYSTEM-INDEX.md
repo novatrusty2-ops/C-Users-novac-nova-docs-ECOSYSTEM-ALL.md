@@ -16,5 +16,6 @@ Live API: https://nova-bank-api-production-7311.up.railway.app
 - [AnakaChain Bridge (11013)](anakachain.md) — `/api/v1/public/docs/anakachain`
 - [Nova Sync Protocol](protocol.md) — `/api/v1/public/docs/protocol`
 - [TyganPay onboarding](tyganpay-onboarding.md) — partner rail pack (invite + form payload)
+- [Job complete checklist](JOB-COMPLETE.md) — done items + external handoffs
 - [Wallet integrity diagnosis](wallet-integrity-diagnosis.md) — Railway “Wallet not found”
 - [Anaka Connect VPS](anaka-connect-vps.md) — `51.75.64.28` middleware runbook

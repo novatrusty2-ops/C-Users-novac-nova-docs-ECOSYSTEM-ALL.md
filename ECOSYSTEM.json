@@ -2665,11 +2665,13 @@
     "onboardingPackPath": "tyganpay/nova-onboarding-pack.json",
     "onboardingGuidePath": "docs/tyganpay-onboarding.md",
     "formPayloadPath": "tyganpay/form-payload.json",
-    "statusAsOf": "2026-07-17T13:45:33.939Z",
+    "statusAsOf": "2026-07-17T13:55:00.000Z",
     "inviteStatus": "onboarding_link_view_limit_blocked",
     "clientEntityFromNovaApi": "Nova Bank Malta Ltd",
     "platformOperator": "Anakatech LLC",
     "notes": "Invite exhausted 15 client views without a submitted change. Use form-payload.json + drafts after TyganPay resets the invite.",
-    "draftsPath": "tyganpay/drafts"
+    "draftsPath": "tyganpay/drafts",
+    "resetRequestPath": "tyganpay/RESET-REQUEST.md",
+    "jobCompletePath": "docs/JOB-COMPLETE.md"
   }
 }
