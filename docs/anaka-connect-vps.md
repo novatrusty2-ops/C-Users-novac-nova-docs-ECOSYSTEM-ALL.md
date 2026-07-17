@@ -48,7 +48,18 @@ SSH (`:22`) accepts connections from this environment, but **no deploy key / cre
 
 ## Bring it back up (ops runbook)
 
-On a host with SSH access:
+**Automated (preferred):** from this repo, with SSH key:
+
+```bash
+export ANAKA_CONNECT_SSH_USER=root          # or deploy user
+export ANAKA_CONNECT_SSH_KEY=~/.ssh/id_ed25519
+# optional: export ANAKA_CONNECT_SSH_PORT=2222
+bash scripts/restart-anaka-connect.sh
+```
+
+Recheck 2026-07-17 from cloud agent: TCP open on 22/2222/80/3100/…; **SSH kex reset** and **HTTP reset** — credentials or console access still required.
+
+Manual SSH:
 
 ```bash
 ssh root@51.75.64.28   # or the deploy user for vps-58bb86af

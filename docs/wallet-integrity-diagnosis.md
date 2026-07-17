@@ -8,6 +8,15 @@
 
 Transfers fail with `404 Wallet not found` when `fromAccountId` is a **4-digit account number**. The transfer path looks up wallets by **UUID primary key only** and does not resolve account numbers. This is reproducible for a freshly registered user's own funded-path account (`1140` → UUID works; `"1140"` → Wallet not found).
 
+**Live check 2026-07-17:** OpenAPI `TransferByAccount.fromAccountId` is still `format: uuid`. `GET /api/v1/admin/wallets/health` → **404** (NestJS patch not deployed). Apply with:
+
+```bash
+export NOVA_API_ROOT=/path/to/nova/apps/api
+bash scripts/apply-wallet-integrity-patch.sh
+```
+
+Client workaround (resolve → UUID → transfer): `scripts/transfer-by-account-resolve.py`.
+
 A secondary gap is likely: ledger import / Real Fiat promotion can leave **account-registry rows without transferable wallet rows**. That cannot be confirmed for 6379/9873/5017 without the owning JWT (non-owner UUID lookups also return the same 404).
 
 ## 1. Where is the wallet layer?

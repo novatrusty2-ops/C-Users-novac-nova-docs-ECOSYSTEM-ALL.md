@@ -2527,11 +2527,21 @@
       "officer-auth"
     ],
     "statusProbe": {
-      "probedAt": "2026-07-16T16:28:00Z",
+      "probedAt": "2026-07-17T13:59:03Z",
       "dns": "ok",
       "tcpAccept": true,
+      "portsOpen": [
+        22,
+        2222,
+        80,
+        3000,
+        3100,
+        28545
+      ],
+      "ssh": "kex-connection-reset",
       "http": "connection-reset",
-      "interpretation": "host up; Anaka Connect app stack not serving \u2014 restart required on VPS"
+      "interpretation": "host up; SSH and HTTP app stack not serving \u2014 restart requires OVH/SSH credentials",
+      "restartScript": "scripts/restart-anaka-connect.sh"
     }
   },
   "api": {
@@ -2551,7 +2561,7 @@
     "publicDocs": "/api/v1/public/docs/:slug"
   },
   "walletIntegrity": {
-    "status": "patch-ready",
+    "status": "patch-ready-not-deployed",
     "diagnosisDoc": "docs/wallet-integrity-diagnosis.md",
     "anakaConnectDoc": "docs/anaka-connect-vps.md",
     "apiPatch": "patches/nova-bank-api/wallet-integrity",
@@ -2562,7 +2572,12 @@
       "6379",
       "9873",
       "5017"
-    ]
+    ],
+    "liveOpenApiFromAccountId": "uuid",
+    "liveAdminHealth": "404",
+    "applyScript": "scripts/apply-wallet-integrity-patch.sh",
+    "clientWorkaround": "scripts/transfer-by-account-resolve.py",
+    "blocker": "Private nova NestJS monorepo not accessible from this agent; set NOVA_API_ROOT and deploy to Railway"
   },
   "docs": {
     "index": "docs/ECOSYSTEM-INDEX.md",

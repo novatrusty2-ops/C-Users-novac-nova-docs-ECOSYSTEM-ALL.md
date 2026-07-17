@@ -33,6 +33,15 @@ Job checklist: [`docs/JOB-COMPLETE.md`](docs/JOB-COMPLETE.md) · Guide: [`docs/t
 
 ## Anaka Connect VPS / wallet integrity
 
+Ops scripts (need your credentials / nova checkout):
+
+```bash
+bash scripts/restart-anaka-connect.sh          # step 3 — VPS
+export NOVA_API_ROOT=/path/to/nova/apps/api
+bash scripts/apply-wallet-integrity-patch.sh  # step 4 — NestJS patch
+```
+
+
 `51.75.64.28` is **Anaka Connect** (`ANAKA_CONNECT_BASE` / `novaBankVPS`). TCP accepts; HTTP may reset when the app stack is down.
 
 | Artifact | Path |

@@ -32,13 +32,30 @@ python3 scripts/check-tyganpay-invite.py   # expect HTTP 200
 # Paste tyganpay/form-payload.json fields; upload signed docs; submit once
 ```
 
-### 2. Restart Anaka Connect VPS
+### 2. Restart Anaka Connect VPS — **blocked here**
 
-Host `51.75.64.28` — TCP accepts, HTTP resets. Follow [`anaka-connect-vps.md`](anaka-connect-vps.md) (SSH required).
+Host `51.75.64.28` — TCP accepts on 22/80/3100/…; **SSH handshake + HTTP reset**. No SSH key in this agent.
 
-### 3. Apply wallet patch in Nova API source
+```bash
+# When you have access:
+export ANAKA_CONNECT_SSH_USER=root
+export ANAKA_CONNECT_SSH_KEY=/path/to/key
+bash scripts/restart-anaka-connect.sh
+```
 
-Copy [`patches/nova-bank-api/wallet-integrity`](../patches/nova-bank-api/wallet-integrity) into the private NestJS `nova` repo and deploy to Railway.
+Or use OVH console / [`anaka-connect-vps.md`](anaka-connect-vps.md).
+
+### 3. Apply wallet patch in Nova API source — **blocked here**
+
+Private NestJS `nova` monorepo is **not** in GitHub under `novatrusty2-ops` (only this docs repo + empty placeholders). Live OpenAPI still requires `fromAccountId` **uuid**; `/admin/wallets/health` → 404.
+
+```bash
+export NOVA_API_ROOT=/path/to/nova/apps/api
+bash scripts/apply-wallet-integrity-patch.sh
+# then wire module, implement store, deploy Railway
+```
+
+Until deploy, use client resolve workaround: `scripts/transfer-by-account-resolve.py`.
 
 ## Superseded open PRs
 
