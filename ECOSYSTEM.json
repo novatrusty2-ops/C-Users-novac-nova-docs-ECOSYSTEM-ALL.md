@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "generatedAt": "2026-06-27T21:48:31.714Z",
+  "version": "1.0.1",
+  "generatedAt": "2026-07-17T14:24:54.884Z",
   "generatedFrom": "nova",
   "organization": "Anakatech LLC",
   "products": {
@@ -8,29 +8,30 @@
       "name": "Nova Bank Online",
       "url": "https://nova-bank-api-production-7311.up.railway.app",
       "api": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
-      "role": "custodial neobank — ledger, cards, fiat/crypto vaults"
+      "role": "custodial neobank \u2014 ledger, cards, fiat/crypto vaults"
     },
     "novaSwap": {
       "name": "Nova Swap",
       "url": "https://nova-bank-api-production-7311.up.railway.app/swap",
-      "role": "Marionette trading / DEX"
+      "role": "Marionette trading / DEX",
+      "fallbackUrl": "http://51.75.64.28/swap"
     },
     "novaWallet": {
       "name": "Nova Wallet",
       "bundleId": "llc.anakatech.novawallet",
-      "role": "non-custodial mobile signer — NovaONE + NRW World",
+      "role": "non-custodial mobile signer \u2014 NovaONE + NRW World",
       "repoPath": "apps/wallet"
     },
     "novaOneExplorer": {
       "name": "Nova Chain Explorer",
-      "url": "https://novaone.anakatech.llc/",
+      "url": "https://novaone.novablockchain.it.com/",
       "role": "NovaONE block explorer + bridge adapter registry"
     },
     "nrwCentralBank": {
       "name": "NRW Nova World Central Bank",
       "url": "https://nrw-central-bank-api-production.up.railway.app",
       "api": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
-      "role": "virtual central bank — pools, settlement, wires"
+      "role": "virtual central bank \u2014 pools, settlement, wires"
     },
     "nrwWorldChain": {
       "name": "NRW World Chain",
@@ -47,17 +48,37 @@
       "name": "Hybx Fineract",
       "url": "https://fineract.hybxfinance.com",
       "role": "core banking / settlement middleware"
+    },
+    "novaProductionNode": {
+      "name": "Nova Production Node",
+      "chainId": 9001,
+      "rpc": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+      "publicRpc": "https://nova-bank-api-production-7311.up.railway.app/rpc",
+      "status": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/status",
+      "role": "custody EVM node (currently degraded \u2014 edge/upstream disconnected)",
+      "health": "degraded"
     }
   },
   "productionUrls": {
     "novaBankApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
     "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
+    "novaSwapFallback": "http://51.75.64.28/swap",
     "nrwCentralBank": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
     "nrwWorldChain": "https://nrw-world-chain-production-6029.up.railway.app",
-    "novaOneRpc": "https://anakatech.llc/novaone-rpc/",
-    "novaOneExplorer": "https://novaone.anakatech.llc/",
+    "novaOneRpc": "http://51.75.64.28/novaone-rpc/",
+    "novaOneRpcFallbacks": [
+      "https://novablockchain.it.com/novaone-rpc/",
+      "https://novaone-rpc.novablockchain.it.com",
+      "https://anakatech.llc/novaone-rpc/",
+      "https://novablockchainsystem.com/novaone-rpc/",
+      "https://novaone-rpc.novablockchainsystem.com"
+    ],
+    "novaOneExplorer": "https://novaone.novablockchain.it.com/",
+    "novaProductionRpc": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+    "novaProductionRpcPublic": "https://nova-bank-api-production-7311.up.railway.app/rpc",
     "dbisRpc": "https://rpc.defi-oracle.io",
-    "anakaBridge": "https://bridge.anakachain.com"
+    "anakaBridge": "https://bridge.anakachain.com",
+    "alltraRpc": "https://mainnet-rpc.alltra.global"
   },
   "onexLocal": {
     "bridgeBase": "http://127.0.0.1:9338",
@@ -76,8 +97,8 @@
   },
   "novaOne": {
     "chainId": 22016,
-    "rpc": "https://anakatech.llc/novaone-rpc/",
-    "explorer": "https://novaone.anakatech.llc/",
+    "rpc": "http://51.75.64.28/novaone-rpc/",
+    "explorer": "https://novaone.novablockchain.it.com/",
     "connection": {
       "chainName": "NovaONE",
       "chainId": 22016,
@@ -97,34 +118,40 @@
       "permissioned": true,
       "rpcEndpoints": [
         {
-          "id": "public",
-          "label": "Public RPC (path)",
-          "url": "https://anakatech.llc/novaone-rpc/"
+          "id": "rpc-0",
+          "label": "Unhealthy candidate #1",
+          "url": "http://51.75.64.28/novaone-rpc/",
+          "health": "down"
         },
         {
-          "id": "subdomain",
-          "label": "Subdomain RPC (propagating)",
-          "url": "https://novaone-rpc.anakatech.llc"
+          "id": "rpc-1",
+          "label": "Unhealthy candidate #2",
+          "url": "https://novablockchain.it.com/novaone-rpc/",
+          "health": "down"
         },
         {
-          "id": "lan-primary",
-          "label": "LAN primary (socat → node1)",
-          "url": "http://192.168.1.50:8554"
+          "id": "rpc-2",
+          "label": "Unhealthy candidate #3",
+          "url": "https://novaone-rpc.novablockchain.it.com",
+          "health": "down"
         },
         {
-          "id": "lan-node1",
-          "label": "LAN node1 direct",
-          "url": "http://192.168.1.50:8551"
+          "id": "rpc-3",
+          "label": "Unhealthy candidate #4",
+          "url": "https://anakatech.llc/novaone-rpc/",
+          "health": "down"
         },
         {
-          "id": "lan-node2",
-          "label": "LAN node2",
-          "url": "http://192.168.1.50:8552"
+          "id": "rpc-4",
+          "label": "Unhealthy candidate #5",
+          "url": "https://novablockchainsystem.com/novaone-rpc/",
+          "health": "down"
         },
         {
-          "id": "lan-node3",
-          "label": "LAN node3",
-          "url": "http://192.168.1.50:8553"
+          "id": "rpc-5",
+          "label": "Unhealthy candidate #6",
+          "url": "https://novaone-rpc.novablockchainsystem.com",
+          "health": "down"
         }
       ],
       "rpcApis": [
@@ -154,13 +181,16 @@
         }
       ],
       "quirks": [
-        "Zero gas — eth_gasPrice returns 0x0; some libraries reject gasPrice: 0",
-        "Permissioned QBFT — only validators propose; add/remove via qbft_proposeValidatorVote",
-        "HTTP JSON-RPC only — no WebSocket subscriptions",
-        "Public RPC — no auth; Cloudflare → nginx → socat → node1",
-        "Subdomain novaone-rpc.anakatech.llc may still be propagating; path URL is live"
+        "Zero gas \u2014 eth_gasPrice returns 0x0; some libraries reject gasPrice: 0",
+        "Permissioned QBFT \u2014 only validators propose; add/remove via qbft_proposeValidatorVote",
+        "HTTP JSON-RPC only \u2014 no WebSocket subscriptions",
+        "Public RPC \u2014 no auth; Cloudflare \u2192 nginx \u2192 socat \u2192 node1",
+        "Primary RPC candidate after health probe: http://51.75.64.28/novaone-rpc/",
+        "novablockchainsystem.com unreliable \u2014 wallet API may still advertise it",
+        "VPS 51.75.64.28 and HTTPS public RPCs may be down; re-run scripts/sync-ecosystem.py"
       ]
-    }
+    },
+    "health": "down"
   },
   "defiOracle": {
     "chainId": 138,
@@ -186,10 +216,15 @@
         "Private QBFT Mesh"
       ],
       "defaultRpcUrls": [
+        "http://51.75.64.28/novaone-rpc/",
+        "https://novablockchain.it.com/novaone-rpc/",
+        "https://novaone-rpc.novablockchain.it.com",
         "https://anakatech.llc/novaone-rpc/",
-        "https://novaone-rpc.anakatech.llc",
-        "http://192.168.1.50:8554"
-      ]
+        "https://novablockchainsystem.com/novaone-rpc/",
+        "https://novaone-rpc.novablockchainsystem.com"
+      ],
+      "defaultExplorerUrl": "https://novaone.novablockchain.it.com/",
+      "health": "down"
     },
     {
       "id": "dbis-138",
@@ -205,7 +240,8 @@
       "defaultRpcUrls": [
         "https://rpc.defi-oracle.io"
       ],
-      "defaultExplorerUrl": "https://explorer.defi-oracle.io"
+      "defaultExplorerUrl": "https://explorer.defi-oracle.io",
+      "health": "ok"
     },
     {
       "id": "anaka-bridge",
@@ -217,7 +253,8 @@
       ],
       "defaultRpcUrls": [
         "https://bridge.anakachain.com"
-      ]
+      ],
+      "health": "ok"
     },
     {
       "id": "alltra-mainnet",
@@ -225,8 +262,37 @@
       "chainId": 651940,
       "role": "external",
       "defaultRpcUrls": [
-        "https://mainnet-rpc.alltra.global"
-      ]
+        "https://mainnet-rpc.alltra.global",
+        "http://103.42.59.54:8545",
+        "http://103.42.59.55:8545",
+        "https://alltra-rpc.novablockchainsystem.com/"
+      ],
+      "health": "ok"
+    },
+    {
+      "id": "nova-production",
+      "label": "Nova Production Node",
+      "chainId": 9001,
+      "role": "custody",
+      "defaultRpcUrls": [
+        "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+        "https://nova-bank-api-production-7311.up.railway.app/rpc",
+        "http://51.75.64.28:28545/rpc"
+      ],
+      "defaultExplorerUrl": "http://51.75.64.28:28545/explorer/",
+      "health": "degraded"
+    },
+    {
+      "id": "nrw-world",
+      "label": "NRW World Chain",
+      "chainId": 33001,
+      "role": "settlement",
+      "defaultRpcUrls": [
+        "https://nrw-world-chain-production-6029.up.railway.app",
+        "https://novablockchainsystem.com/nrw-rpc/"
+      ],
+      "explorerUrl": "https://nrw-central-bank-api-production.up.railway.app",
+      "health": "ok"
     }
   ],
   "walletNetworks": [
@@ -238,15 +304,41 @@
       "nativeSymbol": "NOVA",
       "decimals": 18,
       "rpcUrls": [
+        "http://51.75.64.28/novaone-rpc/",
+        "https://novablockchain.it.com/novaone-rpc/",
+        "https://novaone-rpc.novablockchain.it.com",
         "https://anakatech.llc/novaone-rpc/",
-        "https://novaone-rpc.anakatech.llc"
+        "https://novablockchainsystem.com/novaone-rpc/",
+        "https://novaone-rpc.novablockchainsystem.com"
       ],
-      "explorerUrl": "https://novaone.anakatech.llc/",
+      "explorerUrl": "https://novaone.novablockchain.it.com/",
       "swapEnabled": true,
       "tradable": true,
       "transferable": true,
       "decentralized": true,
-      "ecosystemRole": "trading"
+      "ecosystemRole": "trading",
+      "health": "degraded"
+    },
+    {
+      "id": "nova-production",
+      "label": "Nova Production Node",
+      "chainId": 9001,
+      "kind": "evm",
+      "nativeSymbol": "NOVA",
+      "decimals": 18,
+      "rpcUrls": [
+        "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+        "https://nova-bank-api-production-7311.up.railway.app/rpc",
+        "http://51.75.64.28:28545/rpc"
+      ],
+      "explorerUrl": "http://51.75.64.28:28545/explorer/",
+      "swapEnabled": true,
+      "tradable": true,
+      "transferable": true,
+      "decentralized": true,
+      "ecosystemRole": "custody",
+      "health": "degraded",
+      "healthNote": "production-node edge/upstream disconnected; /rpc 404; VPS 51.75.64.28 down"
     },
     {
       "id": "nrw-world",
@@ -256,14 +348,17 @@
       "nativeSymbol": "NRW",
       "decimals": 18,
       "rpcUrls": [
-        "https://nrw-world-chain-production-6029.up.railway.app"
+        "https://nrw-world-chain-production-6029.up.railway.app",
+        "https://novablockchainsystem.com/nrw-rpc/"
       ],
       "explorerUrl": "https://nrw-central-bank-api-production.up.railway.app",
       "swapEnabled": true,
       "tradable": true,
       "transferable": true,
       "decentralized": true,
-      "ecosystemRole": "settlement"
+      "ecosystemRole": "settlement",
+      "health": "ok",
+      "explorerNote": "NRW uses central bank API as status surface (no dedicated explorer)"
     },
     {
       "id": "dbis-138",
@@ -307,7 +402,8 @@
       "nativeSymbol": "ETH",
       "decimals": 18,
       "rpcUrls": [
-        "https://eth.llamarpc.com"
+        "https://eth.llamarpc.com",
+        "https://side-rough-telescope.ethereum-mainnet.quiknode.pro/b36288d4817e418d1d30c2f69ee917d1c829de34"
       ],
       "explorerUrl": "https://etherscan.io",
       "swapEnabled": true,
@@ -377,7 +473,29 @@
       "tradable": true,
       "transferable": true,
       "decentralized": true,
-      "ecosystemRole": "external"
+      "ecosystemRole": "external",
+      "healthNote": "Explorer-only \u2014 rpcUrls intentionally empty"
+    },
+    {
+      "id": "alltra-mainnet",
+      "label": "Alltra Global World",
+      "chainId": 651940,
+      "kind": "evm",
+      "nativeSymbol": "ALL",
+      "decimals": 18,
+      "rpcUrls": [
+        "https://mainnet-rpc.alltra.global",
+        "http://103.42.59.54:8545",
+        "http://103.42.59.55:8545",
+        "https://alltra-rpc.novablockchainsystem.com/"
+      ],
+      "explorerUrl": "https://alltra.global/",
+      "swapEnabled": true,
+      "tradable": true,
+      "transferable": true,
+      "decentralized": true,
+      "ecosystemRole": "trading",
+      "health": "ok"
     },
     {
       "id": "nova-bank",
@@ -397,31 +515,18 @@
   ],
   "tradableTokens": [
     {
-      "symbol": "NOVA",
-      "name": "NovaONE Native",
+      "symbol": "$BUCKS",
+      "name": "DOLLAR BUCKS",
       "decimals": 18,
-      "assetClass": "native",
+      "assetClass": "crypto",
       "chains": [
-        "nova-one"
-      ],
-      "networks": [
+        "alltra-mainnet",
         "nova-one",
-        "nova-bank"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "NRW",
-      "name": "NRW World Native",
-      "decimals": 18,
-      "assetClass": "native",
-      "chains": [
         "nrw-world"
       ],
       "networks": [
+        "alltra-mainnet",
+        "nova-one",
         "nrw-world",
         "nova-bank"
       ],
@@ -431,15 +536,17 @@
       "decentralized": true
     },
     {
-      "symbol": "USD",
-      "name": "US Dollar",
-      "decimals": 2,
-      "assetClass": "fiat",
+      "symbol": "11::11",
+      "name": "11:11",
+      "decimals": 18,
+      "assetClass": "crypto",
       "chains": [
+        "alltra-mainnet",
         "nova-one",
         "nrw-world"
       ],
       "networks": [
+        "alltra-mainnet",
         "nova-one",
         "nrw-world",
         "nova-bank"
@@ -447,37 +554,42 @@
       "tradable": true,
       "swappable": true,
       "transferable": true,
-      "decentralized": false
+      "decentralized": true
     },
     {
-      "symbol": "EUR",
-      "name": "Euro",
-      "decimals": 2,
-      "assetClass": "fiat",
+      "symbol": "ACX",
+      "name": "ACX",
+      "decimals": 18,
+      "assetClass": "crypto",
       "chains": [
+        "alltra-mainnet",
         "nova-one",
         "nrw-world"
       ],
       "networks": [
+        "alltra-mainnet",
         "nova-one",
         "nrw-world",
-        "nova-bank"
+        "nova-bank",
+        "dbis-138"
       ],
       "tradable": true,
       "swappable": true,
       "transferable": true,
-      "decentralized": false
+      "decentralized": true
     },
     {
-      "symbol": "GBP",
-      "name": "British Pound",
-      "decimals": 2,
-      "assetClass": "fiat",
+      "symbol": "ALL",
+      "name": "ALLTRA Native",
+      "decimals": 18,
+      "assetClass": "native",
       "chains": [
+        "alltra-mainnet",
         "nova-one",
         "nrw-world"
       ],
       "networks": [
+        "alltra-mainnet",
         "nova-one",
         "nrw-world",
         "nova-bank"
@@ -485,7 +597,45 @@
       "tradable": true,
       "swappable": true,
       "transferable": true,
-      "decentralized": false
+      "decentralized": true
+    },
+    {
+      "symbol": "ANAKA",
+      "name": "Anaka Coin",
+      "decimals": 6,
+      "assetClass": "crypto",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank",
+        "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ANKA",
+      "name": "AnakaChain",
+      "decimals": 18,
+      "assetClass": "native",
+      "chains": [
+        "anaka-bridge"
+      ],
+      "networks": [
+        "anaka-bridge",
+        "nova-one",
+        "nrw-world"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
     },
     {
       "symbol": "AUD",
@@ -507,125 +657,103 @@
       "decentralized": false
     },
     {
-      "symbol": "CHF",
-      "name": "Swiss Franc",
-      "decimals": 2,
-      "assetClass": "fiat",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": false
-    },
-    {
-      "symbol": "JPY",
-      "name": "Japanese Yen",
-      "decimals": 0,
-      "assetClass": "fiat",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": false
-    },
-    {
-      "symbol": "SDG",
-      "name": "Sudanese Pound",
-      "decimals": 2,
-      "assetClass": "fiat",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": false
-    },
-    {
-      "symbol": "USDC",
-      "name": "USD Coin",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "dbis-138",
-        "anaka-bridge",
-        "ethereum",
-        "solana",
-        "tron"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "USDT",
-      "name": "Tether USD",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "dbis-138",
-        "anaka-bridge",
-        "ethereum",
-        "solana",
-        "tron"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "ETH",
-      "name": "Ether",
+      "symbol": "AUDA",
+      "name": "MOOLA",
       "decimals": 18,
       "assetClass": "crypto",
       "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
         "nova-one",
         "nrw-world",
-        "dbis-138",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "AUSDC",
+      "name": "Alltra USD Coin (USDC)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "AUSDT",
+      "name": "Alltra USD Token (USDT)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank",
+        "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "BNB",
+      "name": "BNB",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "bsc",
         "ethereum"
       ],
       "networks": [
+        "bsc",
+        "ethereum",
+        "nova-one"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "BRK",
+      "name": "Break",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
         "nova-one",
         "nrw-world",
-        "dbis-138",
-        "anaka-bridge",
-        "ethereum"
+        "nova-bank"
       ],
       "tradable": true,
       "swappable": true,
@@ -655,100 +783,10 @@
       "decentralized": true
     },
     {
-      "symbol": "TRX",
-      "name": "TRON",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "tron"
-      ],
-      "networks": [
-        "tron",
-        "nova-one",
-        "nrw-world"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "SOL",
-      "name": "Solana",
-      "decimals": 9,
-      "assetClass": "crypto",
-      "chains": [
-        "solana"
-      ],
-      "networks": [
-        "solana",
-        "nova-one",
-        "nrw-world"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "BNB",
-      "name": "BNB",
-      "decimals": 18,
-      "assetClass": "crypto",
-      "chains": [
-        "bsc",
-        "ethereum"
-      ],
-      "networks": [
-        "bsc",
-        "ethereum",
-        "nova-one"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "MATIC",
-      "name": "Polygon",
-      "decimals": 18,
-      "assetClass": "crypto",
-      "chains": [
-        "ethereum"
-      ],
-      "networks": [
-        "ethereum",
-        "nova-one"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "ANKA",
-      "name": "AnakaChain",
-      "decimals": 18,
-      "assetClass": "native",
-      "chains": [
-        "anaka-bridge"
-      ],
-      "networks": [
-        "anaka-bridge",
-        "nova-one",
-        "nrw-world"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "SHIVA",
-      "name": "Shiva Coin",
-      "decimals": 6,
-      "assetClass": "crypto",
+      "symbol": "CHF",
+      "name": "Swiss Franc",
+      "decimals": 2,
+      "assetClass": "fiat",
       "chains": [
         "nova-one",
         "nrw-world"
@@ -756,8 +794,28 @@
       "networks": [
         "nova-one",
         "nrw-world",
-        "nova-bank",
-        "dbis-138"
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": false
+    },
+    {
+      "symbol": "CHT",
+      "name": "ChatCoin",
+      "decimals": 8,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
       ],
       "tradable": true,
       "swappable": true,
@@ -765,10 +823,10 @@
       "decentralized": true
     },
     {
-      "symbol": "ACX",
-      "name": "ACX",
-      "decimals": 6,
-      "assetClass": "crypto",
+      "symbol": "CNY",
+      "name": "Sudanese Pound",
+      "decimals": 2,
+      "assetClass": "fiat",
       "chains": [
         "nova-one",
         "nrw-world"
@@ -776,137 +834,16 @@
       "networks": [
         "nova-one",
         "nrw-world",
-        "nova-bank",
-        "dbis-138"
+        "nova-bank"
       ],
       "tradable": true,
       "swappable": true,
       "transferable": true,
-      "decentralized": true
+      "decentralized": false
     },
     {
-      "symbol": "ICX",
-      "name": "ICX",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank",
-        "dbis-138"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "XRP",
-      "name": "XRP",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank",
-        "dbis-138"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "E1111",
-      "name": "11:11 Coin",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank",
-        "dbis-138"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "AUSDT",
-      "name": "Australian USDT",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank",
-        "dbis-138"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "VICTORYA",
-      "name": "Victoria Coin",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank",
-        "dbis-138"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "KUSD",
-      "name": "K USD",
-      "decimals": 6,
-      "assetClass": "crypto",
-      "chains": [
-        "nova-one",
-        "nrw-world"
-      ],
-      "networks": [
-        "nova-one",
-        "nrw-world",
-        "nova-bank",
-        "dbis-138"
-      ],
-      "tradable": true,
-      "swappable": true,
-      "transferable": true,
-      "decentralized": true
-    },
-    {
-      "symbol": "ANAKA",
-      "name": "Anaka Coin",
+      "symbol": "CUSDC",
+      "name": "Custodial USDC",
       "decimals": 6,
       "assetClass": "crypto",
       "chains": [
@@ -945,8 +882,8 @@
       "decentralized": true
     },
     {
-      "symbol": "CUSDC",
-      "name": "Custodial USDC",
+      "symbol": "E1111",
+      "name": "11:11 Coin",
       "decimals": 6,
       "assetClass": "crypto",
       "chains": [
@@ -958,6 +895,892 @@
         "nrw-world",
         "nova-bank",
         "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ETH",
+      "name": "Ether",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "nova-one",
+        "nrw-world",
+        "dbis-138",
+        "ethereum"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "dbis-138",
+        "anaka-bridge",
+        "ethereum"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "EUR",
+      "name": "Euro",
+      "decimals": 2,
+      "assetClass": "fiat",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": false
+    },
+    {
+      "symbol": "FIRE",
+      "name": "Ignition",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "FLKR",
+      "name": "Fliker",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "FSH",
+      "name": "Fresh",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "GBP",
+      "name": "British Pound",
+      "decimals": 2,
+      "assetClass": "fiat",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": false
+    },
+    {
+      "symbol": "GLD1111",
+      "name": "11::11 1/1000 1 Oz Gold",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "HYBX",
+      "name": "HYBX",
+      "decimals": 8,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "HYDX",
+      "name": "Hyper-Dex Exchange",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ICX",
+      "name": "ICX",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank",
+        "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "JPY",
+      "name": "Japanese Yen",
+      "decimals": 0,
+      "assetClass": "fiat",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": false
+    },
+    {
+      "symbol": "KUSD",
+      "name": "K USD",
+      "decimals": 6,
+      "assetClass": "crypto",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank",
+        "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "MATIC",
+      "name": "Polygon",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "ethereum"
+      ],
+      "networks": [
+        "ethereum",
+        "nova-one"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "MONEEZ",
+      "name": "ReelMoneez",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "NOVA",
+      "name": "NovaONE Native",
+      "decimals": 18,
+      "assetClass": "native",
+      "chains": [
+        "nova-one"
+      ],
+      "networks": [
+        "nova-one",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "NRW",
+      "name": "NRW World Native",
+      "decimals": 18,
+      "assetClass": "native",
+      "chains": [
+        "nrw-world"
+      ],
+      "networks": [
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "NSB-AUSDT",
+      "name": "NSB AUSDT (SP Monza Reserve)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "PAYINQ",
+      "name": "Payinq",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "PSS",
+      "name": "PASS",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "SDG",
+      "name": "Sudanese Pound",
+      "decimals": 2,
+      "assetClass": "fiat",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": false
+    },
+    {
+      "symbol": "SFY",
+      "name": "Staffy",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "SHIVA",
+      "name": "SHIVA",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank",
+        "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "SKSH",
+      "name": "Skosh",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "SOL",
+      "name": "Solana",
+      "decimals": 9,
+      "assetClass": "crypto",
+      "chains": [
+        "solana"
+      ],
+      "networks": [
+        "solana",
+        "nova-one",
+        "nrw-world"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "SON",
+      "name": "Odin",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "TN8",
+      "name": "TorN8ion",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "TRX",
+      "name": "TRON",
+      "decimals": 6,
+      "assetClass": "crypto",
+      "chains": [
+        "tron"
+      ],
+      "networks": [
+        "tron",
+        "nova-one",
+        "nrw-world"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USD",
+      "name": "US Dollar",
+      "decimals": 2,
+      "assetClass": "fiat",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": false
+    },
+    {
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "assetClass": "crypto",
+      "chains": [
+        "nova-one",
+        "nrw-world",
+        "alltra-mainnet"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "dbis-138",
+        "anaka-bridge",
+        "ethereum",
+        "solana",
+        "tron",
+        "alltra-mainnet",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT",
+      "name": "Tether USD",
+      "decimals": 6,
+      "assetClass": "crypto",
+      "chains": [
+        "nova-one",
+        "nrw-world",
+        "alltra-mainnet"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "dbis-138",
+        "anaka-bridge",
+        "ethereum",
+        "solana",
+        "tron",
+        "alltra-mainnet",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT-BNB",
+      "name": "Tether USD (BNB / BEP20)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT-LEGACY",
+      "name": "USD Token (Legacy)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "USDT-TRC20",
+      "name": "Tether USD (TRC20)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "VCE",
+      "name": "VOICE",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "VICTORYA",
+      "name": "Victoria Coin",
+      "decimals": 6,
+      "assetClass": "crypto",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank",
+        "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "WALL",
+      "name": "Wrapped Alltra",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "WBNB",
+      "name": "Wrapped BNB (ALLTRA)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "WBTC",
+      "name": "Alltra Wrapped BTC Token",
+      "decimals": 8,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "WETH",
+      "name": "Wrapped Ether",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "WTRX",
+      "name": "Wrapped TRX (ALLTRA)",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "XRP",
+      "name": "XRP",
+      "decimals": 6,
+      "assetClass": "crypto",
+      "chains": [
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "nova-one",
+        "nrw-world",
+        "nova-bank",
+        "dbis-138"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ZARA",
+      "name": "Zaragoza USD Peg",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
+      ],
+      "tradable": true,
+      "swappable": true,
+      "transferable": true,
+      "decentralized": true
+    },
+    {
+      "symbol": "ZRG",
+      "name": "Zaragoza",
+      "decimals": 18,
+      "assetClass": "crypto",
+      "chains": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world"
+      ],
+      "networks": [
+        "alltra-mainnet",
+        "nova-one",
+        "nrw-world",
+        "nova-bank"
       ],
       "tradable": true,
       "swappable": true,
@@ -1408,59 +2231,59 @@
   "bridgeAdapters": [
     {
       "id": "novaone-defi-oracle-138",
-      "name": "NovaONE ↔ DeFi Oracle",
+      "name": "NovaONE \u2194 DeFi Oracle",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 138,
       "destChainName": "DeFi Oracle Chain",
       "status": "active",
       "relayerType": "wrapped-token",
-      "sourceRpc": "https://anakatech.llc/novaone-rpc/",
+      "sourceRpc": "http://51.75.64.28/novaone-rpc/",
       "destRpc": "https://rpc.defi-oracle.io",
-      "explorerUrl": "https://novaone.anakatech.llc/"
+      "explorerUrl": "https://novaone.novablockchain.it.com/"
     },
     {
       "id": "novaone-ethereum",
-      "name": "NovaONE ↔ Ethereum",
+      "name": "NovaONE \u2194 Ethereum",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 1,
       "destChainName": "Ethereum",
       "status": "active",
       "relayerType": "wrapped-token",
-      "sourceRpc": "https://anakatech.llc/novaone-rpc/",
+      "sourceRpc": "http://51.75.64.28/novaone-rpc/",
       "destRpc": "https://eth.llamarpc.com",
-      "explorerUrl": "https://novaone.anakatech.llc/"
+      "explorerUrl": "https://novaone.novablockchain.it.com/"
     },
     {
       "id": "novaone-anaka-mesh",
-      "name": "NovaONE ↔ AnakaChain Mesh",
+      "name": "NovaONE \u2194 AnakaChain Mesh",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 11013,
       "destChainName": "AnakaChain Bridge",
       "status": "active",
       "relayerType": "anaka-mesh",
-      "sourceRpc": "https://anakatech.llc/novaone-rpc/",
+      "sourceRpc": "http://51.75.64.28/novaone-rpc/",
       "destRpc": "https://bridge.anakachain.com",
-      "explorerUrl": "https://novaone.anakatech.llc/"
+      "explorerUrl": "https://novaone.novablockchain.it.com/"
     },
     {
       "id": "novaone-nrw-world",
-      "name": "NovaONE ↔ NRW World",
+      "name": "NovaONE \u2194 NRW World",
       "sourceChainId": 22016,
       "sourceChainName": "NovaONE",
       "destChainId": 33001,
       "destChainName": "NRW World Chain",
       "status": "active",
       "relayerType": "wrapped-token",
-      "sourceRpc": "https://anakatech.llc/novaone-rpc/",
+      "sourceRpc": "http://51.75.64.28/novaone-rpc/",
       "destRpc": "https://nrw-world-chain-production-6029.up.railway.app",
-      "explorerUrl": "https://novaone.anakatech.llc/"
+      "explorerUrl": "https://novaone.novablockchain.it.com/"
     },
     {
       "id": "superbridge-ethereum",
-      "name": "Super Bridge — Ethereum ↔ NovaONE",
+      "name": "Super Bridge \u2014 Ethereum \u2194 NovaONE",
       "sourceChainId": 1,
       "sourceChainName": "Ethereum",
       "destChainId": 22016,
@@ -1468,12 +2291,12 @@
       "status": "active",
       "relayerType": "wrapped-token",
       "sourceRpc": "https://eth.llamarpc.com",
-      "destRpc": "https://anakatech.llc/novaone-rpc/",
+      "destRpc": "http://51.75.64.28/novaone-rpc/",
       "explorerUrl": "https://etherscan.io"
     },
     {
       "id": "superbridge-bsc",
-      "name": "Super Bridge — BNB Chain ↔ NovaONE",
+      "name": "Super Bridge \u2014 BNB Chain \u2194 NovaONE",
       "sourceChainId": 56,
       "sourceChainName": "BNB Smart Chain",
       "destChainId": 22016,
@@ -1481,12 +2304,12 @@
       "status": "active",
       "relayerType": "wrapped-token",
       "sourceRpc": "https://bsc-dataseed.binance.org",
-      "destRpc": "https://anakatech.llc/novaone-rpc/",
+      "destRpc": "http://51.75.64.28/novaone-rpc/",
       "explorerUrl": "https://bscscan.com"
     },
     {
       "id": "superbridge-tron",
-      "name": "Super Bridge — TRON ↔ NovaONE",
+      "name": "Super Bridge \u2014 TRON \u2194 NovaONE",
       "sourceChainId": 728126428,
       "sourceChainName": "TRON",
       "destChainId": 22016,
@@ -1494,7 +2317,7 @@
       "status": "active",
       "relayerType": "onex-bridge",
       "sourceRpc": "https://api.trongrid.io",
-      "destRpc": "https://anakatech.llc/novaone-rpc/",
+      "destRpc": "http://51.75.64.28/novaone-rpc/",
       "explorerUrl": "https://tronscan.org"
     }
   ],
@@ -1513,7 +2336,7 @@
         "nova-one",
         "nrw-world"
       ],
-      "addressHint": "Copy deposit address from Binance → Withdraw → select matching network."
+      "addressHint": "Copy deposit address from Binance \u2192 Withdraw \u2192 select matching network."
     },
     {
       "id": "okx",
@@ -1529,7 +2352,7 @@
         "nova-one",
         "nrw-world"
       ],
-      "addressHint": "OKX → Assets → Withdraw → paste the address for the selected chain."
+      "addressHint": "OKX \u2192 Assets \u2192 Withdraw \u2192 paste the address for the selected chain."
     },
     {
       "id": "bybit",
@@ -1543,7 +2366,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Bybit → Withdraw → choose network, then copy deposit address."
+      "addressHint": "Bybit \u2192 Withdraw \u2192 choose network, then copy deposit address."
     },
     {
       "id": "bitget",
@@ -1557,7 +2380,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Bitget → Withdraw → match network before sending."
+      "addressHint": "Bitget \u2192 Withdraw \u2192 match network before sending."
     },
     {
       "id": "coinbase",
@@ -1570,7 +2393,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Coinbase → Receive/Withdraw → use address for the correct network."
+      "addressHint": "Coinbase \u2192 Receive/Withdraw \u2192 use address for the correct network."
     },
     {
       "id": "kraken",
@@ -1583,7 +2406,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Kraken → Funding → Withdraw → select chain."
+      "addressHint": "Kraken \u2192 Funding \u2192 Withdraw \u2192 select chain."
     },
     {
       "id": "crypto-com",
@@ -1597,7 +2420,7 @@
         "solana",
         "bitcoin"
       ],
-      "addressHint": "Crypto.com app → Transfer → Withdraw → copy on-chain address."
+      "addressHint": "Crypto.com app \u2192 Transfer \u2192 Withdraw \u2192 copy on-chain address."
     },
     {
       "id": "metamask",
@@ -1609,9 +2432,11 @@
         "dbis-138",
         "nova-one",
         "nrw-world",
-        "anaka-bridge"
+        "anaka-bridge",
+        "nova-production",
+        "alltra-mainnet"
       ],
-      "addressHint": "Your MetaMask account address (0x…) on the selected network."
+      "addressHint": "Your MetaMask account address (0x\u2026) on the selected network."
     },
     {
       "id": "trust-wallet",
@@ -1625,9 +2450,11 @@
         "solana",
         "bitcoin",
         "nova-one",
-        "nrw-world"
+        "nrw-world",
+        "nova-production",
+        "alltra-mainnet"
       ],
-      "addressHint": "Trust Wallet → Receive → copy address for the asset network."
+      "addressHint": "Trust Wallet \u2192 Receive \u2192 copy address for the asset network."
     },
     {
       "id": "coinbase-wallet",
@@ -1638,9 +2465,11 @@
         "ethereum",
         "dbis-138",
         "solana",
-        "nova-one"
+        "nova-one",
+        "nova-production",
+        "alltra-mainnet"
       ],
-      "addressHint": "Coinbase Wallet → Receive on the selected chain."
+      "addressHint": "Coinbase Wallet \u2192 Receive on the selected chain."
     },
     {
       "id": "okx-wallet",
@@ -1653,7 +2482,9 @@
         "tron",
         "solana",
         "nova-one",
-        "nrw-world"
+        "nrw-world",
+        "nova-production",
+        "alltra-mainnet"
       ],
       "addressHint": "OKX Web3 wallet receive address for the network."
     },
@@ -1666,7 +2497,7 @@
         "solana",
         "ethereum"
       ],
-      "addressHint": "Phantom → Receive → Solana or EVM address."
+      "addressHint": "Phantom \u2192 Receive \u2192 Solana or EVM address."
     },
     {
       "id": "ledger",
@@ -1680,7 +2511,7 @@
         "solana",
         "tron"
       ],
-      "addressHint": "Ledger Live → Receive → verify address on device."
+      "addressHint": "Ledger Live \u2192 Receive \u2192 verify address on device."
     },
     {
       "id": "other",
@@ -1695,7 +2526,9 @@
         "anaka-bridge",
         "tron",
         "solana",
-        "bitcoin"
+        "bitcoin",
+        "nova-production",
+        "alltra-mainnet"
       ],
       "addressHint": "Paste the recipient address for the selected network."
     }
@@ -1710,14 +2543,22 @@
   "api": {
     "globalStatus": "/api/v1/global/status",
     "walletNetworks": "/api/v1/wallet/networks",
-    "walletTokens": "/api/v1/wallet/tokens",
+    "walletTokens": "/api/v1/chains/ecosystem/tokens",
     "walletPortfolio": "/api/v1/wallet/portfolio/:address",
     "walletImport": "/api/v1/wallet/ecosystem/import",
     "bridgeAdapters": "/api/v1/chains/nova-one/bridge-adapters",
     "ecosystemTokens": "/api/v1/chains/ecosystem/tokens",
     "novaChainStatus": "/api/v1/nova-chain/status",
     "chainsStatus": "/api/v1/chains/status",
-    "publicDocs": "/api/v1/public/docs/:slug"
+    "publicDocs": "/api/v1/public/docs/:slug",
+    "productionNodeStatus": "/api/v1/production-node/status",
+    "productionNodeRpc": "/api/v1/production-node/rpc",
+    "openapi": "/api/v1/openapi.json",
+    "proofOfFunds": "/api/v1/global/proof-of-funds/nova-bank",
+    "brokenPaths": {
+      "/api/v1/wallet-ecosystem": "404 Not Found \u2014 use wallet/networks + chains/ecosystem/tokens",
+      "/rpc": "404 Not Found \u2014 production node edge disconnected"
+    }
   },
   "docs": {
     "index": "docs/ECOSYSTEM-INDEX.md",
@@ -1732,5 +2573,278 @@
       "anakachain",
       "protocol"
     ]
-  }
+  },
+  "urlHealth": {
+    "checkedAt": "2026-07-17T14:24:54.884Z",
+    "summary": {
+      "novaBankApi": "ok",
+      "novaOneRpc": "down",
+      "nrwWorldChain": "ok",
+      "nrwCentralBank": "ok",
+      "novaSwap": "ok",
+      "vps51": "down",
+      "novablockchainsystem": "down",
+      "novaProductionNode": "down",
+      "alltra": "ok",
+      "defiOracle": "ok",
+      "anakaBridge": "ok"
+    },
+    "notes": [
+      "Prefer Railway and verified RPC endpoints; do not trust wallet/networks hostnames blindly",
+      "novablockchainsystem.com is unreliable (521/timeout/403) \u2014 kept only as last-resort fallback",
+      "VPS 51.75.64.28 may flap; probe before relying on it for NovaONE / swap / production node",
+      "Nova Production Node edge/upstream currently disconnected (Railway /rpc 404, proxy 500)",
+      "Bitcoin rpcUrls intentionally empty (explorer-only via mempool.space)",
+      "deployed.ethereumSourceBridge is null (undeployed)",
+      "Live /api/v1/wallet-ecosystem returns 404 \u2014 use /api/v1/wallet/networks and /chains/ecosystem/tokens",
+      "See docs/PRODUCTION-ISSUES.md for API-source fixes that cannot be done in this repo"
+    ],
+    "probes": {
+      "novaBankApi": {
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/global/status",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": false,
+        "error": null
+      },
+      "novaOneRpcCandidates": [
+        {
+          "url": "http://51.75.64.28/novaone-rpc/",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "ConnectionResetError: [Errno 104] Connection reset by peer"
+        },
+        {
+          "url": "https://novablockchain.it.com/novaone-rpc/",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "HTTPError: HTTP Error 405: Method Not Allowed"
+        },
+        {
+          "url": "https://novaone-rpc.novablockchain.it.com",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "URLError: <urlopen error [Errno -2] Name or service not known>"
+        },
+        {
+          "url": "https://anakatech.llc/novaone-rpc/",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "HTTPError: HTTP Error 308: Permanent Redirect"
+        },
+        {
+          "url": "https://novablockchainsystem.com/novaone-rpc/",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "TimeoutError: The read operation timed out"
+        },
+        {
+          "url": "https://novaone-rpc.novablockchainsystem.com",
+          "status": "down",
+          "httpStatus": null,
+          "rpcOk": false,
+          "error": "URLError: <urlopen error [Errno -2] Name or service not known>"
+        }
+      ],
+      "nrwWorldChain": {
+        "url": "https://nrw-world-chain-production-6029.up.railway.app",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": true,
+        "error": null
+      },
+      "nrwCentralBank": {
+        "url": "https://nrw-central-bank-api-production.up.railway.app/api/v1/global/status",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": false,
+        "error": null
+      },
+      "novaSwap": {
+        "url": "https://nova-bank-api-production-7311.up.railway.app/swap",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": false,
+        "error": null
+      },
+      "vpsNovaOne": {
+        "url": "http://51.75.64.28/novaone-rpc/",
+        "status": "down",
+        "httpStatus": null,
+        "rpcOk": false,
+        "error": "ConnectionResetError: [Errno 104] Connection reset by peer"
+      },
+      "novablockchainsystem": {
+        "url": "https://novablockchainsystem.com/api/v1/global/status",
+        "status": "down",
+        "httpStatus": null,
+        "rpcOk": false,
+        "error": "TimeoutError: The read operation timed out"
+      },
+      "novaProductionRpc": {
+        "url": "https://nova-bank-api-production-7311.up.railway.app/rpc",
+        "status": "down",
+        "httpStatus": null,
+        "rpcOk": false,
+        "error": "HTTPError: HTTP Error 404: Not Found"
+      },
+      "novaProductionProxy": {
+        "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+        "status": "down",
+        "httpStatus": null,
+        "rpcOk": false,
+        "error": "HTTPError: HTTP Error 500: Internal Server Error"
+      },
+      "alltra": {
+        "url": "https://mainnet-rpc.alltra.global",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": true,
+        "error": null
+      },
+      "defiOracle": {
+        "url": "https://rpc.defi-oracle.io",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": true,
+        "error": null
+      },
+      "anakaBridge": {
+        "url": "https://bridge.anakachain.com",
+        "status": "ok",
+        "httpStatus": 200,
+        "rpcOk": true,
+        "error": null
+      },
+      "productionNodeApi": {
+        "edgeConnected": false,
+        "upstreamConnected": false,
+        "edgeError": "fetch failed",
+        "upstreamError": "fetch failed"
+      }
+    },
+    "domains": {
+      "nova-bank-api-production-7311.up.railway.app": {
+        "status": "ok",
+        "role": "Nova Bank API + member UI + Swap"
+      },
+      "novablockchainsystem.com": {
+        "status": "down",
+        "error": "TimeoutError: The read operation timed out",
+        "fallback": "https://nova-bank-api-production-7311.up.railway.app/api/v1"
+      },
+      "51.75.64.28": {
+        "status": "down",
+        "role": "NovaONE RPC, Nova Swap, OneX node",
+        "error": "ConnectionResetError: [Errno 104] Connection reset by peer"
+      },
+      "nrw-world-chain-production-6029.up.railway.app": {
+        "status": "ok",
+        "role": "NRW World Chain RPC"
+      },
+      "nrw-central-bank-api-production.up.railway.app": {
+        "status": "ok",
+        "role": "NRW Central Bank API"
+      }
+    },
+    "recommended": {
+      "novaBankApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
+      "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
+      "novaSwapFallback": "http://51.75.64.28/swap",
+      "nrwCentralBank": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
+      "nrwWorldChain": "https://nrw-world-chain-production-6029.up.railway.app",
+      "novaOneRpc": "http://51.75.64.28/novaone-rpc/",
+      "novaOneRpcFallbacks": [
+        "https://novablockchain.it.com/novaone-rpc/",
+        "https://novaone-rpc.novablockchain.it.com",
+        "https://anakatech.llc/novaone-rpc/",
+        "https://novablockchainsystem.com/novaone-rpc/",
+        "https://novaone-rpc.novablockchainsystem.com"
+      ],
+      "novaOneExplorer": "https://novaone.novablockchain.it.com/",
+      "novaProductionRpc": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/rpc",
+      "novaProductionRpcPublic": "https://nova-bank-api-production-7311.up.railway.app/rpc",
+      "dbisRpc": "https://rpc.defi-oracle.io",
+      "anakaBridge": "https://bridge.anakachain.com",
+      "alltraRpc": "https://mainnet-rpc.alltra.global"
+    }
+  },
+  "integrations": {
+    "source": "live-api-health-adjusted",
+    "novaBank": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
+    "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
+    "novaSwapFallback": "http://51.75.64.28/swap",
+    "nrwCentralBank": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
+    "nrwWorldChain": "https://nrw-world-chain-production-6029.up.railway.app",
+    "novaOneRpc": "http://51.75.64.28/novaone-rpc/",
+    "novaOneExplorer": "https://novaone.novablockchain.it.com/",
+    "onexEcosystem": {
+      "novaBank": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
+      "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
+      "walletApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet/networks",
+      "nrwCentralBank": "https://nrw-central-bank-api-production.up.railway.app/api/v1",
+      "nrwWorldChain": "https://nrw-world-chain-production-6029.up.railway.app",
+      "novaOneRpc": "http://51.75.64.28/novaone-rpc/",
+      "novaOneExplorer": "https://novaone.novablockchain.it.com/",
+      "defiOracleRpc": "https://rpc.defi-oracle.io",
+      "defiOracleExplorer": "https://explorer.defi-oracle.io",
+      "defiOracleWallet": "https://wallet.defi-oracle.io/wallet/",
+      "anakaBridge": "https://bridge.anakachain.com",
+      "bridgeProject": "/bridge-project",
+      "novaSwapFallback": "http://51.75.64.28/swap",
+      "walletTokens": "https://nova-bank-api-production-7311.up.railway.app/api/v1/chains/ecosystem/tokens"
+    },
+    "walletNetworksEndpoint": "https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet/networks",
+    "ecosystemTokensEndpoint": "https://nova-bank-api-production-7311.up.railway.app/api/v1/chains/ecosystem/tokens",
+    "productionNodeStatus": "https://nova-bank-api-production-7311.up.railway.app/api/v1/production-node/status"
+  },
+  "knownIssues": [
+    {
+      "id": "nbs-domain-down",
+      "severity": "high",
+      "component": "novablockchainsystem.com",
+      "summary": "Primary public domain returns 521/timeout/403; wallet API still advertises it",
+      "fixIn": "Nova Bank API source + Cloudflare origin"
+    },
+    {
+      "id": "novaone-rpc-outage",
+      "severity": "critical",
+      "component": "NovaONE RPC",
+      "summary": "No healthy NovaONE JSON-RPC endpoint",
+      "fixIn": "VPS / Cloudflare / Besu node ops"
+    },
+    {
+      "id": "production-node-disconnected",
+      "severity": "high",
+      "component": "Nova Production Node",
+      "summary": "edge and upstream RPC disconnected; public /rpc 404",
+      "fixIn": "Nova Bank API deployment (host.docker.internal / 28545 upstream)"
+    },
+    {
+      "id": "wallet-ecosystem-404",
+      "severity": "medium",
+      "component": "API routes",
+      "summary": "/api/v1/wallet-ecosystem returns 404; docs still reference it",
+      "fixIn": "Nova Bank API source"
+    },
+    {
+      "id": "chains-status-timeout",
+      "severity": "medium",
+      "component": "/api/v1/chains/status",
+      "summary": "Endpoint often times out; uses broken anakatech / internal nrw-world RPCs",
+      "fixIn": "Nova Bank API source"
+    },
+    {
+      "id": "ethereum-source-bridge-null",
+      "severity": "low",
+      "component": "deployed.ethereumSourceBridge",
+      "summary": "Ethereum source bridge address not deployed",
+      "fixIn": "Bridge deployment"
+    }
+  ]
 }

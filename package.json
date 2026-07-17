@@ -1,0 +1,12 @@
+{
+  "name": "nova-bank-ecosystem-manifest",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Nova Bank ecosystem manifest — networks, tokens, docs, and health checks",
+  "scripts": {
+    "fetch": "bash scripts/fetch-api.sh",
+    "sync": "python3 scripts/sync-ecosystem.py",
+    "verify": "node scripts/verify-ecosystem.mjs",
+    "refresh": "npm run fetch && npm run sync && npm run verify"
+  }
+}
