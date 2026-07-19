@@ -30,7 +30,8 @@ export function Landing() {
           className="mt-3 max-w-sm text-sm text-nova-muted animate-fade-up"
           style={{ animationDelay: '180ms' }}
         >
-          OKX-style assets dashboard for NovaONE, NRW, and the mesh — separate from Signet Wallet.
+          OKX-style assets dashboard for NovaONE, NRW, and the mesh. Separate product from Signet Wallet.
+
         </p>
         <div className="mt-10 w-full max-w-xs space-y-3 animate-fade-up" style={{ animationDelay: '240ms' }}>
           <Link to={ROUTES.onboarding} className="block">

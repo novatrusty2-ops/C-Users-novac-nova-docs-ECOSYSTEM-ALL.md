@@ -12,3 +12,4 @@ tsconfig.tsbuildinfo
 *.tsbuildinfo
 apps/*/node_modules/
 apps/*/dist/
+apps/nova/.netlify/

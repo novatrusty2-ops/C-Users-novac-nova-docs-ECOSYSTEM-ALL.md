@@ -9,9 +9,12 @@ import '@/index.css'
 const root = document.getElementById('root')
 if (!root) throw new Error('Root element #root not found')
 
+/** Pages mirror uses /signet/; canonical host signetwallet.com uses base / */
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
+
 createRoot(root).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <ToastProvider>
         <WalletProvider>
           <App />

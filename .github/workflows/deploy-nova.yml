@@ -1,6 +1,7 @@
-name: Build Nova Wallet (legacy)
+name: Deploy Nova Wallet
 
-# Prefer deploy-production.yml — kept for manual Nova-only artifact builds
+# Nova owns novablockchain.it.com apex — use deploy-production.yml for the full split site.
+# This workflow builds a Nova-only artifact for mirrors / VPS (apps/nova/deploy.sh).
 on:
   workflow_dispatch:
 
@@ -17,11 +18,12 @@ jobs:
       - run: npm ci
       - working-directory: apps/nova
         env:
-          VITE_BASE: /nova/
+          VITE_BASE: /
         run: |
           npm run typecheck
           npm run test
           npm run build
+          cp dist/index.html dist/404.html
       - uses: actions/upload-artifact@v4
         with:
           name: nova-wallet-dist

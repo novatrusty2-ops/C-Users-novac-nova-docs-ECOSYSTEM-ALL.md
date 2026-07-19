@@ -2,13 +2,14 @@
 
 Trading-first mobile signer — **OKX Wallet / Nova Bank dashboard** layout.
 
-**Production:** https://novablockchain.it.com/nova/
+**Production:** https://novablockchain.it.com/
 
-Separate product from Signet Wallet (different theme, storage `nova.*`, UX shell).
+Nova owns the Pages apex. **Signet Wallet is a separate product**
+([signetwallet.com](https://signetwallet.com) · Pages mirror `/signet/`).
 
 ## Layout
 
-- **Assets** — total balance, circular quick actions, Crypto / NovaONE·NRW segments, flat token list
+- **Assets** — total balance, circular quick actions, Crypto / NovaONE·NRW segments
 - **Trade** — stacked swap panels
 - **History** — activity feed
 - **Me** — profile, Nova Bank, partners, networks, security
@@ -17,6 +18,6 @@ Separate product from Signet Wallet (different theme, storage `nova.*`, UX shell
 
 ```bash
 npm run dev          # http://localhost:5174
-VITE_BASE=/nova/ npm run build   # production subpath
+npm run build        # production root base /
 ./deploy.sh          # optional nginx mirror
 ```
