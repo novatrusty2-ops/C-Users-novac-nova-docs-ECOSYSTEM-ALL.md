@@ -15,8 +15,10 @@ import {
   loadAccounts,
   setActiveAccountId,
 } from '@/lib/accounts'
+import { JsonRpcProvider, formatUnits } from 'ethers'
 import { getActiveChainId, setActiveChainId } from '@/lib/activeChain'
-import { allKnownChains } from '@/lib/networks'
+import { allKnownChains, getEnabledChainIds } from '@/lib/networks'
+import { resolveUsdPrice } from '@/lib/prices'
 import {
   createWallet,
   deriveAccount,
@@ -54,12 +56,42 @@ interface WalletContextValue {
 
 const WalletContext = createContext<WalletContextValue | null>(null)
 
-async function fetchBalancesStub(
+async function fetchChainBalances(
   account: WalletAccount,
   chain: ChainDefinition,
 ): Promise<TokenBalanceRow[]> {
+  let nativeRaw = 0n
+  try {
+    const rpc = chain.rpcUrls[0]
+    if (rpc) {
+      const provider = new JsonRpcProvider(rpc, chain.id, { staticNetwork: true })
+      nativeRaw = await new Promise<bigint>((resolve, reject) => {
+        const t = setTimeout(() => reject(new Error('rpc timeout')), 4500)
+        provider
+          .getBalance(account.address)
+          .then((v) => {
+            clearTimeout(t)
+            resolve(v)
+          })
+          .catch((e) => {
+            clearTimeout(t)
+            reject(e)
+          })
+      })
+    }
+  } catch {
+    nativeRaw = 0n
+  }
+
   const rows: TokenBalanceRow[] = []
   for (const token of chain.tokens) {
+    const isNative = token.address == null
+    const balanceRaw = isNative ? nativeRaw : 0n
+    const balance = formatUnits(balanceRaw, token.decimals)
+    const usdPrice =
+      token.usd ?? (await resolveUsdPrice(token.symbol, token.coingeckoId)) ?? null
+    const usdValue =
+      usdPrice != null ? Number(balance) * usdPrice : null
     rows.push({
       chainId: chain.id,
       chainName: chain.name,
@@ -67,14 +99,13 @@ async function fetchBalancesStub(
       name: token.name,
       decimals: token.decimals,
       address: token.address,
-      balance: '0',
-      balanceRaw: 0n,
-      usdPrice: token.usd ?? null,
-      usdValue: null,
+      balance: Number(balance) === 0 ? '0' : Number(balance).toLocaleString(undefined, { maximumFractionDigits: 6 }),
+      balanceRaw,
+      usdPrice,
+      usdValue: usdValue != null && Number.isFinite(usdValue) ? usdValue : null,
       iconColor: chain.iconColor,
     })
   }
-  void account
   return rows
 }
 
@@ -99,18 +130,27 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   )
 
   const refreshBalances = useCallback(async () => {
-    if (!activeAccount || !activeChain || !unlocked) {
+    if (!activeAccount || !unlocked) {
       setBalances([])
       return
     }
     setBalancesLoading(true)
     try {
-      const rows = await fetchBalancesStub(activeAccount, activeChain)
-      setBalances(rows)
+      const enabled = new Set(getEnabledChainIds())
+      const chains = allKnownChains().filter((c) => enabled.has(c.id))
+      // Prioritize active + NovaOne + NRW for dashboard responsiveness
+      const priority = [activeChainId, 22016, 33001]
+      const ordered = [
+        ...priority.map((id) => chains.find((c) => c.id === id)).filter(Boolean),
+        ...chains.filter((c) => !priority.includes(c.id)),
+      ] as ChainDefinition[]
+      const unique = [...new Map(ordered.map((c) => [c.id, c])).values()].slice(0, 8)
+      const chunks = await Promise.all(unique.map((c) => fetchChainBalances(activeAccount, c)))
+      setBalances(chunks.flat())
     } finally {
       setBalancesLoading(false)
     }
-  }, [activeAccount, activeChain, unlocked])
+  }, [activeAccount, activeChainId, unlocked])
 
   useEffect(() => {
     void refreshBalances()
