@@ -10,5 +10,3 @@ coverage/
 tsconfig.tsbuildinfo
 .vite/
 *.tsbuildinfo
-apps/*/node_modules/
-apps/*/dist/

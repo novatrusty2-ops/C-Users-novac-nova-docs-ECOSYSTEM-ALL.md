@@ -3,10 +3,10 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 DIST="$ROOT/dist"
-TARGET="/var/www/anakatechllc-com/signet"
+TARGET="/var/www/anakatechllc-com/nova"
 STAGE="${TARGET}.staging.$$"
 
-echo "Building Signet Wallet…"
+echo "Building Nova Wallet (apps/nova)…"
 npm run build --prefix "$ROOT"
 
 echo "Staging to $STAGE"

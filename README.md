@@ -1,59 +1,65 @@
-# Signet Wallet v3
+# Anakatech Wallets
 
-Self-custody multi-chain wallet for the Anaka mesh — **NovaOne**, **NRW World**, partner chains, and major EVM networks. Built with React 19, Vite, Tailwind (signet design tokens), ethers v6, Safe SDK, and WalletConnect.
+Two **separate** wallet products — different brands, themes, storage, UX, and deploy targets.
 
-## Stack
+| | **Signet Wallet** | **Nova Wallet** |
+|---|---|---|
+| Path | `apps/signet` | `apps/nova` |
+| Domain | [signetwallet.com](https://signetwallet.com) · [novablockchain.it.com](https://novablockchain.it.com) | [novablockchain.it.com/nova](https://novablockchain.it.com/nova/) |
+| Role | Institutional self-custody SPA | Trading-first mobile signer |
+| Theme | Regal burgundy / gold / cream | Cool navy / teal / cyan |
+| Default chains | Full Anaka mesh + public EVMs | **NovaONE + NRW World** only |
+| Chain accents | NovaONE `#8B5CF6` · NRW `#A855F7` | NovaONE `#0EA5E9` · NRW `#14B8A6` |
+| Storage keys | `signet.*` | `nova.*` |
+| Ports | `5173` / `4173` | `5174` / `4174` |
+| Deploy | Pages `/` + Anakatech VPS | Pages `/nova/` |
 
-- **UI:** React 19, react-router-dom v7, Tailwind CSS, Recharts
-- **Crypto:** ethers v6, @safe-global/protocol-kit, @walletconnect/web3wallet
-- **Path alias:** `@/` → `src/`
-- **Brand:** burgundy / gold / cream regal theme — tokens in `branding/brand-tokens.json`, synced via `npm run brand:sync`
+They do **not** share UI themes, localStorage namespaces, or product positioning.
 
-## Getting started
-
-```bash
-npm install
-npm run dev          # http://localhost:5173
-npm run typecheck
-npm run test         # vitest suite (keystore, accounts, transfer, bridge, …)
-npm run build        # → dist/
-npm run preview
-```
-
-Canonical domain: **signetwallet.com**. Theme: deep burgundy / gold / cream. Chain accent colors: NovaOne `#8B5CF6`, NRW World `#A855F7`.
-
-Optional institutional gate (private banking networks):
+## Quick start
 
 ```bash
-GATE_ACCESS_CODE=your-code npm run gate   # POST /verify { "code": "..." }
+npm install                 # workspaces: apps/signet + apps/nova
+
+npm run dev:signet          # http://localhost:5173
+npm run dev:nova            # http://localhost:5174
+
+npm run build:signet
+npm run build:nova
+npm test
 ```
 
-Set `VITE_GATE_URL=http://localhost:8787` in `.env` for the UI gate modal.
+## Signet (`apps/signet`)
 
-## Brand sync
+Self-custody multi-chain wallet — Safe multisig, WalletConnect, institutional gate, banks directory, bridge/swap, PWA.
 
 ```bash
-npm run brand:sync     # writes src/lib/brand.generated.ts + src/brand/tokens.css
-npm run brand:extract  # stub — instructions for asset extraction
-npm run brand:icons    # stub — instructions for icon exports
+cd apps/signet && npm run dev
+cd apps/signet && ./deploy.sh   # nginx atomic deploy
 ```
 
-## Deploy
+## Nova (`apps/nova`)
+
+Lean trading wallet for the Nova mesh — Portfolio / Swap / Activity / Settings tabs. No institutional gate, no Safe UI, no Signet branding.
 
 ```bash
-chmod +x deploy.sh
-./deploy.sh            # rsync dist → /var/www/anakatechllc-com/signet/
+cd apps/nova && npm run dev
+cd apps/nova && ./deploy.sh
 ```
 
-## Project layout
+## Production (GitHub Pages)
 
-- `src/lib/*` — keystore, chains, bridge, swap, transfer, Safe, settings
-- `src/context/*` — wallet + toast providers
-- `src/hooks/*` — thin wrappers over libs
-- `src/pages/*` — routed screens
-- `src/components/*` — UI building blocks
-- `server/gate/` — institutional access HTTP gate
+Live host: **https://novablockchain.it.com**
 
-## License
+| Product | URL | Theme |
+|---------|-----|-------|
+| **Signet Wallet** | https://novablockchain.it.com/ | Burgundy / gold / cream |
+| **Nova Wallet** | https://novablockchain.it.com/nova/ | Navy / teal / cyan |
 
-Private — Anakatech / Signet Wallet.
+Deployed by [`.github/workflows/deploy-production.yml`](.github/workflows/deploy-production.yml) on push to `main`.
+
+- Signet builds with `base: /`
+- Nova builds with `VITE_BASE=/nova/`
+
+`signetwallet.com` is a separate Anakatech VPS deploy (not GitHub Pages).
+
