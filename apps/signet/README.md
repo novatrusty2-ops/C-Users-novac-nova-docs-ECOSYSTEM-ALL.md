@@ -1,21 +1,15 @@
 # Signet Wallet
 
-Institutional self-custody multi-chain SPA — **separate product from Nova Wallet** (`apps/nova`).
+Institutional self-custody multi-chain SPA.
 
-- Theme: regal burgundy / gold / cream
-- Chain accents: NovaONE `#8B5CF6`, NRW `#A855F7`
-- Storage: `signet.*` keys only
-- Features: Safe multisig, WalletConnect, institutional gate, banks, bridge, PWA
+**Production:** https://signetwallet.com
+
+**Separate from Nova Wallet** ([novablockchain.it.com](https://novablockchain.it.com/)) — Signet is not hosted on Nova’s Pages site.
 
 ```bash
-npm install
 npm run dev        # :5173
 npm run build
-npm run test
-./deploy.sh        # → /var/www/anakatechllc-com/signet
+./deploy.sh        # → /var/www/anakatechllc-com/signet → signetwallet.com
 ```
 
-Canonical domain: https://signetwallet.com  
-Pages mirror: https://novablockchain.it.com/signet/  
-Nova Wallet (separate): https://novablockchain.it.com/
-
+CI builds a `signet-wallet-dist` artifact (`.github/workflows/deploy-signet.yml`) for VPS deploy.

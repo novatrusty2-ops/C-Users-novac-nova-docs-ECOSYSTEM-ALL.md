@@ -10,8 +10,9 @@ import '@/index.css'
 const root = document.getElementById('root')
 if (!root) throw new Error('Root element #root not found')
 
-/** Pages mirror uses /signet/; canonical host signetwallet.com uses base / */
+/** Canonical host: signetwallet.com — separate product from Nova Wallet */
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
+
 
 createRoot(root).render(
   <StrictMode>

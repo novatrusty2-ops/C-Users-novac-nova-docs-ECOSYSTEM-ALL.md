@@ -1,9 +1,15 @@
-name: Deploy Signet Wallet
+name: Build Signet Wallet
 
-# Signet Pages mirror is assembled at /signet/ by deploy-production.yml.
-# Canonical: https://signetwallet.com (Anakatech VPS via apps/signet/deploy.sh).
-# This workflow builds a Signet-only artifact (root base) for the VPS mirror.
+# Signet Wallet ONLY — canonical https://signetwallet.com (Anakatech VPS via apps/signet/deploy.sh)
+# Does NOT publish to novablockchain.it.com (that host is Nova-only).
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/signet/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-signet.yml'
   workflow_dispatch:
 
 jobs:
@@ -11,13 +17,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: package-lock.json
+
       - run: npm ci
-      - working-directory: apps/signet
+
+      - name: Test & build Signet (root base for signetwallet.com)
+        working-directory: apps/signet
         env:
           VITE_BASE: /
         run: |
@@ -25,6 +35,9 @@ jobs:
           npm run test
           npm run build
           cp dist/index.html dist/404.html
+          echo 'signetwallet.com' > dist/CNAME
+          echo "{\"product\":\"signet-wallet\",\"canonical\":\"https://signetwallet.com\",\"separateFrom\":\"nova-wallet\"}" > dist/signet.json
+
       - uses: actions/upload-artifact@v4
         with:
           name: signet-wallet-dist

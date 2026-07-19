@@ -51,7 +51,7 @@
       },
       "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 \u2014 lean tab shell",
       "deploy": {
-        "githubPages": "Actions deploy-production.yml \u2192 https://novablockchain.it.com/ (Nova owns apex)",
+        "githubPages": "deploy-nova.yml \u2192 https://novablockchain.it.com/ (Nova-only)",
         "nginx": "/var/www/anakatechllc-com/nova via apps/nova/deploy.sh (optional)"
       },
       "separateFrom": "signetWallet",
@@ -70,7 +70,6 @@
       "name": "Signet Wallet",
       "domain": "signetwallet.com",
       "url": "https://signetwallet.com",
-      "pagesUrl": "https://novablockchain.it.com/signet/",
       "bundleId": "llc.anakatech.signetwallet",
       "role": "institutional self-custody multi-chain SPA \u2014 Safe, WalletConnect, banks gate, full mesh",
       "repoPath": "apps/signet",
@@ -86,9 +85,9 @@
       },
       "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 + Safe + WalletConnect + PWA",
       "deploy": {
-        "githubPages": "Actions deploy-production.yml \u2192 https://novablockchain.it.com/signet/ (mirror only)",
-        "nginx": "/var/www/anakatechllc-com/signet via apps/signet/deploy.sh (signetwallet.com)",
-        "canonical": "https://signetwallet.com"
+        "canonical": "https://signetwallet.com",
+        "ciArtifact": "deploy-signet.yml \u2192 signet-wallet-dist",
+        "nginx": "/var/www/anakatechllc-com/signet via apps/signet/deploy.sh"
       },
       "separateFrom": "novaWallet",
       "canonicalDomain": "https://signetwallet.com"
@@ -131,7 +130,6 @@
     "dbisRpc": "https://rpc.defi-oracle.io",
     "anakaBridge": "https://bridge.anakachain.com",
     "signetWallet": "https://signetwallet.com",
-    "signetWalletPages": "https://novablockchain.it.com/signet/",
     "novaWalletRepo": "apps/nova",
     "signetWalletRepo": "apps/signet",
     "novaWalletPages": "https://novablockchain.it.com/"
@@ -170,14 +168,12 @@
       }
     },
     "production": {
-      "host": "https://novablockchain.it.com",
-      "novaPath": "/",
-      "signetPath": "/signet/",
       "novaUrl": "https://novablockchain.it.com/",
-      "signetPagesMirror": "https://novablockchain.it.com/signet/",
-      "signetCanonical": "https://signetwallet.com",
-      "deployWorkflow": ".github/workflows/deploy-production.yml",
-      "note": "Full production split: Nova owns Pages apex; Signet is a separate product at /signet/ (canonical signetwallet.com)."
+      "signetUrl": "https://signetwallet.com/",
+      "hostsSeparated": true,
+      "novaDeploy": ".github/workflows/deploy-nova.yml \u2192 GitHub Pages (Nova-only)",
+      "signetDeploy": ".github/workflows/deploy-signet.yml \u2192 artifact + apps/signet/deploy.sh \u2192 signetwallet.com",
+      "note": "Nova and Signet are fully separate products and hosts. Signet is NOT nested under Nova Pages."
     }
   },
   "onexLocal": {
