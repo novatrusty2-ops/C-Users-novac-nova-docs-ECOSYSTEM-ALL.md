@@ -17,16 +17,18 @@ import { Receive } from '@/pages/Receive'
 import type { ReactNode } from 'react'
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { hasWallet, unlocked } = useWallet()
+  const { hasWallet, unlocked, sessionReady } = useWallet()
 
+  // External Web3 (MetaMask / Trust / SafePal / Gate / …) counts as a ready session
+  if (sessionReady) return children
   if (!hasWallet) return <Navigate to={ROUTES.onboarding} replace />
   if (!unlocked) return <Navigate to={ROUTES.unlock} replace />
   return children
 }
 
 function PublicOnly({ children }: { children: ReactNode }) {
-  const { hasWallet, unlocked } = useWallet()
-  if (hasWallet && unlocked) return <Navigate to={ROUTES.portfolio} replace />
+  const { hasWallet, unlocked, sessionReady } = useWallet()
+  if (sessionReady || (hasWallet && unlocked)) return <Navigate to={ROUTES.portfolio} replace />
   if (hasWallet && !unlocked) return <Navigate to={ROUTES.unlock} replace />
   return children
 }

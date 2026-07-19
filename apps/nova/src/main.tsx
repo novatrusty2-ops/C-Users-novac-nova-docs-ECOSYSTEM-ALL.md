@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ToastProvider } from '@/context/ToastContext'
 import { WalletProvider } from '@/context/WalletContext'
+import { Web3Provider } from '@/context/Web3Context'
 import App from '@/App'
 import '@/index.css'
 
@@ -14,7 +15,9 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter basename={basename}>
       <ToastProvider>
         <WalletProvider>
-          <App />
+          <Web3Provider>
+            <App />
+          </Web3Provider>
         </WalletProvider>
       </ToastProvider>
     </BrowserRouter>

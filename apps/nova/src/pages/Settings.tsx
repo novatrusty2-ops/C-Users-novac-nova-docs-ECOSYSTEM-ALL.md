@@ -3,7 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/common/Button'
 import { Modal } from '@/components/common/Modal'
 import { TopBar } from '@/components/layout/TopBar'
+import { ConnectWalletButton } from '@/components/wallet/ConnectWalletButton'
 import { useWallet } from '@/context/WalletContext'
+import { useWeb3 } from '@/context/Web3Context'
 import { useDisplaySettings } from '@/hooks/useDisplaySettings'
 import { CHAINS } from '@/lib/chains'
 import { getEnabledChainIds, toggleChain } from '@/lib/networks'
@@ -47,7 +49,9 @@ export function Settings() {
   const { push } = useToast()
   const { lockWallet, wipeWallet, switchChain, activeChainId, refreshBalances, activeAccount } =
     useWallet()
+  const { connected, session, shortAddress } = useWeb3()
   const { currency, hideBalances, updateCurrency, updateHideBalances } = useDisplaySettings()
+
   const [enabled, setEnabled] = useState(() => getEnabledChainIds())
   const [autolock, setAutolock] = useState<AutolockMinutes>(() => getAutolockMinutes())
   const [confirmWipe, setConfirmWipe] = useState(false)
@@ -85,11 +89,23 @@ export function Settings() {
       <TopBar title="Me" showNetwork={false} />
       <div className="page-container space-y-4">
         {/* Profile header — OKX Me tab */}
-        <section className="rounded-xl bg-nova-surface px-4 py-4">
-          <p className="font-display text-lg font-bold text-nova-ink">{BRAND.name}</p>
-          <p className="mt-1 truncate font-mono text-xs text-nova-muted">
-            {activeAccount?.address ?? 'No account'}
-          </p>
+        <section className="rounded-xl bg-nova-surface px-4 py-4 space-y-3">
+          <div>
+            <p className="font-display text-lg font-bold text-nova-ink">{BRAND.name}</p>
+            <p className="mt-1 truncate font-mono text-xs text-nova-muted">
+              {activeAccount?.address ?? 'No account'}
+            </p>
+            {connected && session ? (
+              <p className="mt-1 text-xs text-nova-accent">
+                Web3 · {session.walletName} · {shortAddress(session.address)}
+              </p>
+            ) : null}
+          </div>
+          <ConnectWalletButton
+            className="w-full"
+            variant={connected ? 'ghost' : 'primary'}
+            label={connected ? 'Switch Web3 wallet' : 'Connect Web3 wallet'}
+          />
         </section>
 
         <section className="overflow-hidden rounded-xl bg-nova-surface">

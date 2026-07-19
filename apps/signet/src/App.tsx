@@ -33,19 +33,21 @@ import { SettingsConnectionsPage } from '@/pages/settings/Connections'
 import { SettingsAdvancedPage } from '@/pages/settings/Advanced'
 import { SettingsFafoPage } from '@/pages/settings/Fafo'
 import { SettingsAboutPage } from '@/pages/settings/About'
+import { WalletConnectPage } from '@/pages/WalletConnectPage'
 import type { ReactNode } from 'react'
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { hasWallet, unlocked } = useWallet()
+  const { hasWallet, unlocked, sessionReady } = useWallet()
 
+  if (sessionReady) return children
   if (!hasWallet) return <Navigate to={ROUTES.onboarding} replace />
   if (!unlocked) return <Navigate to={ROUTES.unlock} replace />
   return children
 }
 
 function PublicOnly({ children }: { children: ReactNode }) {
-  const { hasWallet, unlocked } = useWallet()
-  if (hasWallet && unlocked) return <Navigate to={ROUTES.portfolio} replace />
+  const { hasWallet, unlocked, sessionReady } = useWallet()
+  if (sessionReady || (hasWallet && unlocked)) return <Navigate to={ROUTES.portfolio} replace />
   if (hasWallet && !unlocked) return <Navigate to={ROUTES.unlock} replace />
   return children
 }
@@ -74,9 +76,11 @@ export function App() {
             }
           />
           <Route path={ROUTES.unlock} element={<LockedPage />} />
+          <Route path={ROUTES.walletConnect} element={<WalletConnectPage />} />
 
           <Route
             path={ROUTES.portfolio}
+
             element={
               <ProtectedRoute>
                 <DashboardPage />
