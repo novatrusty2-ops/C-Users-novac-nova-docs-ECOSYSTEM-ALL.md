@@ -11,12 +11,14 @@ beforeEach(() => {
 })
 
 describe('usertokens import', () => {
-  it('imports NovaONE and NRW ecosystem tokens', () => {
+  it('imports Nova Plus tokens across three chains', () => {
     const result = importEcosystemTokensFromMesh('ecosystem')
-    expect(result.count).toBeGreaterThan(10)
+    expect(result.count).toBeGreaterThan(40)
     expect(result.added).toBe(result.count)
+    expect(result.chains).toEqual([22016, 33001, 9001])
     expect(userTokensForChain(22016).some((t) => t.symbol === 'NOVA')).toBe(true)
     expect(userTokensForChain(33001).some((t) => t.symbol === 'NRW')).toBe(true)
+    expect(userTokensForChain(9001).some((t) => t.symbol === 'NOVA')).toBe(true)
     expect(userTokensForChain(22016).some((t) => t.symbol === 'AnA' && t.address)).toBe(true)
   })
 
@@ -40,7 +42,7 @@ describe('usertokens import', () => {
             address: null,
             standard: 'native',
           },
-          source: 'signet',
+          source: 'legacy',
           importedAt: Date.now(),
         },
       ]),

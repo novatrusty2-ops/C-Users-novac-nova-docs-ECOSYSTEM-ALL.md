@@ -7,11 +7,16 @@ const STABLECOINS = new Set([
   'DAI',
   'BUSD',
   'AUSDT',
+  'AUSDC',
   'CUSDT',
   'CUSDC',
   'KUSD',
   'TUSD',
   'FRAX',
+  'USDT-LEGACY',
+  'USDT-TRC20',
+  'USDT-BNB',
+  'NSB-AUSDT',
 ])
 
 const coingeckoCache = new Map<string, { price: number; at: number }>()

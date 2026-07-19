@@ -1,11 +1,12 @@
 import type { ChainToken } from '@/types'
 import {
-  tokensForChain,
+  tokensForNovaPlus,
   toChainToken,
   withPricedHints,
   type EcosystemTokenDef,
 } from './ecosystemTokens'
 import { oracleUsdPrice } from './oracle'
+import { NOVA_PLUS_CHAIN_IDS } from './novaPlus'
 
 const KEY = 'nova.usertokens.v1'
 
@@ -31,7 +32,7 @@ export function loadUserTokens(): UserTokenRecord[] {
   if (!raw) return []
   try {
     const parsed = JSON.parse(raw) as Array<UserTokenRecord & { source?: string }>
-    // Normalize legacy source tags (e.g. old "signet") → ecosystem
+    // Normalize unknown / legacy source tags → ecosystem
     return parsed.map((r) => ({
       ...r,
       source:
@@ -73,11 +74,14 @@ export function mergeUserTokens(incoming: UserTokenRecord[]): { added: number; t
   return { added, total: next.length }
 }
 
-/** Import curated NovaONE (22016) + NRW (33001) ecosystem token catalogs with price hints */
+/**
+ * Import all Nova Plus tokens (NovaONE 22016 + NRW 33001 + Nova Production 9001)
+ * with full oracle price hints. Liquidity is attached on balance refresh.
+ */
 export function importEcosystemTokensFromMesh(
   source: UserTokenRecord['source'] = 'ecosystem',
-): { added: number; total: number; count: number } {
-  const defs = withPricedHints([...tokensForChain(22016), ...tokensForChain(33001)])
+): { added: number; total: number; count: number; chains: number[] } {
+  const defs = withPricedHints(tokensForNovaPlus())
   const now = Date.now()
   const records: UserTokenRecord[] = defs.map((d: EcosystemTokenDef) => {
     const token = toChainToken(d)
@@ -91,7 +95,7 @@ export function importEcosystemTokensFromMesh(
     }
   })
   const result = mergeUserTokens(records)
-  return { ...result, count: records.length }
+  return { ...result, count: records.length, chains: [...NOVA_PLUS_CHAIN_IDS] }
 }
 
 export function userTokensForChain(chainId: number): ChainToken[] {

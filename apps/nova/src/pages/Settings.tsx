@@ -77,7 +77,10 @@ export function Settings() {
   function handleImportTokens() {
     const r = importEcosystemTokensFromMesh('ecosystem')
     setImported(r.total)
-    push(r.added ? `Imported ${r.added} mesh tokens` : 'Mesh tokens already present', 'success')
+    push(
+      r.added ? `Imported ${r.added} Nova Plus tokens` : 'Nova Plus catalog already present',
+      'success',
+    )
     void refreshBalances()
   }
 
@@ -116,7 +119,7 @@ export function Settings() {
           <Row label="Nova Bank dashboard" href={ECOSYSTEM_LINKS.novaBank} />
           <Row label="Nova Swap" href={ECOSYSTEM_LINKS.novaSwap} />
           <button type="button" className="w-full text-left" onClick={handleImportTokens}>
-            <Row label={`Import mesh tokens (${imported})`} />
+            <Row label={`Import Nova Plus tokens (${imported})`} />
           </button>
         </section>
 

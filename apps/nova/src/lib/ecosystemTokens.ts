@@ -1,51 +1,68 @@
 import type { ChainToken } from '@/types'
+import { NOVA_PLUS_SNAPSHOT, type NovaPlusTokenSnap } from './novaPlusSnapshot'
+import { NOVA_PLUS_CHAIN_IDS } from './novaPlus'
 
 /**
- * Curated NovaONE (22016) + NRW World (33001) token catalogs for import into Nova Wallet.
- * Native tokens use address:null; known ERC-20s use verified mesh contracts where available.
+ * Nova Plus token catalogs — NovaONE (22016) + NRW (33001) + Nova Production (9001).
+ * Production snapshot from Nova Bank ecosystem API + verified mesh ERC-20 contracts.
  */
 export interface EcosystemTokenDef extends ChainToken {
   chainIds: number[]
   assetClass: 'native' | 'erc20' | 'crypto' | 'fiat'
   importable: boolean
+  tradable?: boolean
+  swappable?: boolean
+  transferable?: boolean
+  decentralized?: boolean
 }
 
 const NOVAONE = 22016
 const NRW = 33001
+const NOVA_PROD = 9001
 
 /** Known mesh ERC-20 contracts (from Anaka mesh registry) */
 export const MESH_CONTRACTS = {
   AnA_22016: '0xc05F5B8A193bECA1744E42D4c3c516DBC49f7d8B',
   WAGAS_22016: '0x01396c382FeCb30548FFa3f9D9da2252C3C94748',
-  /** Wrapped bridge on NovaONE (deployed bridge — used as ecosystem anchor) */
   WRAPPED_BRIDGE_22016: '0x227a6f3EEF2df576bc127dF0326D1F4B6f0ce9Cb',
 } as const
 
-export const ECOSYSTEM_TOKENS: EcosystemTokenDef[] = [
-  // Natives
-  {
-    symbol: 'NOVA',
-    name: 'NovaONE Native',
-    decimals: 18,
-    address: null,
-    standard: 'native',
-    usd: 1,
-    chainIds: [NOVAONE],
-    assetClass: 'native',
-    importable: true,
-  },
-  {
-    symbol: 'NRW',
-    name: 'NRW World Native',
-    decimals: 18,
-    address: null,
-    standard: 'native',
-    usd: 1,
-    chainIds: [NRW],
-    assetClass: 'native',
-    importable: true,
-  },
-  // Known ERC-20s on NovaONE
+function snapToDefs(snap: NovaPlusTokenSnap): EcosystemTokenDef[] {
+  const assetClass =
+    snap.assetClass === 'native' ||
+    snap.assetClass === 'erc20' ||
+    snap.assetClass === 'crypto' ||
+    snap.assetClass === 'fiat'
+      ? snap.assetClass
+      : 'crypto'
+
+  return snap.chainIds
+    .filter((id) => (NOVA_PLUS_CHAIN_IDS as readonly number[]).includes(id))
+    .map((chainId) => {
+      const isNative =
+        (snap.symbol === 'NOVA' && (chainId === NOVAONE || chainId === NOVA_PROD)) ||
+        (snap.symbol === 'NRW' && chainId === NRW)
+
+      return {
+        symbol: snap.symbol,
+        name: snap.name,
+        decimals: snap.decimals,
+        address: null as string | null,
+        standard: (isNative ? 'native' : 'erc20') as 'native' | 'erc20',
+        usd: snap.usd,
+        coingeckoId: snap.coingeckoId ?? undefined,
+        chainIds: [chainId],
+        assetClass,
+        importable: true,
+        tradable: snap.tradable,
+        swappable: snap.swappable,
+        transferable: snap.transferable,
+        decentralized: snap.decentralized,
+      }
+    })
+}
+
+const CONTRACT_TOKENS: EcosystemTokenDef[] = [
   {
     symbol: 'AnA',
     name: 'Anaka',
@@ -56,6 +73,10 @@ export const ECOSYSTEM_TOKENS: EcosystemTokenDef[] = [
     chainIds: [NOVAONE],
     assetClass: 'erc20',
     importable: true,
+    tradable: true,
+    swappable: true,
+    transferable: true,
+    decentralized: true,
   },
   {
     symbol: 'WAGAS',
@@ -67,46 +88,39 @@ export const ECOSYSTEM_TOKENS: EcosystemTokenDef[] = [
     chainIds: [NOVAONE],
     assetClass: 'erc20',
     importable: true,
+    tradable: true,
+    swappable: true,
+    transferable: true,
+    decentralized: true,
   },
-  // Ecosystem crypto catalog (watchlist — same HD address across mesh)
-  ...makeMeshCrypto('USDC', 'USD Coin', 6, 1),
-  ...makeMeshCrypto('USDT', 'Tether USD', 6, 1),
-  ...makeMeshCrypto('ETH', 'Ether', 18, undefined, 'ethereum'),
-  ...makeMeshCrypto('BTC', 'Bitcoin', 8, undefined, 'bitcoin'),
-  ...makeMeshCrypto('SHIVA', 'Shiva Coin', 6, 0.1),
-  ...makeMeshCrypto('ACX', 'ACX', 6, 0.1),
-  ...makeMeshCrypto('ICX', 'ICX', 6, 0.1),
-  ...makeMeshCrypto('XRP', 'XRP', 6, 0.5),
-  ...makeMeshCrypto('E1111', '11:11 Coin', 6, 0.05),
-  ...makeMeshCrypto('AUSDT', 'Australian USDT', 6, 1),
-  ...makeMeshCrypto('VICTORYA', 'Victoria Coin', 6, 0.05),
-  ...makeMeshCrypto('KUSD', 'K USD', 6, 1),
-  ...makeMeshCrypto('ANAKA', 'Anaka Coin', 6, 0.1),
-  ...makeMeshCrypto('CUSDT', 'Custodial USDT', 6, 1),
-  ...makeMeshCrypto('CUSDC', 'Custodial USDC', 6, 1),
 ]
 
-function makeMeshCrypto(
-  symbol: string,
-  name: string,
-  decimals: number,
-  usd?: number,
-  coingeckoId?: string,
-): EcosystemTokenDef[] {
-  // Catalog entries — shown with live/oracle price + mesh liquidity even at zero balance
-  return [NOVAONE, NRW].map((chainId) => ({
-    symbol,
-    name,
-    decimals,
-    address: null as string | null,
-    standard: 'erc20' as const,
-    usd,
-    coingeckoId,
-    chainIds: [chainId],
-    assetClass: 'crypto' as const,
-    importable: true,
-  }))
+function buildCatalog(): EcosystemTokenDef[] {
+  const fromSnap = NOVA_PLUS_SNAPSHOT.flatMap(snapToDefs)
+  const map = new Map<string, EcosystemTokenDef>()
+  for (const t of fromSnap) {
+    map.set(`${t.chainIds[0]}:${t.symbol.toUpperCase()}:${t.address ?? 'native'}`, t)
+  }
+  // Prefer verified contracts over address-less watchlist twins
+  for (const t of CONTRACT_TOKENS) {
+    const watchKey = `${t.chainIds[0]}:${t.symbol.toUpperCase()}:native`
+    const ercKey = `${t.chainIds[0]}:${t.symbol.toUpperCase()}:null`
+    map.delete(watchKey)
+    map.delete(ercKey)
+    map.delete(`${t.chainIds[0]}:${t.symbol.toUpperCase()}:`)
+    // remove address-null same symbol on same chain
+    for (const k of [...map.keys()]) {
+      if (k.startsWith(`${t.chainIds[0]}:${t.symbol.toUpperCase()}:`) && !k.endsWith(t.address!)) {
+        const existing = map.get(k)
+        if (existing && !existing.address) map.delete(k)
+      }
+    }
+    map.set(`${t.chainIds[0]}:${t.symbol.toUpperCase()}:${t.address}`, t)
+  }
+  return [...map.values()]
 }
+
+export const ECOSYSTEM_TOKENS: EcosystemTokenDef[] = buildCatalog()
 
 /** Ensure every importable token has a resolvable USD hint from oracle when missing */
 export function withPricedHints(defs: EcosystemTokenDef[]): EcosystemTokenDef[] {
@@ -117,10 +131,16 @@ export function withPricedHints(defs: EcosystemTokenDef[]): EcosystemTokenDef[] 
       d.coingeckoId ??
       ({
         ETH: 'ethereum',
+        WETH: 'weth',
         BTC: 'bitcoin',
+        WBTC: 'wrapped-bitcoin',
+        BNB: 'binancecoin',
+        SOL: 'solana',
+        TRX: 'tron',
         XRP: 'ripple',
         USDC: 'usd-coin',
         USDT: 'tether',
+        MATIC: 'matic-network',
       } as Record<string, string>)[d.symbol.toUpperCase()],
   }))
 }
@@ -129,10 +149,17 @@ export function tokensForChain(chainId: number): EcosystemTokenDef[] {
   return ECOSYSTEM_TOKENS.filter((t) => t.chainIds.includes(chainId) && t.importable)
 }
 
-export function tokensForNovaOneAndNrw(): EcosystemTokenDef[] {
+export function tokensForNovaPlus(): EcosystemTokenDef[] {
   return ECOSYSTEM_TOKENS.filter(
-    (t) => t.importable && (t.chainIds.includes(NOVAONE) || t.chainIds.includes(NRW)),
+    (t) =>
+      t.importable &&
+      t.chainIds.some((id) => (NOVA_PLUS_CHAIN_IDS as readonly number[]).includes(id)),
   )
+}
+
+/** @deprecated use tokensForNovaPlus */
+export function tokensForNovaOneAndNrw(): EcosystemTokenDef[] {
+  return tokensForNovaPlus()
 }
 
 export function toChainToken(def: EcosystemTokenDef): ChainToken {
@@ -145,4 +172,14 @@ export function toChainToken(def: EcosystemTokenDef): ChainToken {
     usd: def.usd,
     coingeckoId: def.coingeckoId,
   }
+}
+
+export function findEcosystemToken(
+  chainId: number,
+  symbol: string,
+): EcosystemTokenDef | undefined {
+  const upper = symbol.toUpperCase()
+  return ECOSYSTEM_TOKENS.find(
+    (t) => t.chainIds.includes(chainId) && t.symbol.toUpperCase() === upper,
+  )
 }

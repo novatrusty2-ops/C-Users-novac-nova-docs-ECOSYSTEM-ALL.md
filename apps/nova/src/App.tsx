@@ -12,6 +12,7 @@ import { Swap } from '@/pages/Swap'
 import { Activity } from '@/pages/Activity'
 import { Settings } from '@/pages/Settings'
 import { Ecosystem } from '@/pages/Ecosystem'
+import { TokenDetail } from '@/pages/TokenDetail'
 import { Send } from '@/pages/Send'
 import { Receive } from '@/pages/Receive'
 import type { ReactNode } from 'react'
@@ -105,6 +106,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Receive />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.token}
+          element={
+            <ProtectedRoute>
+              <TokenDetail />
             </ProtectedRoute>
           }
         />

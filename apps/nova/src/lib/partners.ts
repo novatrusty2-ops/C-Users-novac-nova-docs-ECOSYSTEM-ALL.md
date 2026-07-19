@@ -35,6 +35,8 @@ export const ECOSYSTEM_LINKS = {
   ecosystemTokensApi:
     'https://nova-bank-api-production-7311.up.railway.app/api/v1/chains/ecosystem/tokens',
   defiOracleWallet: 'https://wallet.defi-oracle.io/wallet/',
+  /** Nova Plus — 3-chain mesh (NovaONE · NRW · Production) */
+  novaPlus: 'https://novablockchain.it.com/',
 } as const
 
 export function getPartner(id: string): PartnerWallet | undefined {

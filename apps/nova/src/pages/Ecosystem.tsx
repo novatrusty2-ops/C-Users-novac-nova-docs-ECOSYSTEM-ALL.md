@@ -30,8 +30,8 @@ export function Ecosystem() {
       setTokenCount(result.total)
       push(
         result.added > 0
-          ? `Imported ${result.added} tokens with price + liquidity`
-          : `Priced catalog ready (${result.total} tokens)`,
+          ? `Imported ${result.added} Nova Plus tokens · price + liquidity`
+          : `Nova Plus catalog ready (${result.total} tokens)`,
         'success',
       )
       void refreshBalances()
@@ -72,19 +72,20 @@ export function Ecosystem() {
 
         <section className="card-surface space-y-3">
           <h2 className="font-display text-sm font-semibold text-nova-ink">
-            Import tokens · NovaONE & NRW
+            Import tokens · Nova Plus
           </h2>
           <p className="text-xs text-nova-muted">
-            Pull curated tokens for chains <span className="font-mono">22016</span> and{' '}
-            <span className="font-mono">33001</span> (NOVA, NRW, AnA, WAGAS, USDC/USDT catalog, mesh
-            assets). Imported: {tokenCount}
+            Transfer the full production catalog onto Nova Wallet for chains{' '}
+            <span className="font-mono">22016</span>, <span className="font-mono">33001</span>, and{' '}
+            <span className="font-mono">9001</span> — price, liquidity, charts, and skills for every
+            token. Imported: {tokenCount}
           </p>
           <Button
             className="w-full"
             disabled={importing}
             onClick={() => importMeshTokens('ecosystem')}
           >
-            Import NovaONE + NRW tokens
+            Import Nova Plus (3 chains)
           </Button>
         </section>
 

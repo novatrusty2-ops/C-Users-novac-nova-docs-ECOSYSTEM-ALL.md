@@ -70,9 +70,9 @@ export const CHAINS: ChainDefinition[] = [
     isDefault: true,
     isOptional: false,
     ecosystemRole: 'custody',
-    tokens: [
+    tokens: meshTokens(9001, [
       { symbol: 'NOVA', name: 'Nova Token', decimals: 18, address: null, standard: 'native', usd: 1 },
-    ],
+    ]),
   },
   {
     id: 138,

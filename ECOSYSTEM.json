@@ -39,9 +39,14 @@
         "novaSwap"
       ],
       "tokenImport": {
+        "novaPlus": true,
         "novaOne": 22016,
         "nrwWorld": 33001,
-        "catalog": "apps/nova/src/lib/ecosystemTokens.ts"
+        "novaProduction": 9001,
+        "catalog": "apps/nova/src/lib/ecosystemTokens.ts",
+        "snapshot": "apps/nova/src/lib/novaPlusSnapshot.ts",
+        "charts": true,
+        "skills": true
       },
       "storagePrefix": "nova.",
       "ports": {
