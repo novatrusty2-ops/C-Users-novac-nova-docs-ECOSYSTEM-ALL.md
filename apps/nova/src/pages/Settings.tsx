@@ -14,7 +14,7 @@ import type { AutolockMinutes, DisplayCurrency } from '@/types'
 import { ROUTES } from '@/lib/routes'
 import { BRAND } from '@/lib/brand'
 import { ECOSYSTEM_LINKS, PARTNERS } from '@/lib/partners'
-import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
+import { ensureNovaPlusTokensImported, loadUserTokens } from '@/lib/usertokens'
 import { useToast } from '@/context/ToastContext'
 
 function Row({
@@ -75,10 +75,12 @@ export function Settings() {
   }
 
   function handleImportTokens() {
-    const r = importEcosystemTokensFromMesh('ecosystem')
+    const r = ensureNovaPlusTokensImported('ecosystem')
     setImported(r.total)
     push(
-      r.added ? `Imported ${r.added} Nova Plus tokens` : 'Nova Plus catalog already present',
+      r.added > 0
+        ? `Synced ${r.added} Nova Plus tokens`
+        : `${r.total} Nova Plus tokens already auto-listed`,
       'success',
     )
     void refreshBalances()

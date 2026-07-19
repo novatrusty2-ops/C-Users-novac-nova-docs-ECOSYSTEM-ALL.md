@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/common/Button'
 import { Spinner } from '@/components/common/Spinner'
@@ -7,12 +7,11 @@ import { TopBar } from '@/components/layout/TopBar'
 import { TokenRow } from '@/components/tokens/TokenRow'
 import { QuickActions } from '@/components/wallet/QuickActions'
 import { useWallet } from '@/context/WalletContext'
-import { useToast } from '@/context/ToastContext'
 import { useTokenBalances } from '@/hooks/useTokenBalances'
 import { useDisplaySettings } from '@/hooks/useDisplaySettings'
 import { ROUTES } from '@/lib/routes'
 import { ECOSYSTEM_LINKS } from '@/lib/partners'
-import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
+import { ensureNovaPlusTokensImported, loadUserTokens } from '@/lib/usertokens'
 import { formatCompactUsd } from '@/lib/liquidity'
 import { NOVA_PLUS_CHAIN_IDS, NOVA_PLUS_LABEL } from '@/lib/novaPlus'
 
@@ -20,11 +19,17 @@ type AssetTab = 'crypto' | 'plus'
 
 export function Portfolio() {
   const { activeAccount, refreshBalances } = useWallet()
-  const { push } = useToast()
   const { rows, loading, formattedTotal, totalUsd } = useTokenBalances()
   const { hideBalances, toggleHideBalances } = useDisplaySettings()
   const [imported, setImported] = useState(() => loadUserTokens().length)
   const [tab, setTab] = useState<AssetTab>('plus')
+
+  // Auto-import full catalog on Assets view (covers Web3 + returning sessions)
+  useEffect(() => {
+    const r = ensureNovaPlusTokensImported('ecosystem')
+    setImported(r.total)
+    if (r.added > 0) void refreshBalances()
+  }, [refreshBalances])
 
   const meshRows = useMemo(() => {
     const ids = new Set([22016, 33001, 9001, 138, 11013, 651940])
@@ -44,18 +49,6 @@ export function Portfolio() {
   )
   const totalLiq = plusRows.reduce((s, r) => s + (r.liquidityUsd ?? 0), 0)
   const listRows = tab === 'plus' ? plusRows : meshRows
-
-  async function handleImport() {
-    const r = importEcosystemTokensFromMesh('ecosystem')
-    setImported(r.total)
-    push(
-      r.added
-        ? `Imported ${r.added} Nova Plus tokens · price & liquidity`
-        : `Nova Plus catalog ready (${r.total} tokens)`,
-      'success',
-    )
-    await refreshBalances()
-  }
 
   return (
     <>
@@ -132,24 +125,15 @@ export function Portfolio() {
 
           <div className="mb-1 flex items-center justify-between px-0.5 pt-3">
             <p className="text-xs text-nova-muted">
-              {imported > 0 ? `${imported} listed` : 'Assets'}
+              {imported > 0 ? `${imported} auto-listed` : 'Assets'}
             </p>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                className="text-xs text-nova-accent"
-                onClick={() => void handleImport()}
-              >
-                Import
-              </button>
-              <button
-                type="button"
-                className="text-xs text-nova-muted hover:text-nova-ink"
-                onClick={() => void refreshBalances()}
-              >
-                Refresh
-              </button>
-            </div>
+            <button
+              type="button"
+              className="text-xs text-nova-muted hover:text-nova-ink"
+              onClick={() => void refreshBalances()}
+            >
+              Refresh
+            </button>
           </div>
 
           {loading ? (
@@ -158,11 +142,9 @@ export function Portfolio() {
             </div>
           ) : listRows.length === 0 ? (
             <div className="rounded-xl bg-nova-surface px-4 py-8 text-center">
-              <p className="text-sm text-nova-muted">
-                No assets yet. Import the Nova Plus catalog (3 chains).
-              </p>
-              <Button className="mt-4" onClick={() => void handleImport()}>
-                Import Nova Plus tokens
+              <p className="text-sm text-nova-muted">Loading Nova Plus tokens…</p>
+              <Button className="mt-4" onClick={() => void refreshBalances()}>
+                Refresh
               </Button>
               <Link
                 to={ROUTES.ecosystem}

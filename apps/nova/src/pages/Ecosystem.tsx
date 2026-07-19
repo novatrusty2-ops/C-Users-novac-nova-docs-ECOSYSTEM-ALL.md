@@ -7,7 +7,7 @@ import { useWallet } from '@/context/WalletContext'
 import { CHAINS, defaultChainIds } from '@/lib/chains'
 import { ECOSYSTEM_LINKS, PARTNERS } from '@/lib/partners'
 import { setEnabledChainIds, getEnabledChainIds } from '@/lib/networks'
-import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
+import { ensureNovaPlusTokensImported, loadUserTokens } from '@/lib/usertokens'
 import { CopyButton } from '@/components/common/CopyButton'
 import { ROUTES } from '@/lib/routes'
 
@@ -26,12 +26,12 @@ export function Ecosystem() {
   function importMeshTokens(source: 'ecosystem' | 'pouchpay' = 'ecosystem') {
     setImporting(true)
     try {
-      const result = importEcosystemTokensFromMesh(source)
+      const result = ensureNovaPlusTokensImported(source)
       setTokenCount(result.total)
       push(
         result.added > 0
-          ? `Imported ${result.added} Nova Plus tokens · price + liquidity`
-          : `Nova Plus catalog ready (${result.total} tokens)`,
+          ? `Synced ${result.added} Nova Plus tokens · price + liquidity`
+          : `Nova Plus auto-listed (${result.total} tokens)`,
         'success',
       )
       void refreshBalances()
@@ -75,17 +75,17 @@ export function Ecosystem() {
             Import tokens · Nova Plus
           </h2>
           <p className="text-xs text-nova-muted">
-            Transfer the full production catalog onto Nova Wallet for chains{' '}
-            <span className="font-mono">22016</span>, <span className="font-mono">33001</span>, and{' '}
-            <span className="font-mono">9001</span> — price, liquidity, charts, and skills for every
-            token. Imported: {tokenCount}
+            All Nova Plus tokens auto-import when you unlock or connect Web3. Chains{' '}
+            <span className="font-mono">22016</span>, <span className="font-mono">33001</span>,{' '}
+            <span className="font-mono">9001</span> — price, liquidity, charts, skills. Listed:{' '}
+            {tokenCount}
           </p>
           <Button
             className="w-full"
             disabled={importing}
             onClick={() => importMeshTokens('ecosystem')}
           >
-            Import Nova Plus (3 chains)
+            Re-sync Nova Plus catalog
           </Button>
         </section>
 

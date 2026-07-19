@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import {
   clearUserTokens,
+  ensureNovaPlusTokensImported,
   importEcosystemTokensFromMesh,
   loadUserTokens,
   userTokensForChain,
@@ -27,6 +28,17 @@ describe('usertokens import', () => {
     const second = importEcosystemTokensFromMesh()
     expect(second.added).toBe(0)
     expect(loadUserTokens().length).toBe(second.total)
+  })
+
+  it('auto-fills missing tokens via ensureNovaPlusTokensImported', () => {
+    importEcosystemTokensFromMesh()
+    const one = loadUserTokens()[0]!
+    localStorage.setItem('nova.usertokens.v1', JSON.stringify([one]))
+    localStorage.removeItem('nova.usertokens.catalog.v1')
+    const r = ensureNovaPlusTokensImported()
+    expect(r.added).toBeGreaterThan(10)
+    expect(r.total).toBe(r.count)
+    expect(userTokensForChain(9001).length).toBeGreaterThan(0)
   })
 
   it('normalizes legacy source tags to ecosystem', () => {

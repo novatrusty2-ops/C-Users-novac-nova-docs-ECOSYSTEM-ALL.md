@@ -9,8 +9,15 @@ import { oracleUsdPrice } from './oracle'
 import { NOVA_PLUS_CHAIN_IDS } from './novaPlus'
 
 const KEY = 'nova.usertokens.v1'
+const CATALOG_META_KEY = 'nova.usertokens.catalog.v1'
 
 export type UserTokenSource = 'ecosystem' | 'manual' | 'pouchpay'
+
+/** Bump when the Nova Plus catalog grows so sessions re-sync automatically */
+export function novaPlusCatalogFingerprint(): string {
+  const defs = tokensForNovaPlus()
+  return `nova-plus:${defs.length}:${NOVA_PLUS_CHAIN_IDS.join(',')}`
+}
 
 export interface UserTokenRecord {
   chainId: number
@@ -95,7 +102,27 @@ export function importEcosystemTokensFromMesh(
     }
   })
   const result = mergeUserTokens(records)
+  try {
+    storage()?.setItem(CATALOG_META_KEY, novaPlusCatalogFingerprint())
+  } catch {
+    /* ignore */
+  }
   return { ...result, count: records.length, chains: [...NOVA_PLUS_CHAIN_IDS] }
+}
+
+/**
+ * Ensure the full Nova Plus catalog is present (idempotent).
+ * Runs on every session — fills gaps when the catalog grows.
+ */
+export function ensureNovaPlusTokensImported(
+  source: UserTokenRecord['source'] = 'ecosystem',
+): { added: number; total: number; count: number; chains: number[]; synced: boolean } {
+  const fp = novaPlusCatalogFingerprint()
+  const prev = storage()?.getItem(CATALOG_META_KEY)
+  const before = loadUserTokens().length
+  const result = importEcosystemTokensFromMesh(source)
+  const synced = result.added > 0 || prev !== fp || before === 0
+  return { ...result, synced }
 }
 
 export function userTokensForChain(chainId: number): ChainToken[] {
@@ -106,6 +133,7 @@ export function userTokensForChain(chainId: number): ChainToken[] {
 
 export function clearUserTokens(): void {
   storage()?.removeItem(KEY)
+  storage()?.removeItem(CATALOG_META_KEY)
   try {
     window.dispatchEvent(new Event('nova-tokens-changed'))
   } catch {
