@@ -4,7 +4,8 @@
   "private": true,
   "description": "Nova Wallet — https://novablockchain.it.com/",
   "workspaces": [
-    "apps/nova"
+    "apps/nova",
+    "apps/nova-api"
   ],
   "scripts": {
     "dev": "npm run dev -w nova-wallet",
@@ -13,7 +14,10 @@
     "build:nova": "npm run build -w nova-wallet",
     "test": "npm run test -w nova-wallet",
     "test:nova": "npm run test -w nova-wallet",
-    "typecheck": "npm run typecheck -w nova-wallet"
+    "typecheck": "npm run typecheck -w nova-wallet",
+    "api:dev": "npm run dev -w nova-api",
+    "api:start": "npm run start -w nova-api",
+    "api:smoke": "npm run smoke -w nova-api"
   },
   "engines": {
     "node": ">=20"

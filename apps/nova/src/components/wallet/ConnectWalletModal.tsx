@@ -31,7 +31,8 @@ export function ConnectWalletModal({ open, onClose, onConnected }: ConnectWallet
   return (
     <Modal open={open} title="Connect wallet" onClose={onClose}>
       <p className="mb-4 text-xs text-nova-muted">
-        MetaMask, Trust, SafePal, Gate, OKX, Coinbase, Rabby, Brave, Bitget, and other Web3 wallets.
+        Injected &amp; EIP-6963: MetaMask, Trust, SafePal, Gate, OKX, Coinbase, Rabby, Brave, Bitget,
+        WalletConnect, or any browser wallet.
       </p>
 
       {connected && session ? (

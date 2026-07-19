@@ -113,6 +113,7 @@ export function Settings() {
             Nova Bank
           </p>
           <Row label="Ecosystem hub" to={ROUTES.ecosystem} />
+          <Row label="Institutional custody" to={ROUTES.custody} />
           <Row label="Nova Bank dashboard" href={ECOSYSTEM_LINKS.novaBank} />
           <Row label="Nova Swap" href={ECOSYSTEM_LINKS.novaSwap} />
           <button type="button" className="w-full text-left" onClick={handleImportTokens}>

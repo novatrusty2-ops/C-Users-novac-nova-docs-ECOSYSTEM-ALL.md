@@ -40,7 +40,7 @@ describe('usertokens import', () => {
             address: null,
             standard: 'native',
           },
-          source: 'signet',
+          source: 'legacy',
           importedAt: Date.now(),
         },
       ]),
