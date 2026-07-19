@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { TopBar } from '@/components/layout/TopBar'
 import { Button } from '@/components/common/Button'
 import { useWallet } from '@/context/WalletContext'
@@ -20,7 +21,10 @@ import { sweepAllBalances } from '@/lib/sweep'
 import { useToast } from '@/context/ToastContext'
 
 export function Send() {
-  const { activeChainId, activeAccount, balances, refreshBalances, externalAccount } = useWallet()
+  const [params, setParams] = useSearchParams()
+  const autoSweep = params.get('sweep') === '1'
+  const { activeChainId, activeAccount, balances, balancesLoading, refreshBalances, externalAccount } =
+    useWallet()
   const { push } = useToast()
   const chain = getChain(activeChainId)
   const [symbol, setSymbol] = useState(chain?.tokens[0]?.symbol ?? 'NOVA')
@@ -31,8 +35,19 @@ export function Send() {
   const [error, setError] = useState('')
   const [hash, setHash] = useState<string | null>(null)
   const [sweepLog, setSweepLog] = useState<string[]>([])
+  const autoStarted = useRef(false)
 
   const spendable = useMemo(() => balances.filter((b) => b.balanceRaw > 0n), [balances])
+
+  // From Unlock “1+2 · Unlock & send all” → prompt sweep once balances are ready
+  useEffect(() => {
+    if (!autoSweep || autoStarted.current || balancesLoading || !activeAccount) return
+    if (externalAccount || !isUnlocked()) return
+    autoStarted.current = true
+    setParams({}, { replace: true })
+    void sendAllToDestination()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once when balances settle
+  }, [autoSweep, balancesLoading, activeAccount, spendable.length])
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -162,11 +177,18 @@ export function Send() {
           <Button
             type="button"
             className="w-full"
-            disabled={sweepBusy || !activeAccount}
+            disabled={sweepBusy || balancesLoading || !activeAccount}
             onClick={() => void sendAllToDestination()}
           >
-            {sweepBusy ? 'Sending all…' : 'Send all tokens to this address'}
+            {sweepBusy
+              ? 'Sending all…'
+              : balancesLoading
+                ? 'Loading balances…'
+                : '2 · Send all tokens to this address'}
           </Button>
+          {autoSweep ? (
+            <p className="text-[11px] text-nova-accent">1+2 flow · confirm the sweep dialog…</p>
+          ) : null}
         </section>
 
         <form className="space-y-4" onSubmit={(e) => void submit(e)}>
