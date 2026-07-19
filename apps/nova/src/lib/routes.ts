@@ -7,6 +7,7 @@ export const ROUTES = {
   activity: '/activity',
   settings: '/settings',
   ecosystem: '/ecosystem',
+  custody: '/custody',
   send: '/send',
   receive: '/receive',
 } as const

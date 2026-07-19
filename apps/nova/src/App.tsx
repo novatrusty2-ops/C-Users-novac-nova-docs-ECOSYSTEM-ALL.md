@@ -12,6 +12,7 @@ import { Swap } from '@/pages/Swap'
 import { Activity } from '@/pages/Activity'
 import { Settings } from '@/pages/Settings'
 import { Ecosystem } from '@/pages/Ecosystem'
+import { Custody } from '@/pages/Custody'
 import { Send } from '@/pages/Send'
 import { Receive } from '@/pages/Receive'
 import type { ReactNode } from 'react'
@@ -89,6 +90,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Ecosystem />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.custody}
+          element={
+            <ProtectedRoute>
+              <Custody />
             </ProtectedRoute>
           }
         />

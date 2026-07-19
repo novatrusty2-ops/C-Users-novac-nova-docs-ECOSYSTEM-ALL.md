@@ -1,0 +1,20 @@
+{
+  "name": "nova-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Nova Wallet custody API — DFNS + Cobo (secrets server-side only)",
+  "scripts": {
+    "dev": "node --watch src/index.mjs",
+    "start": "node src/index.mjs",
+    "smoke": "node src/smoke.mjs"
+  },
+  "dependencies": {
+    "@dfns/sdk": "^0.8.25",
+    "@dfns/sdk-keysigner": "^0.8.25",
+    "tweetnacl": "^1.0.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

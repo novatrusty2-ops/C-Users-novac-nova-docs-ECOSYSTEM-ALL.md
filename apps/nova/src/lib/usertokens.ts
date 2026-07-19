@@ -31,7 +31,7 @@ export function loadUserTokens(): UserTokenRecord[] {
   if (!raw) return []
   try {
     const parsed = JSON.parse(raw) as Array<UserTokenRecord & { source?: string }>
-    // Normalize legacy source tags (e.g. old "signet") → ecosystem
+    // Normalize unknown / legacy source tags → ecosystem
     return parsed.map((r) => ({
       ...r,
       source:
