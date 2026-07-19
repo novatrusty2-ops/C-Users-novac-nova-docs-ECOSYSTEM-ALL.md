@@ -1,0 +1,104 @@
+@import './brand/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-signet-bg text-signet-ink font-body antialiased;
+  }
+
+  ::selection {
+    background: rgba(201, 168, 76, 0.35);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply min-h-[100dvh] overflow-x-hidden;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(140, 42, 62, 0.45), transparent 55%),
+      radial-gradient(800px 400px at 80% 20%, rgba(201, 168, 76, 0.12), transparent 50%),
+      var(--color-bg);
+  }
+
+  .grain-overlay {
+    position: relative;
+  }
+
+  .grain-overlay::before {
+    content: '';
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    opacity: 0.045;
+    z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 font-medium transition;
+    @apply bg-gold-gradient text-signet-bg-deep shadow-gold;
+    @apply hover:brightness-110 active:scale-[0.98];
+    background-size: 200% 100%;
+  }
+
+  .btn-primary.shimmer {
+    @apply animate-shimmer;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2 text-signet-ink-muted transition;
+    border-color: var(--color-border);
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(201, 168, 76, 0.4);
+    color: var(--color-gold-light);
+  }
+
+  .input-field {
+    @apply w-full rounded-lg px-4 py-2.5 text-signet-ink outline-none transition;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .input-field::placeholder {
+    color: var(--color-ink-dim);
+  }
+
+  .input-field:focus {
+    border-color: rgba(201, 168, 76, 0.5);
+    box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.3);
+  }
+
+  .card-interactive {
+    @apply rounded-xl p-4 transition;
+    border: 1px solid var(--color-border);
+    background: rgba(46, 20, 24, 0.8);
+  }
+
+  .card-interactive:hover {
+    border-color: rgba(201, 168, 76, 0.3);
+    background: rgba(60, 26, 34, 0.8);
+  }
+
+  .page-container {
+    @apply relative z-10 mx-auto w-full max-w-5xl px-4 pb-24 pt-6 md:pb-8 md:pt-8;
+  }
+
+  .settings-nav-link {
+    @apply block rounded-lg px-3 py-2 text-sm text-signet-ink-muted transition;
+    @apply hover:bg-signet-surface hover:text-signet-gold-light;
+  }
+
+  .settings-nav-link.active {
+    @apply bg-signet-surface-raised text-signet-gold-light border border-signet-border;
+  }
+}
