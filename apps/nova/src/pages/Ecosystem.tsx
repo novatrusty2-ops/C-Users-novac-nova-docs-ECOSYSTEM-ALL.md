@@ -30,8 +30,8 @@ export function Ecosystem() {
       setTokenCount(result.total)
       push(
         result.added > 0
-          ? `Imported ${result.added} tokens from NovaONE + NRW`
-          : `Tokens already imported (${result.total})`,
+          ? `Imported ${result.added} tokens with price + liquidity`
+          : `Priced catalog ready (${result.total} tokens)`,
         'success',
       )
       void refreshBalances()

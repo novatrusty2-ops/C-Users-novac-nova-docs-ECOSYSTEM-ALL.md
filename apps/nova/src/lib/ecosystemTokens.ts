@@ -93,7 +93,7 @@ function makeMeshCrypto(
   usd?: number,
   coingeckoId?: string,
 ): EcosystemTokenDef[] {
-  // Catalog entries without on-chain address yet — imported as watch tokens (balance 0 until mapped)
+  // Catalog entries — shown with live/oracle price + mesh liquidity even at zero balance
   return [NOVAONE, NRW].map((chainId) => ({
     symbol,
     name,
@@ -105,6 +105,23 @@ function makeMeshCrypto(
     chainIds: [chainId],
     assetClass: 'crypto' as const,
     importable: true,
+  }))
+}
+
+/** Ensure every importable token has a resolvable USD hint from oracle when missing */
+export function withPricedHints(defs: EcosystemTokenDef[]): EcosystemTokenDef[] {
+  return defs.map((d) => ({
+    ...d,
+    usd: d.usd ?? undefined,
+    coingeckoId:
+      d.coingeckoId ??
+      ({
+        ETH: 'ethereum',
+        BTC: 'bitcoin',
+        XRP: 'ripple',
+        USDC: 'usd-coin',
+        USDT: 'tether',
+      } as Record<string, string>)[d.symbol.toUpperCase()],
   }))
 }
 

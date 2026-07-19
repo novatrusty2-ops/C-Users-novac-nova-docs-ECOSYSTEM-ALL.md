@@ -18,8 +18,10 @@ import {
 import { Contract, JsonRpcProvider, formatUnits } from 'ethers'
 import { getActiveChainId, setActiveChainId } from '@/lib/activeChain'
 import { tokensOnChain } from '@/lib/chains'
+import { quoteLiquidity } from '@/lib/liquidity'
 import { allKnownChains, getEnabledChainIds } from '@/lib/networks'
 import { resolveUsdPrice } from '@/lib/prices'
+import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
 import {
   createWallet,
   deriveAccount,
@@ -104,8 +106,11 @@ async function fetchChainBalances(
     }
 
     const balance = formatUnits(balanceRaw, token.decimals)
-    const usdPrice = token.usd ?? (await resolveUsdPrice(token.symbol, token.coingeckoId)) ?? null
-    const usdValue = usdPrice != null ? Number(balance) * usdPrice : null
+    const liq = await quoteLiquidity(chain.id, token.symbol, token.coingeckoId)
+    const usdPrice =
+      liq?.priceUsd ?? token.usd ?? (await resolveUsdPrice(token.symbol, token.coingeckoId)) ?? null
+    const amountNum = Number(balance)
+    const usdValue = usdPrice != null && Number.isFinite(amountNum) ? amountNum * usdPrice : null
     rows.push({
       chainId: chain.id,
       chainName: chain.name,
@@ -114,13 +119,17 @@ async function fetchChainBalances(
       decimals: token.decimals,
       address: token.address,
       balance:
-        Number(balance) === 0
+        amountNum === 0
           ? '0'
-          : Number(balance).toLocaleString(undefined, { maximumFractionDigits: 6 }),
+          : amountNum.toLocaleString(undefined, { maximumFractionDigits: 6 }),
       balanceRaw,
       usdPrice,
       usdValue: usdValue != null && Number.isFinite(usdValue) ? usdValue : null,
       iconColor: chain.iconColor,
+      liquidityUsd: liq?.liquidityUsd ?? null,
+      volume24hUsd: liq?.volume24hUsd ?? null,
+      pair: liq?.pair ?? null,
+      priceSource: liq?.priceSource ?? null,
     })
   }
   return rows
@@ -184,7 +193,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setHasWallet(true)
       setUnlocked(true)
       syncAccounts()
-      push('Wallet created', 'success')
+      const r = importEcosystemTokensFromMesh('ecosystem')
+      push(`Wallet created · ${r.added} tokens with prices`, 'success')
       return result
     },
     [push, syncAccounts],
@@ -197,7 +207,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setHasWallet(true)
       setUnlocked(true)
       syncAccounts()
-      push('Wallet imported', 'success')
+      const r = importEcosystemTokensFromMesh('ecosystem')
+      push(`Wallet imported · ${r.added} priced tokens`, 'success')
       return result
     },
     [push, syncAccounts],
@@ -221,7 +232,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       await unlock(password)
       setUnlocked(true)
       syncAccounts()
-      push('Wallet unlocked', 'success')
+      if (loadUserTokens().length === 0) {
+        const r = importEcosystemTokensFromMesh('ecosystem')
+        push(`Unlocked · imported ${r.added} priced mesh tokens`, 'success')
+      } else {
+        push('Wallet unlocked', 'success')
+      }
     },
     [push, syncAccounts],
   )

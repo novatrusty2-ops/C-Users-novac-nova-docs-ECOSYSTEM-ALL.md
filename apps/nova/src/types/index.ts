@@ -52,6 +52,13 @@ export interface TokenBalanceRow {
   usdPrice: number | null
   usdValue: number | null
   iconColor: string
+  /** Mesh / pool liquidity depth in USD */
+  liquidityUsd?: number | null
+  /** 24h volume estimate in USD */
+  volume24hUsd?: number | null
+  /** Trading pair label e.g. NOVA/USDC */
+  pair?: string | null
+  priceSource?: 'peg' | 'coingecko' | 'oracle' | 'mesh' | null
 }
 
 export type DisplayCurrency = 'USD' | 'EUR' | 'GBP'

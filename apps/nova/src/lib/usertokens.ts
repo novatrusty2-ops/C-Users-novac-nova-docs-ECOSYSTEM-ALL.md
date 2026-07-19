@@ -1,5 +1,11 @@
 import type { ChainToken } from '@/types'
-import { tokensForChain, toChainToken, type EcosystemTokenDef } from './ecosystemTokens'
+import {
+  tokensForChain,
+  toChainToken,
+  withPricedHints,
+  type EcosystemTokenDef,
+} from './ecosystemTokens'
+import { oracleUsdPrice } from './oracle'
 
 const KEY = 'nova.usertokens.v1'
 
@@ -57,18 +63,23 @@ export function mergeUserTokens(incoming: UserTokenRecord[]): { added: number; t
   return { added, total: next.length }
 }
 
-/** Import curated NovaONE (22016) + NRW (33001) ecosystem token catalogs */
+/** Import curated NovaONE (22016) + NRW (33001) ecosystem token catalogs with price hints */
 export function importEcosystemTokensFromMesh(
   source: UserTokenRecord['source'] = 'ecosystem',
 ): { added: number; total: number; count: number } {
-  const defs = [...tokensForChain(22016), ...tokensForChain(33001)]
+  const defs = withPricedHints([...tokensForChain(22016), ...tokensForChain(33001)])
   const now = Date.now()
-  const records: UserTokenRecord[] = defs.map((d: EcosystemTokenDef) => ({
-    chainId: d.chainIds[0]!,
-    token: toChainToken(d),
-    source,
-    importedAt: now,
-  }))
+  const records: UserTokenRecord[] = defs.map((d: EcosystemTokenDef) => {
+    const token = toChainToken(d)
+    const hinted = oracleUsdPrice(token.symbol)
+    if (token.usd == null && hinted != null) token.usd = hinted
+    return {
+      chainId: d.chainIds[0]!,
+      token,
+      source,
+      importedAt: now,
+    }
+  })
   const result = mergeUserTokens(records)
   return { ...result, count: records.length }
 }
