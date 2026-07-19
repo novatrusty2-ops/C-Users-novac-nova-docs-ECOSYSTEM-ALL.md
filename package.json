@@ -16,9 +16,16 @@
     "test:signet": "npm run test -w signet-wallet",
     "test:nova": "npm run test -w nova-wallet",
     "test": "npm run test:signet && npm run test:nova",
-    "typecheck": "npm run typecheck -w signet-wallet && npm run typecheck -w nova-wallet"
+    "typecheck": "npm run typecheck -w signet-wallet && npm run typecheck -w nova-wallet",
+    "custody:smoke": "node scripts/custody-smoke-test.mjs"
   },
+
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@dfns/sdk": "^0.8.25",
+    "@dfns/sdk-keysigner": "^0.8.25",
+    "tweetnacl": "^1.0.3"
   }
 }
