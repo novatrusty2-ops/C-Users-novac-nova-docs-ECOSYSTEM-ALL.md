@@ -1,5 +1,8 @@
 name: Deploy Production Wallets
 
+# Full production split:
+#   Nova  → https://novablockchain.it.com/        (owns apex)
+#   Signet → https://novablockchain.it.com/signet/ (Pages mirror; canonical signetwallet.com)
 on:
   push:
     branches: [main]
@@ -35,45 +38,67 @@ jobs:
       - name: Install workspaces
         run: npm ci
 
-      - name: Test & build Signet (production root)
-        working-directory: apps/signet
-        run: |
-          npm run typecheck
-          npm run test
-          npm run build
-
-      - name: Test & build Nova (production /nova/)
+      - name: Test & build Nova (production root)
         working-directory: apps/nova
         env:
-          VITE_BASE: /nova/
+          VITE_BASE: /
         run: |
           npm run typecheck
           npm run test
           npm run build
 
-      - name: Assemble production site
+      - name: Test & build Signet (production /signet/)
+        working-directory: apps/signet
+        env:
+          VITE_BASE: /signet/
+        run: |
+          npm run typecheck
+          npm run test
+          npm run build
+
+      - name: Assemble split production site
         run: |
           rm -rf site
-          mkdir -p site/nova
-          # Signet at domain root
-          cp -a apps/signet/dist/. site/
+          mkdir -p site/signet site/nova
+          # Nova owns domain root — separate product
+          cp -a apps/nova/dist/. site/
           cp site/index.html site/404.html
-          # Nova at /nova/
-          cp -a apps/nova/dist/. site/nova/
-          cp site/nova/index.html site/nova/404.html
+          # Signet at /signet/ — not mixed into Nova chrome
+          cp -a apps/signet/dist/. site/signet/
+          cp site/signet/index.html site/signet/404.html
+          # Legacy /nova/ bookmark → Nova root
+          cat > site/nova/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="refresh" content="0;url=/" />
+            <link rel="canonical" href="/" />
+            <title>Nova Wallet</title>
+          </head>
+          <body style="background:#000;color:#fff;font-family:system-ui;display:grid;place-items:center;min-height:100vh">
+            <p><a style="color:#14b8a6" href="/">Continue to Nova Wallet →</a></p>
+          </body>
+          </html>
+          EOF
           touch site/.nojekyll
           echo 'novablockchain.it.com' > site/CNAME
           cat > site/wallets.json <<'EOF'
           {
-            "signet": { "url": "/", "name": "Signet Wallet" },
-            "nova": { "url": "/nova/", "name": "Nova Wallet" },
+            "nova": { "url": "/", "name": "Nova Wallet", "role": "apex host" },
+            "signet": {
+              "url": "/signet/",
+              "name": "Signet Wallet",
+              "canonical": "https://signetwallet.com",
+              "role": "separate product — Pages mirror only"
+            },
             "domain": "novablockchain.it.com",
-            "signetCanonical": "https://signetwallet.com"
+            "split": true
           }
           EOF
-          ls -la site site/nova | head -40
-          # Sanity: Nova assets must be under /nova/
-          grep -q '/nova/assets/' site/nova/index.html
+          grep -q 'Nova Wallet' site/index.html
+          grep -q '/signet/assets\|./assets\|/assets/' site/signet/index.html
+          ls -la site site/signet | head -30
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -1,17 +1,10 @@
-name: Deploy Signet Wallet (legacy)
+name: Deploy Signet Wallet
 
-# Prefer deploy-production.yml — kept for manual Signet-only rebuilds
+# Signet Pages mirror is assembled at /signet/ by deploy-production.yml.
+# Canonical: https://signetwallet.com (Anakatech VPS via apps/signet/deploy.sh).
+# This workflow builds a Signet-only artifact (root base) for the VPS mirror.
 on:
   workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages-signet
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -25,23 +18,14 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci
       - working-directory: apps/signet
+        env:
+          VITE_BASE: /
         run: |
           npm run typecheck
           npm run test
           npm run build
           cp dist/index.html dist/404.html
-          touch dist/.nojekyll
-          echo 'novablockchain.it.com' > dist/CNAME
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: signet-wallet-dist
           path: apps/signet/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4

@@ -16,4 +16,6 @@ npm run test
 ```
 
 Canonical domain: https://signetwallet.com  
-Pages mirror: https://novablockchain.it.com
+Pages mirror: https://novablockchain.it.com/signet/  
+Nova Wallet (separate): https://novablockchain.it.com/
+

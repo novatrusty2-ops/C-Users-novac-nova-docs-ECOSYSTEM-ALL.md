@@ -5,14 +5,14 @@ Two **separate** wallet products — different brands, themes, storage, UX, and 
 | | **Signet Wallet** | **Nova Wallet** |
 |---|---|---|
 | Path | `apps/signet` | `apps/nova` |
-| Domain | [signetwallet.com](https://signetwallet.com) · [novablockchain.it.com](https://novablockchain.it.com) | [novablockchain.it.com/nova](https://novablockchain.it.com/nova/) |
+| Domain | [signetwallet.com](https://signetwallet.com) · [Pages /signet](https://novablockchain.it.com/signet/) | [novablockchain.it.com](https://novablockchain.it.com/) (owns apex) |
 | Role | Institutional self-custody SPA | Trading-first mobile signer |
 | Theme | Regal burgundy / gold / cream | OKX black / teal trading dashboard |
 | Default chains | Full Anaka mesh + public EVMs | **NovaONE + NRW World** only |
 | Chain accents | NovaONE `#8B5CF6` · NRW `#A855F7` | NovaONE `#0EA5E9` · NRW `#14B8A6` |
 | Storage keys | `signet.*` | `nova.*` |
 | Ports | `5173` / `4173` | `5174` / `4174` |
-| Deploy | Pages `/` + Anakatech VPS | Pages `/nova/` |
+| Deploy | Pages `/signet/` + Anakatech VPS | Pages `/` (apex) |
 
 They do **not** share UI themes, localStorage namespaces, or product positioning.
 
@@ -50,19 +50,18 @@ cd apps/nova && npm run dev
 cd apps/nova && ./deploy.sh
 ```
 
-## Production (GitHub Pages)
+## Production (GitHub Pages) — split hosts
 
-Live host: **https://novablockchain.it.com**
-
-| Product | URL | Theme |
-|---------|-----|-------|
-| **Signet Wallet** | https://novablockchain.it.com/ | Burgundy / gold / cream |
-| **Nova Wallet** | https://novablockchain.it.com/nova/ | OKX black / teal |
+| Product | Production URL | Theme |
+|---------|----------------|-------|
+| **Nova Wallet** | https://novablockchain.it.com/ | OKX black / teal (owns apex) |
+| **Signet Wallet** | https://signetwallet.com · [Pages mirror](https://novablockchain.it.com/signet/) | Burgundy / gold / cream |
 
 Deployed by [`.github/workflows/deploy-production.yml`](.github/workflows/deploy-production.yml) on push to `main`.
 
-- Signet builds with `base: /`
-- Nova builds with `VITE_BASE=/nova/`
+- Nova builds with `base: /` (domain root)
+- Signet Pages mirror builds with `VITE_BASE=/signet/`
+- Products do **not** share UI, storage (`nova.*` / `signet.*`), or branding
 
-`signetwallet.com` is a separate Anakatech VPS deploy (not GitHub Pages).
+`signetwallet.com` remains Signet’s canonical Anakatech VPS deploy.
 

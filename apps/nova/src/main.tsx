@@ -6,6 +6,7 @@ import { WalletProvider } from '@/context/WalletContext'
 import App from '@/App'
 import '@/index.css'
 
+/** Nova owns production root at novablockchain.it.com — separate from Signet at /signet/ */
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
 
 createRoot(document.getElementById('root')!).render(

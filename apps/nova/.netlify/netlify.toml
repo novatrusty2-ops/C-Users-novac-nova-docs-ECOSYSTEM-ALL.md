@@ -1,0 +1,28 @@
+plugins = []
+headers = []
+redirects = []
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "/workspace/apps/nova/apps/nova/dist"
+publishOrigin = "ui"
+commandOrigin = "ui"
+base = "/workspace/apps/nova"
+command = "npm --workspace nova-wallet run build"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
