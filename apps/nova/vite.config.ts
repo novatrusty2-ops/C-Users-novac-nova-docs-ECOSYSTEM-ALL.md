@@ -3,8 +3,9 @@ import react from '@vitejs/plugin-react'
 import path from 'node:path'
 
 export default defineConfig({
-  // Nova production owns domain root (novablockchain.it.com) — not nested under Signet
+  // Production: https://novablockchain.it.com/
   base: process.env.VITE_BASE || '/',
+
   plugins: [react()],
   resolve: {
     alias: {

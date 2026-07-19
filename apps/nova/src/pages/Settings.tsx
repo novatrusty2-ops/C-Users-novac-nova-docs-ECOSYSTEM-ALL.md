@@ -207,7 +207,8 @@ export function Settings() {
         </section>
 
         <p className="pb-4 text-center text-[11px] text-nova-muted">
-          {BRAND.bundleId} · separate from Signet Wallet
+          {BRAND.bundleId}
+
         </p>
       </div>
 

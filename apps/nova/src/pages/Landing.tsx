@@ -59,7 +59,8 @@ export function Landing() {
       </div>
 
       <footer className="relative z-10 pb-8 text-center text-[11px] text-nova-muted">
-        {BRAND.name} · not Signet
+        {BRAND.name}
+
       </footer>
     </section>
   )

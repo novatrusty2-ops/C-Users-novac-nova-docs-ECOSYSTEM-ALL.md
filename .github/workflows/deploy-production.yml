@@ -1,8 +1,6 @@
-name: Deploy Production Wallets
+name: Deploy Nova Wallet (manual)
 
-# Convenience dispatcher:
-#   Nova  → Pages (novablockchain.it.com) via deploy-nova.yml logic
-#   Signet → build artifact only (signetwallet.com via VPS — never nested under Nova)
+# Nova alone — same as deploy-nova.yml (manual trigger)
 on:
   workflow_dispatch:
 
@@ -16,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  nova:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,32 +31,21 @@ jobs:
           npm run typecheck
           npm run test
           npm run build
-      - name: Assemble Nova-only site
+      - name: Assemble Nova site
         run: |
           rm -rf site
-          mkdir -p site/signet
+          mkdir -p site
           cp -a apps/nova/dist/. site/
           cp site/index.html site/404.html
           touch site/.nojekyll
           echo 'novablockchain.it.com' > site/CNAME
-          cat > site/signet/index.html <<'EOF'
-          <!DOCTYPE html>
-          <html lang="en"><head>
-            <meta charset="UTF-8" />
-            <meta http-equiv="refresh" content="0;url=https://signetwallet.com/" />
-            <link rel="canonical" href="https://signetwallet.com/" />
-            <title>Signet Wallet</title>
-          </head>
-          <body style="background:#1A0A0A;color:#F5E6C8;font-family:system-ui;display:grid;place-items:center;min-height:100vh;text-align:center">
-            <p><a style="color:#C9A84C" href="https://signetwallet.com/">Signet Wallet (separate product) →</a></p>
-          </body></html>
-          EOF
+          test ! -e site/signet
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
-  deploy-nova:
-    needs: nova
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -66,26 +53,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
-  signet-artifact:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-          cache-dependency-path: package-lock.json
-      - run: npm ci
-      - working-directory: apps/signet
-        env:
-          VITE_BASE: /
-        run: |
-          npm run typecheck
-          npm run test
-          npm run build
-          cp dist/index.html dist/404.html
-      - uses: actions/upload-artifact@v4
-        with:
-          name: signet-wallet-dist
-          path: apps/signet/dist

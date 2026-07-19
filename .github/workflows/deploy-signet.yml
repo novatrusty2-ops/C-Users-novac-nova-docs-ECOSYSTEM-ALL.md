@@ -1,15 +1,8 @@
-name: Build Signet Wallet
+name: Build Signet Wallet (archived path)
 
-# Signet Wallet ONLY — canonical https://signetwallet.com (Anakatech VPS via apps/signet/deploy.sh)
-# Does NOT publish to novablockchain.it.com (that host is Nova-only).
+# Signet is not part of the Nova Wallet product/host.
+# Manual artifact build only — does not publish to novablockchain.it.com.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'apps/signet/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/deploy-signet.yml'
   workflow_dispatch:
 
 jobs:
@@ -17,27 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: package-lock.json
-
       - run: npm ci
-
-      - name: Test & build Signet (root base for signetwallet.com)
-        working-directory: apps/signet
+      - working-directory: apps/signet
         env:
           VITE_BASE: /
         run: |
           npm run typecheck
           npm run test
           npm run build
-          cp dist/index.html dist/404.html
-          echo 'signetwallet.com' > dist/CNAME
-          echo "{\"product\":\"signet-wallet\",\"canonical\":\"https://signetwallet.com\",\"separateFrom\":\"nova-wallet\"}" > dist/signet.json
-
       - uses: actions/upload-artifact@v4
         with:
           name: signet-wallet-dist

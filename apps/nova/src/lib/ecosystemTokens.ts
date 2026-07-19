@@ -13,7 +13,7 @@ export interface EcosystemTokenDef extends ChainToken {
 const NOVAONE = 22016
 const NRW = 33001
 
-/** Known mesh ERC-20 contracts (from Signet / Anaka mesh registry) */
+/** Known mesh ERC-20 contracts (from Anaka mesh registry) */
 export const MESH_CONTRACTS = {
   AnA_22016: '0xc05F5B8A193bECA1744E42D4c3c516DBC49f7d8B',
   WAGAS_22016: '0x01396c382FeCb30548FFa3f9D9da2252C3C94748',

@@ -34,7 +34,6 @@
         651940
       ],
       "integrations": [
-        "signetWallet",
         "pouchPay",
         "novaBank",
         "novaSwap"
@@ -51,10 +50,8 @@
       },
       "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 \u2014 lean tab shell",
       "deploy": {
-        "githubPages": "deploy-nova.yml \u2192 https://novablockchain.it.com/ (Nova-only)",
-        "nginx": "/var/www/anakatechllc-com/nova via apps/nova/deploy.sh (optional)"
+        "githubPages": "deploy-nova.yml \u2192 https://novablockchain.it.com/ (Nova alone)"
       },
-      "separateFrom": "signetWallet",
       "url": "https://novablockchain.it.com/",
       "layout": "okx-wallet / nova-bank-dashboard"
     },
@@ -90,7 +87,9 @@
         "nginx": "/var/www/anakatechllc-com/signet via apps/signet/deploy.sh"
       },
       "separateFrom": "novaWallet",
-      "canonicalDomain": "https://signetwallet.com"
+      "canonicalDomain": "https://signetwallet.com",
+      "deployedWithNova": false,
+      "note": "Not part of Nova Wallet host or Pages deploy"
     },
     "novaOneExplorer": {
       "name": "Nova Chain Explorer",
@@ -135,46 +134,13 @@
     "novaWalletPages": "https://novablockchain.it.com/"
   },
   "walletProductSplit": {
-    "note": "Nova Wallet and Signet Wallet are separate products \u2014 different themes, storage keys, default chains, UX shells, and deploy targets. Do not reuse Signet regal tokens in Nova or Nova navy/teal in Signet.",
+    "primary": "novaWallet",
     "nova": {
       "path": "apps/nova",
-      "layout": "okx-wallet / nova-bank-dashboard",
-      "colors": {
-        "bg": "#000000",
-        "surface": "#121212",
-        "accent": "#14B8A6",
-        "highlight": "#2DD4BF",
-        "success": "#0ECB81",
-        "danger": "#F6465D",
-        "novaone": "#0EA5E9",
-        "nrw": "#14B8A6"
-      },
-      "tabs": [
-        "Assets",
-        "Trade",
-        "History",
-        "Me"
-      ],
-      "separateFrom": "signetWallet"
+      "url": "https://novablockchain.it.com/",
+      "deploy": ".github/workflows/deploy-nova.yml"
     },
-    "signet": {
-      "path": "apps/signet",
-      "colors": {
-        "bg": "#1A0A0A",
-        "accent": "#C9A84C",
-        "burgundy": "#8C2A3E",
-        "novaone": "#8B5CF6",
-        "nrw": "#A855F7"
-      }
-    },
-    "production": {
-      "novaUrl": "https://novablockchain.it.com/",
-      "signetUrl": "https://signetwallet.com/",
-      "hostsSeparated": true,
-      "novaDeploy": ".github/workflows/deploy-nova.yml \u2192 GitHub Pages (Nova-only)",
-      "signetDeploy": ".github/workflows/deploy-signet.yml \u2192 artifact + apps/signet/deploy.sh \u2192 signetwallet.com",
-      "note": "Nova and Signet are fully separate products and hosts. Signet is NOT nested under Nova Pages."
-    }
+    "note": "Nova Wallet is the sole product on novablockchain.it.com. Signet (if present under apps/signet) is not deployed with Nova."
   },
   "onexLocal": {
     "bridgeBase": "http://127.0.0.1:9338",
