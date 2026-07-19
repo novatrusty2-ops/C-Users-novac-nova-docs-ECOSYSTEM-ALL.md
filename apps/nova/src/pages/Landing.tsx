@@ -5,40 +5,48 @@ import { ROUTES } from '@/lib/routes'
 
 export function Landing() {
   return (
-    <section className="relative min-h-[100dvh] hero-gradient flex flex-col">
+    <section className="relative flex min-h-[100dvh] flex-col hero-gradient">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-nova-accent/20 blur-3xl animate-pulse-teal" />
-        <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-nova-highlight/10 blur-3xl" />
+        <div className="absolute -top-16 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-nova-accent/15 blur-3xl" />
       </div>
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
-        <p
-          className="font-display text-[clamp(4rem,18vw,7rem)] font-extrabold leading-none tracking-tighter text-transparent bg-clip-text bg-teal-gradient animate-fade-up"
-          style={{ animationDelay: '0ms' }}
-        >
+        <p className="font-display text-[clamp(3.5rem,16vw,6rem)] font-extrabold leading-none tracking-tighter text-nova-ink animate-fade-up">
           NOVA
         </p>
+        <p
+          className="mt-3 text-sm font-medium tracking-wide text-nova-accent animate-fade-up"
+          style={{ animationDelay: '60ms' }}
+        >
+          Wallet · Bank · Trade
+        </p>
         <h1
-          className="mt-4 font-display text-2xl sm:text-3xl font-semibold text-nova-ink animate-fade-up"
-          style={{ animationDelay: '80ms' }}
+          className="mt-4 max-w-xs font-display text-xl font-semibold text-nova-ink animate-fade-up"
+          style={{ animationDelay: '120ms' }}
         >
           {BRAND.headline}
         </h1>
         <p
-          className="mt-3 max-w-sm text-nova-muted text-base animate-fade-up"
-          style={{ animationDelay: '160ms' }}
+          className="mt-3 max-w-sm text-sm text-nova-muted animate-fade-up"
+          style={{ animationDelay: '180ms' }}
         >
-          Mobile signer for NovaONE and NRW World. Swap stables, track balances, sign on the mesh.
+          OKX-style assets dashboard for NovaONE, NRW, and the mesh — separate from Signet Wallet.
         </p>
-        <div className="mt-10 animate-fade-up" style={{ animationDelay: '240ms' }}>
-          <Link to={ROUTES.onboarding}>
-            <Button className="min-w-[200px] animate-pulse-teal">Open wallet</Button>
+        <div className="mt-10 w-full max-w-xs space-y-3 animate-fade-up" style={{ animationDelay: '240ms' }}>
+          <Link to={ROUTES.onboarding} className="block">
+            <Button className="w-full">Create / import wallet</Button>
+          </Link>
+          <Link
+            to={ROUTES.unlock}
+            className="block text-center text-sm text-nova-muted hover:text-nova-accent"
+          >
+            I already have a wallet
           </Link>
         </div>
       </div>
 
-      <footer className="relative z-10 pb-8 text-center text-xs text-nova-muted">
-        {BRAND.name} · {BRAND.bundleId}
+      <footer className="relative z-10 pb-8 text-center text-[11px] text-nova-muted">
+        {BRAND.name} · not Signet
       </footer>
     </section>
   )

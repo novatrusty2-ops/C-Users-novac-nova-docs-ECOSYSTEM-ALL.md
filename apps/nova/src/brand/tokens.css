@@ -1,16 +1,18 @@
+/* Nova Wallet — OKX / Nova Bank dashboard palette (NOT Signet regal) */
 :root {
-  --color-bg: #071422;
-  --color-bg-alt: #0a1929;
-  --color-surface: #0e2436;
-  --color-surface-raised: #143044;
+  --color-bg: #000000;
+  --color-bg-alt: #0a0a0a;
+  --color-surface: #121212;
+  --color-surface-raised: #1a1a1a;
   --color-accent: #14b8a6;
-  --color-highlight: #22d3ee;
-  --color-ink: #e8f6f8;
-  --color-muted: #8ba3b5;
-  --color-border: rgba(20, 184, 166, 0.22);
-  --color-danger: #ef4444;
-  --color-success: #14b8a6;
+  --color-highlight: #2dd4bf;
+  --color-ink: #ffffff;
+  --color-muted: #8b8b8b;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-danger: #f6465d;
+  --color-success: #0ecb81;
   --color-novaone: #0ea5e9;
   --color-nrw: #14b8a6;
-  --teal-gradient: linear-gradient(135deg, #14b8a6 0%, #22d3ee 50%, #0ea5e9 100%);
+  --teal-gradient: linear-gradient(135deg, #14b8a6 0%, #2dd4bf 55%, #0ea5e9 100%);
+  --okx-hairline: rgba(255, 255, 255, 0.06);
 }

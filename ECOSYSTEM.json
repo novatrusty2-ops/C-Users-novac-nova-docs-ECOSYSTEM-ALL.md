@@ -20,7 +20,7 @@
       "bundleId": "llc.anakatech.novawallet",
       "role": "trading-first non-custodial mobile signer \u2014 full Nova ecosystem EVMs + partner wallets",
       "repoPath": "apps/nova",
-      "theme": "navy/teal/cyan (NOT Signet regal)",
+      "theme": "OKX-style black/teal trading dashboard (NOT Signet regal)",
       "chainColors": {
         "novaone": "#0EA5E9",
         "nrw": "#14B8A6"
@@ -51,11 +51,12 @@
       },
       "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 \u2014 lean tab shell",
       "deploy": {
-        "githubPages": "Actions deploy-production.yml \u2192 https://novablockchain.it.com/nova/",
-        "nginx": "/var/www/anakatechllc-com/nova via apps/nova/deploy.sh (optional)"
+        "githubPages": "Actions deploy-production.yml \u2192 https://novablockchain.it.com/nova/ (full production)",
+        "nginx": "/var/www/anakatechllc-com/nova via apps/nova/deploy.sh (optional mirror)"
       },
       "separateFrom": "signetWallet",
-      "url": "https://novablockchain.it.com/nova/"
+      "url": "https://novablockchain.it.com/nova/",
+      "layout": "okx-wallet / nova-bank-dashboard"
     },
     "pouchPay": {
       "name": "PouchPay Wallet",
@@ -139,13 +140,24 @@
     "note": "Nova Wallet and Signet Wallet are separate products \u2014 different themes, storage keys, default chains, UX shells, and deploy targets. Do not reuse Signet regal tokens in Nova or Nova navy/teal in Signet.",
     "nova": {
       "path": "apps/nova",
+      "layout": "okx-wallet / nova-bank-dashboard",
       "colors": {
-        "bg": "#071422",
+        "bg": "#000000",
+        "surface": "#121212",
         "accent": "#14B8A6",
-        "highlight": "#22D3EE",
+        "highlight": "#2DD4BF",
+        "success": "#0ECB81",
+        "danger": "#F6465D",
         "novaone": "#0EA5E9",
         "nrw": "#14B8A6"
-      }
+      },
+      "tabs": [
+        "Assets",
+        "Trade",
+        "History",
+        "Me"
+      ],
+      "separateFrom": "signetWallet"
     },
     "signet": {
       "path": "apps/signet",
@@ -164,7 +176,7 @@
       "signetUrl": "https://novablockchain.it.com/",
       "novaUrl": "https://novablockchain.it.com/nova/",
       "deployWorkflow": ".github/workflows/deploy-production.yml",
-      "note": "GitHub Actions builds both apps into one Pages artifact. signetwallet.com remains a separate Anakatech host deploy."
+      "note": "Full production GitHub Pages \u2014 Signet at / and Nova at /nova/ are separate products co-hosted on one Pages artifact. Not a demo tunnel."
     }
   },
   "onexLocal": {

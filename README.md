@@ -7,7 +7,7 @@ Two **separate** wallet products — different brands, themes, storage, UX, and 
 | Path | `apps/signet` | `apps/nova` |
 | Domain | [signetwallet.com](https://signetwallet.com) · [novablockchain.it.com](https://novablockchain.it.com) | [novablockchain.it.com/nova](https://novablockchain.it.com/nova/) |
 | Role | Institutional self-custody SPA | Trading-first mobile signer |
-| Theme | Regal burgundy / gold / cream | Cool navy / teal / cyan |
+| Theme | Regal burgundy / gold / cream | OKX black / teal trading dashboard |
 | Default chains | Full Anaka mesh + public EVMs | **NovaONE + NRW World** only |
 | Chain accents | NovaONE `#8B5CF6` · NRW `#A855F7` | NovaONE `#0EA5E9` · NRW `#14B8A6` |
 | Storage keys | `signet.*` | `nova.*` |
@@ -40,6 +40,9 @@ cd apps/signet && ./deploy.sh   # nginx atomic deploy
 
 ## Nova (`apps/nova`)
 
+OKX Wallet / Nova Bank dashboard layout — Assets · Trade · History · Me. Separate product from Signet.
+
+
 Lean trading wallet for the Nova mesh — Portfolio / Swap / Activity / Settings tabs. No institutional gate, no Safe UI, no Signet branding.
 
 ```bash
@@ -54,7 +57,7 @@ Live host: **https://novablockchain.it.com**
 | Product | URL | Theme |
 |---------|-----|-------|
 | **Signet Wallet** | https://novablockchain.it.com/ | Burgundy / gold / cream |
-| **Nova Wallet** | https://novablockchain.it.com/nova/ | Navy / teal / cyan |
+| **Nova Wallet** | https://novablockchain.it.com/nova/ | OKX black / teal |
 
 Deployed by [`.github/workflows/deploy-production.yml`](.github/workflows/deploy-production.yml) on push to `main`.
 

@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
+import { IconHistory, IconSwap, IconUser, IconWallet } from '@/components/layout/icons'
 import { ROUTES } from '@/lib/routes'
 
 const TABS = [
-  { to: ROUTES.portfolio, label: 'Portfolio', icon: '◉' },
-  { to: ROUTES.swap, label: 'Swap', icon: '⇄' },
-  { to: ROUTES.activity, label: 'Activity', icon: '≡' },
-  { to: ROUTES.settings, label: 'Settings', icon: '⚙' },
+  { to: ROUTES.portfolio, label: 'Assets', Icon: IconWallet },
+  { to: ROUTES.swap, label: 'Trade', Icon: IconSwap },
+  { to: ROUTES.activity, label: 'History', Icon: IconHistory },
+  { to: ROUTES.settings, label: 'Me', Icon: IconUser },
 ] as const
 
 interface MobileShellProps {
@@ -17,24 +18,23 @@ export function MobileShell({ children, showTabs = false }: MobileShellProps) {
   const { pathname } = useLocation()
 
   return (
-    <div className="relative min-h-[100dvh]">
+    <div className="relative min-h-[100dvh] bg-nova-bg">
       {children}
       {showTabs ? (
         <nav className="tab-bar" aria-label="Main">
-          <div className="mx-auto flex max-w-lg items-stretch justify-around px-2 py-2">
+          <div className="mx-auto flex max-w-lg items-stretch justify-around px-1 pt-2 pb-1">
             {TABS.map((tab) => {
               const active = pathname === tab.to || pathname.startsWith(`${tab.to}/`)
+              const Icon = tab.Icon
               return (
                 <Link
                   key={tab.to}
                   to={tab.to}
-                  className={`flex flex-1 flex-col items-center gap-0.5 rounded-xl px-2 py-2 text-[11px] font-medium transition ${
-                    active
-                      ? 'text-nova-highlight bg-nova-surface/80'
-                      : 'text-nova-muted hover:text-nova-ink'
+                  className={`flex flex-1 flex-col items-center gap-1 px-2 py-1.5 text-[11px] font-medium transition ${
+                    active ? 'text-nova-accent' : 'text-nova-muted hover:text-nova-ink'
                   }`}
                 >
-                  <span className="text-base leading-none">{tab.icon}</span>
+                  <Icon className={`h-[22px] w-[22px] ${active ? 'scale-105' : ''}`} />
                   {tab.label}
                 </Link>
               )

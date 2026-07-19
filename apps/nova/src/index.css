@@ -21,22 +21,19 @@
 
 @layer components {
   .app-shell {
-    @apply min-h-[100dvh] overflow-x-hidden;
-    background:
-      radial-gradient(1200px 600px at 50% -10%, rgba(20, 184, 166, 0.22), transparent 55%),
-      radial-gradient(800px 400px at 80% 20%, rgba(34, 211, 238, 0.1), transparent 50%),
-      var(--color-bg);
+    @apply min-h-[100dvh] overflow-x-hidden bg-nova-bg;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold transition;
-    @apply bg-teal-gradient text-nova-bg shadow-teal;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3.5 font-semibold transition;
+    @apply bg-nova-accent text-black;
     @apply hover:brightness-110 active:scale-[0.98];
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-nova-muted transition;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-nova-muted transition;
     border-color: var(--color-border);
+    background: var(--color-surface);
   }
 
   .btn-ghost:hover {
@@ -45,7 +42,7 @@
   }
 
   .input-field {
-    @apply w-full rounded-xl px-4 py-3 text-nova-ink outline-none transition font-mono text-sm;
+    @apply w-full rounded-lg px-4 py-3.5 text-nova-ink outline-none transition font-mono text-sm;
     border: 1px solid var(--color-border);
     background: var(--color-surface);
   }
@@ -55,29 +52,68 @@
   }
 
   .input-field:focus {
-    border-color: rgba(34, 211, 238, 0.5);
-    box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.25);
+    border-color: rgba(20, 184, 166, 0.55);
   }
 
   .card-surface {
-    @apply rounded-2xl p-4;
+    @apply rounded-xl p-4;
     border: 1px solid var(--color-border);
-    background: rgba(14, 36, 54, 0.85);
+    background: var(--color-surface);
   }
 
   .page-container {
-    @apply relative z-10 mx-auto w-full max-w-lg px-4 pb-28 pt-4;
+    @apply relative z-10 mx-auto w-full max-w-lg px-4 pb-28 pt-3;
   }
 
   .hero-gradient {
     background:
-      linear-gradient(165deg, #071422 0%, #0a1929 35%, rgba(20, 184, 166, 0.18) 100%);
+      radial-gradient(900px 420px at 50% -5%, rgba(20, 184, 166, 0.18), transparent 55%),
+      #000;
   }
 
   .tab-bar {
-    @apply fixed bottom-0 inset-x-0 z-40 border-t backdrop-blur-md;
-    border-color: var(--color-border);
-    background: rgba(7, 20, 34, 0.92);
+    @apply fixed bottom-0 inset-x-0 z-40 border-t;
+    border-color: var(--okx-hairline);
+    background: rgba(0, 0, 0, 0.96);
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .okx-action {
+    @apply flex flex-col items-center gap-1.5;
+  }
+
+  .okx-action-icon {
+    @apply flex h-12 w-12 items-center justify-center rounded-full transition;
+    background: var(--color-surface-raised);
+    color: var(--color-ink);
+  }
+
+  .okx-action:hover .okx-action-icon {
+    background: rgba(20, 184, 166, 0.18);
+    color: var(--color-accent);
+  }
+
+  .okx-segment {
+    @apply flex rounded-lg p-0.5;
+    background: var(--color-surface);
+  }
+
+  .okx-segment-btn {
+    @apply flex-1 rounded-md px-3 py-2 text-center text-sm font-medium transition;
+    color: var(--color-muted);
+  }
+
+  .okx-segment-btn[data-active='true'] {
+    background: var(--color-surface-raised);
+    color: var(--color-ink);
+  }
+
+  .token-list {
+    @apply divide-y;
+    border-color: var(--okx-hairline);
+  }
+
+  .token-list > li {
+    border-color: var(--okx-hairline);
   }
 }

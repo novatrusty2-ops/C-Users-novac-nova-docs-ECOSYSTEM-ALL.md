@@ -1,19 +1,22 @@
 # Nova Wallet
 
-Trading-first mobile signer for **NovaONE + NRW World** — **separate product from Signet Wallet** (`apps/signet`).
+Trading-first mobile signer — **OKX Wallet / Nova Bank dashboard** layout.
 
-- Theme: cool navy / teal / cyan (not Signet burgundy/gold)
-- Chain accents: NovaONE `#0EA5E9`, NRW `#14B8A6` (not Signet purples)
-- Storage: `nova.*` keys only (never `signet.*`)
-- UX: bottom tabs — Portfolio · Swap · Activity · Settings
-- No institutional gate, Safe UI, banks directory, or Signet branding
+**Production:** https://novablockchain.it.com/nova/
+
+Separate product from Signet Wallet (different theme, storage `nova.*`, UX shell).
+
+## Layout
+
+- **Assets** — total balance, circular quick actions, Crypto / NovaONE·NRW segments, flat token list
+- **Trade** — stacked swap panels
+- **History** — activity feed
+- **Me** — profile, Nova Bank, partners, networks, security
+
+## Dev
 
 ```bash
-npm install
-npm run dev        # :5174
-npm run build
-npm run test
-./deploy.sh        # → /var/www/anakatechllc-com/nova
+npm run dev          # http://localhost:5174
+VITE_BASE=/nova/ npm run build   # production subpath
+./deploy.sh          # optional nginx mirror
 ```
-
-Bundle ID: `llc.anakatech.novawallet`

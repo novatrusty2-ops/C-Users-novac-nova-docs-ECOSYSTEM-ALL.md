@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { TopBar } from '@/components/layout/TopBar'
 import { Button } from '@/components/common/Button'
 import { Spinner } from '@/components/common/Spinner'
+import { IconSwap } from '@/components/layout/icons'
 import { useWallet } from '@/context/WalletContext'
 import { quoteSwap, type SwapQuote } from '@/lib/swap'
 import { swapableSymbols } from '@/lib/tokens'
@@ -25,6 +26,13 @@ export function Swap() {
     setQuote(null)
     setDone(false)
   }, [activeChainId])
+
+  function flip() {
+    setFrom(to)
+    setTo(from)
+    setQuote(null)
+    setDone(false)
+  }
 
   async function fetchQuote() {
     setError('')
@@ -62,28 +70,29 @@ export function Swap() {
 
   return (
     <>
-      <TopBar title="Swap" />
+      <TopBar title="Trade" />
       <div className="page-container space-y-4">
-        <p className="text-sm text-nova-muted">
-          1:1 stable swaps with 0.3% fee — trading surface for Nova mesh assets.
-        </p>
+        <p className="text-xs text-nova-muted">Convert · 0.3% fee · Nova mesh stables</p>
 
-        <div className="card-surface space-y-3">
-          <label className="block text-xs text-nova-muted">From</label>
-          <div className="flex gap-2">
-            <select
-              className="input-field flex-1"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-            >
-              {symbols.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
+        {/* OKX-style stacked trade panels */}
+        <div className="relative space-y-2">
+          <div className="rounded-xl bg-nova-surface p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-xs text-nova-muted">From</span>
+              <select
+                className="rounded-full bg-nova-surface-raised px-3 py-1 text-sm font-semibold text-nova-ink outline-none"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+              >
+                {symbols.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
             <input
-              className="input-field flex-1"
+              className="w-full bg-transparent font-display text-3xl font-semibold text-nova-ink outline-none placeholder:text-nova-muted/40"
               inputMode="decimal"
               placeholder="0.00"
               value={amount}
@@ -91,47 +100,72 @@ export function Swap() {
             />
           </div>
 
-          <label className="block text-xs text-nova-muted">To</label>
-          <select
-            className="input-field w-full"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
+          <button
+            type="button"
+            onClick={flip}
+            className="absolute left-1/2 top-1/2 z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-nova-border bg-nova-bg text-nova-accent"
+            aria-label="Flip pair"
           >
-            {symbols.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
+            <IconSwap className="h-4 w-4" />
+          </button>
 
-          <Button
-            className="w-full"
-            disabled={!amount || loading}
-            onClick={() => void fetchQuote()}
-          >
-            {loading ? <Spinner /> : 'Get quote'}
-          </Button>
+          <div className="rounded-xl bg-nova-surface p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-xs text-nova-muted">To</span>
+              <select
+                className="rounded-full bg-nova-surface-raised px-3 py-1 text-sm font-semibold text-nova-ink outline-none"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+              >
+                {symbols.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <p className="font-display text-3xl font-semibold text-nova-muted/70">
+              {quote ? quote.amountOut : '0.00'}
+            </p>
+          </div>
         </div>
+
+        <Button className="w-full" disabled={!amount || loading} onClick={() => void fetchQuote()}>
+          {loading ? <Spinner /> : 'Get quote'}
+        </Button>
 
         {error ? <p className="text-sm text-nova-danger">{error}</p> : null}
 
         {quote ? (
-          <div className="card-surface space-y-2 animate-fade-up">
-            <p className="text-xs text-nova-muted">Quote · {quote.provider}</p>
-            <p className="font-display text-2xl font-semibold text-nova-ink">
-              {quote.amountIn} {quote.fromSymbol} → {quote.amountOut} {quote.toSymbol}
-            </p>
-            <p className="text-xs text-nova-muted">
-              Fee {quote.feeBps / 100}% ({quote.feeAmount} {quote.fromSymbol})
-            </p>
+          <div className="animate-fade-up space-y-3 rounded-xl bg-nova-surface p-4">
+            <div className="flex justify-between text-sm">
+              <span className="text-nova-muted">Rate</span>
+              <span className="font-mono text-nova-ink">
+                1 {quote.fromSymbol} ≈{' '}
+                {(Number(quote.amountOut) / Math.max(Number(quote.amountIn), 1e-12)).toFixed(6)}{' '}
+                {quote.toSymbol}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-nova-muted">Fee</span>
+              <span className="font-mono text-nova-ink">
+                {quote.feeAmount} {quote.fromSymbol} ({quote.feeBps / 100}%)
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-nova-muted">Provider</span>
+              <span className="text-nova-ink">{quote.provider}</span>
+            </div>
             <Button className="w-full" onClick={confirmSwap}>
-              Confirm swap
+              Confirm trade
             </Button>
           </div>
         ) : null}
 
         {done ? (
-          <p className="text-sm text-nova-accent animate-fade-up">Swap recorded in activity.</p>
+          <p className="animate-fade-up text-center text-sm text-nova-success">
+            Trade recorded in History.
+          </p>
         ) : null}
       </div>
     </>

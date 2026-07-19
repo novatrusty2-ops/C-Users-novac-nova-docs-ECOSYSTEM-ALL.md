@@ -3,7 +3,7 @@
   "domain": "anakatech.llc",
   "bundleId": "llc.anakatech.novawallet",
   "organization": "Anakatech",
-  "theme": "trading",
+  "theme": "okx-trading",
   "headline": "Trade the mesh.",
   "fonts": {
     "display": "Sora",
@@ -11,17 +11,17 @@
     "mono": "IBM Plex Mono"
   },
   "colors": {
-    "bg": "#071422",
-    "bgAlt": "#0A1929",
-    "surface": "#0E2436",
-    "surfaceRaised": "#143044",
+    "bg": "#000000",
+    "bgAlt": "#0A0A0A",
+    "surface": "#121212",
+    "surfaceRaised": "#1A1A1A",
     "accent": "#14B8A6",
-    "highlight": "#22D3EE",
-    "ink": "#E8F6F8",
-    "muted": "#8BA3B5",
-    "border": "rgba(20,184,166,0.22)",
-    "danger": "#EF4444",
-    "success": "#14B8A6"
+    "highlight": "#2DD4BF",
+    "ink": "#FFFFFF",
+    "muted": "#8B8B8B",
+    "border": "rgba(255,255,255,0.08)",
+    "danger": "#F6465D",
+    "success": "#0ECB81"
   },
   "chainColors": {
     "novaone": "#0EA5E9",
@@ -30,5 +30,7 @@
     "defiOracle": "#2DD4BF",
     "anaka": "#F59E0B",
     "alltra": "#E8D48B"
-  }
+  },
+  "layout": "okx-wallet / nova-bank-dashboard",
+  "separateFrom": "signetWallet"
 }
