@@ -1,0 +1,26 @@
+:root {
+  --color-bg: #1a0a0a;
+  --color-bg-alt: #241012;
+  --color-bg-deep: #0d0606;
+  --color-surface: #2e1418;
+  --color-surface-raised: #3c1a22;
+  --color-gold: #c9a84c;
+  --color-gold-light: #d4b860;
+  --color-gold-bright: #f5e6a8;
+  --color-gold-muted: #9a7b3a;
+  --color-gold-dim: #5a4e2e;
+  --color-ink: #f5f0e8;
+  --color-ink-muted: #b8a898;
+  --color-ink-dim: #7a6e65;
+  --color-burgundy: #8c2a3e;
+  --color-burgundy-bright: #b23a54;
+  --color-burgundy-dark: #4a1018;
+  --color-border: rgba(201, 168, 76, 0.22);
+  --color-danger: #c0392b;
+  --color-success: #0e9f6e;
+  --gold-gradient: linear-gradient(135deg, #c9a84c 0%, #f5e6a8 50%, #c9a84c 100%);
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-heading: "Cormorant Garamond", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}

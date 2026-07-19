@@ -21,6 +21,14 @@
       "role": "non-custodial mobile signer — NovaONE + NRW World",
       "repoPath": "apps/wallet"
     },
+    "signetWallet": {
+      "name": "Signet Wallet",
+      "domain": "signetwallet.com",
+      "bundleId": "llc.anakatech.signetwallet",
+      "role": "self-custody multi-chain web wallet — regal Signet branding; NovaONE (#8B5CF6) + NRW World (#A855F7) chain colors",
+      "repoPath": ".",
+      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6"
+    },
     "novaOneExplorer": {
       "name": "Nova Chain Explorer",
       "url": "https://novaone.anakatech.llc/",
