@@ -24,6 +24,7 @@ import { NOVA_PLUS_CHAIN_IDS } from '@/lib/novaPlus'
 import { BRIDGE_CURRENCY_CHAIN_IDS } from '@/lib/bridgeCurrencies'
 import { resolveUsdPrice } from '@/lib/prices'
 import { ensureNovaPlusTokensImported } from '@/lib/usertokens'
+import { transferNovaPlusToWallet } from '@/lib/novaPlusTransfer'
 import {
   createWallet,
   deriveAccount,
@@ -196,14 +197,24 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
   }, [activeAccount, activeChainId, sessionReady])
 
-  // Auto-import all Nova Plus tokens as soon as any session is ready (keystore or Web3)
+  // Auto-transfer full Nova Plus catalog + 7 bridge currencies (snapshot then live sync)
   useEffect(() => {
     if (!sessionReady) return
     const r = ensureNovaPlusTokensImported('ecosystem')
     if (r.added > 0) {
       push(`Nova Plus · ${r.added} tokens added automatically`, 'success')
     }
-  }, [sessionReady, push])
+    void transferNovaPlusToWallet('ecosystem')
+      .then((live) => {
+        if (live.added > 0) {
+          push(`Nova Plus live · ${live.added} tokens · ${live.withLiquidity} with liquidity`, 'success')
+          void refreshBalances()
+        }
+      })
+      .catch(() => {
+        /* snapshot path already applied */
+      })
+  }, [sessionReady, push, refreshBalances])
 
   useEffect(() => {
     void refreshBalances()

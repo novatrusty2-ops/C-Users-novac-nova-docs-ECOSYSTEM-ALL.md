@@ -6,6 +6,7 @@ import { fetchNovaPlusCatalog } from './novaBankSync'
 import { NOVA_PLUS_CHAIN_IDS } from './novaPlus'
 import type { NovaPlusTokenSnap } from './novaPlusSnapshot'
 import { MESH_CONTRACTS } from './ecosystemTokens'
+import { bridgeCurrencyTokenDefs, BRIDGE_CURRENCY_CHAIN_IDS } from './bridgeCurrencies'
 import { oracleUsdPrice } from './oracle'
 import { quoteLiquidity } from './liquidity'
 import { mergeUserTokens, type UserTokenRecord } from './usertokens'
@@ -66,10 +67,27 @@ export interface NovaPlusTransferResult {
 export async function transferNovaPlusToWallet(
   source: UserTokenRecord['source'] = 'ecosystem',
 ): Promise<NovaPlusTransferResult> {
-  setEnabledChainIds([...new Set([...getEnabledChainIds(), ...NOVA_PLUS_CHAIN_IDS])])
+  setEnabledChainIds([
+    ...new Set([...getEnabledChainIds(), ...BRIDGE_CURRENCY_CHAIN_IDS, ...NOVA_PLUS_CHAIN_IDS]),
+  ])
 
   const { tokens, source: catalogSource } = await fetchNovaPlusCatalog(true)
   const records = tokens.flatMap((t) => snapToRecords(t, source))
+
+  // 7 production bridge currencies on Nova Plus + Anaka Bridge
+  const bridgeRecords: UserTokenRecord[] = bridgeCurrencyTokenDefs().map((d) => ({
+    chainId: d.chainIds[0]!,
+    token: {
+      symbol: d.symbol,
+      name: d.name,
+      decimals: d.decimals,
+      address: d.address,
+      standard: d.standard,
+      usd: d.usd,
+    },
+    source,
+    importedAt: Date.now(),
+  }))
 
   // Also ensure verified contracts exist even if live API omits them
   const extras: UserTokenRecord[] = [
@@ -101,7 +119,9 @@ export async function transferNovaPlusToWallet(
     },
   ]
 
-  const merged = mergeUserTokens([...records, ...extras], { refreshPrices: true })
+  const merged = mergeUserTokens([...records, ...bridgeRecords, ...extras], {
+    refreshPrices: true,
+  })
 
   let priced = 0
   let withLiquidity = 0
