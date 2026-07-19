@@ -1,11 +1,7 @@
-name: Deploy Signet Wallet
+name: Deploy Signet Wallet (legacy)
 
+# Prefer deploy-production.yml — kept for manual Signet-only rebuilds
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'apps/signet/**'
-      - '.github/workflows/deploy-signet.yml'
   workflow_dispatch:
 
 permissions:
@@ -20,20 +16,19 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/signet
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: apps/signet/package-lock.json
+          cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: npm run build
-      - name: SPA fallback + CNAME
+      - working-directory: apps/signet
         run: |
+          npm run typecheck
+          npm run test
+          npm run build
           cp dist/index.html dist/404.html
           touch dist/.nojekyll
           echo 'novablockchain.it.com' > dist/CNAME

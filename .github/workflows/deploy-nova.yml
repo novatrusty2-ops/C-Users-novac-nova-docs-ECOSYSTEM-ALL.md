@@ -1,30 +1,27 @@
-name: Build Nova Wallet
+name: Build Nova Wallet (legacy)
 
+# Prefer deploy-production.yml — kept for manual Nova-only artifact builds
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'apps/nova/**'
-      - '.github/workflows/deploy-nova.yml'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/nova
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: apps/nova/package-lock.json
+          cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: npm run typecheck
-      - run: npm run test
-      - run: npm run build
+      - working-directory: apps/nova
+        env:
+          VITE_BASE: /nova/
+        run: |
+          npm run typecheck
+          npm run test
+          npm run build
       - uses: actions/upload-artifact@v4
         with:
           name: nova-wallet-dist

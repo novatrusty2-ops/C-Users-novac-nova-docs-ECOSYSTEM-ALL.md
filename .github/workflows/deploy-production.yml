@@ -1,0 +1,90 @@
+name: Deploy Production Wallets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/signet/**'
+      - 'apps/nova/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-production.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install workspaces
+        run: npm ci
+
+      - name: Test & build Signet (production root)
+        working-directory: apps/signet
+        run: |
+          npm run typecheck
+          npm run test
+          npm run build
+
+      - name: Test & build Nova (production /nova/)
+        working-directory: apps/nova
+        env:
+          VITE_BASE: /nova/
+        run: |
+          npm run typecheck
+          npm run test
+          npm run build
+
+      - name: Assemble production site
+        run: |
+          rm -rf site
+          mkdir -p site/nova
+          # Signet at domain root
+          cp -a apps/signet/dist/. site/
+          cp site/index.html site/404.html
+          # Nova at /nova/
+          cp -a apps/nova/dist/. site/nova/
+          cp site/nova/index.html site/nova/404.html
+          touch site/.nojekyll
+          echo 'novablockchain.it.com' > site/CNAME
+          cat > site/wallets.json <<'EOF'
+          {
+            "signet": { "url": "/", "name": "Signet Wallet" },
+            "nova": { "url": "/nova/", "name": "Nova Wallet" },
+            "domain": "novablockchain.it.com",
+            "signetCanonical": "https://signetwallet.com"
+          }
+          EOF
+          ls -la site site/nova | head -40
+          # Sanity: Nova assets must be under /nova/
+          grep -q '/nova/assets/' site/nova/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
