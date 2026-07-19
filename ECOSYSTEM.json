@@ -20,7 +20,7 @@
       "bundleId": "llc.anakatech.novawallet",
       "role": "trading-first non-custodial mobile signer \u2014 full Nova ecosystem EVMs + partner wallets",
       "repoPath": "apps/nova",
-      "theme": "OKX-style black/teal trading dashboard (NOT Signet regal)",
+      "theme": "OKX-style black/teal trading dashboard",
       "chainColors": {
         "novaone": "#0EA5E9",
         "nrw": "#14B8A6"
@@ -63,34 +63,6 @@
       "chainId": 651940,
       "integratedIn": "apps/nova"
     },
-    "signetWallet": {
-      "name": "Signet Wallet",
-      "domain": "signetwallet.com",
-      "url": "https://signetwallet.com",
-      "bundleId": "llc.anakatech.signetwallet",
-      "role": "institutional self-custody multi-chain SPA \u2014 Safe, WalletConnect, banks gate, full mesh",
-      "repoPath": "apps/signet",
-      "theme": "regal burgundy/gold/cream (NOT Nova navy/teal)",
-      "chainColors": {
-        "novaone": "#8B5CF6",
-        "nrw": "#A855F7"
-      },
-      "storagePrefix": "signet.",
-      "ports": {
-        "dev": 5173,
-        "preview": 4173
-      },
-      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 + Safe + WalletConnect + PWA",
-      "deploy": {
-        "canonical": "https://signetwallet.com",
-        "ciArtifact": "deploy-signet.yml \u2192 signet-wallet-dist",
-        "nginx": "/var/www/anakatechllc-com/signet via apps/signet/deploy.sh"
-      },
-      "separateFrom": "novaWallet",
-      "canonicalDomain": "https://signetwallet.com",
-      "deployedWithNova": false,
-      "note": "Not part of Nova Wallet host or Pages deploy"
-    },
     "novaOneExplorer": {
       "name": "Nova Chain Explorer",
       "url": "https://novaone.anakatech.llc/",
@@ -128,19 +100,14 @@
     "novaOneExplorer": "https://novaone.anakatech.llc/",
     "dbisRpc": "https://rpc.defi-oracle.io",
     "anakaBridge": "https://bridge.anakachain.com",
-    "signetWallet": "https://signetwallet.com",
     "novaWalletRepo": "apps/nova",
-    "signetWalletRepo": "apps/signet",
     "novaWalletPages": "https://novablockchain.it.com/"
   },
   "walletProductSplit": {
-    "primary": "novaWallet",
-    "nova": {
-      "path": "apps/nova",
-      "url": "https://novablockchain.it.com/",
-      "deploy": ".github/workflows/deploy-nova.yml"
-    },
-    "note": "Nova Wallet is the sole product on novablockchain.it.com. Signet (if present under apps/signet) is not deployed with Nova."
+    "product": "novaWallet",
+    "path": "apps/nova",
+    "url": "https://novablockchain.it.com/",
+    "deploy": ".github/workflows/deploy-nova.yml"
   },
   "onexLocal": {
     "bridgeBase": "http://127.0.0.1:9338",

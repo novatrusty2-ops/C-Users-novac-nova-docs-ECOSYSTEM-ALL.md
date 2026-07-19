@@ -9,10 +9,12 @@ import { oracleUsdPrice } from './oracle'
 
 const KEY = 'nova.usertokens.v1'
 
+export type UserTokenSource = 'ecosystem' | 'manual' | 'pouchpay'
+
 export interface UserTokenRecord {
   chainId: number
   token: ChainToken
-  source: 'ecosystem' | 'manual' | 'signet' | 'pouchpay'
+  source: UserTokenSource
   importedAt: number
 }
 
@@ -28,7 +30,15 @@ export function loadUserTokens(): UserTokenRecord[] {
   const raw = storage()?.getItem(KEY)
   if (!raw) return []
   try {
-    return JSON.parse(raw) as UserTokenRecord[]
+    const parsed = JSON.parse(raw) as Array<UserTokenRecord & { source?: string }>
+    // Normalize legacy source tags (e.g. old "signet") → ecosystem
+    return parsed.map((r) => ({
+      ...r,
+      source:
+        r.source === 'pouchpay' || r.source === 'manual' || r.source === 'ecosystem'
+          ? r.source
+          : 'ecosystem',
+    }))
   } catch {
     return []
   }

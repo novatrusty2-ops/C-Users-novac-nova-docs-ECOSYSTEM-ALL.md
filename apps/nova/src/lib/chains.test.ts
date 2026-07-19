@@ -3,7 +3,8 @@ import { BRAND } from './brand.generated'
 import { CHAINS, getChain, primaryChains, defaultChainIds } from './chains'
 import { tokensForNovaOneAndNrw } from './ecosystemTokens'
 
-const SIGNET_PURPLES = ['#8B5CF6', '#A855F7', '#8247E5']
+/** Colors reserved for other products — Nova must not reuse them */
+const FORBIDDEN_PURPLES = ['#8B5CF6', '#A855F7', '#8247E5']
 
 describe('chains', () => {
   it('defaults include full Nova ecosystem EVMs', () => {
@@ -13,17 +14,15 @@ describe('chains', () => {
     expect(ids).not.toContain(56)
   })
 
-  it('uses sky blue for NovaONE (not Signet purple)', () => {
+  it('uses sky blue for NovaONE', () => {
     const novaone = getChain(22016)
     expect(novaone?.iconColor.toLowerCase()).toBe('#0ea5e9')
     expect(BRAND.chainColors.novaone.toLowerCase()).toBe('#0ea5e9')
-    expect(novaone?.iconColor.toLowerCase()).not.toBe('#8b5cf6')
   })
 
-  it('uses teal for NRW World (not Signet purple)', () => {
+  it('uses teal for NRW World', () => {
     const nrw = getChain(33001)
     expect(nrw?.iconColor.toLowerCase()).toBe('#14b8a6')
-    expect(nrw?.iconColor.toLowerCase()).not.toBe('#a855f7')
   })
 
   it('includes Alltra for PouchPay partner', () => {
@@ -32,9 +31,11 @@ describe('chains', () => {
     expect(alltra?.isDefault).toBe(true)
   })
 
-  it('does not use Signet purple chain colors', () => {
+  it('uses Nova brand chain colors only', () => {
     for (const chain of CHAINS) {
-      expect(SIGNET_PURPLES.map((c) => c.toLowerCase())).not.toContain(chain.iconColor.toLowerCase())
+      expect(FORBIDDEN_PURPLES.map((c) => c.toLowerCase())).not.toContain(
+        chain.iconColor.toLowerCase(),
+      )
     }
   })
 

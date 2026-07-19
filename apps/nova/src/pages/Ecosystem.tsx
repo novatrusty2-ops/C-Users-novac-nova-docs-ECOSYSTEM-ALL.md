@@ -23,7 +23,7 @@ export function Ecosystem() {
     push('All Nova ecosystem chains enabled', 'success')
   }
 
-  function importMeshTokens(source: 'ecosystem' | 'signet' | 'pouchpay') {
+  function importMeshTokens(source: 'ecosystem' | 'pouchpay' = 'ecosystem') {
     setImporting(true)
     try {
       const result = importEcosystemTokensFromMesh(source)

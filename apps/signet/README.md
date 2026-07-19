@@ -1,15 +1,8 @@
-# Signet Wallet
+# Signet Wallet (disconnected)
 
-Institutional self-custody multi-chain SPA.
+This tree is **not** part of the Nova Wallet product or workspace.
 
-**Production:** https://signetwallet.com
+- Nova Wallet: https://novablockchain.it.com/ (`apps/nova`)
+- Signet is not linked from Nova frontend, backend tooling, or Pages deploy
 
-**Separate from Nova Wallet** ([novablockchain.it.com](https://novablockchain.it.com/)) — Signet is not hosted on Nova’s Pages site.
-
-```bash
-npm run dev        # :5173
-npm run build
-./deploy.sh        # → /var/www/anakatechllc-com/signet → signetwallet.com
-```
-
-CI builds a `signet-wallet-dist` artifact (`.github/workflows/deploy-signet.yml`) for VPS deploy.
+To work on Signet in isolation, `cd` here and use its own `package.json` (not the root workspace).
