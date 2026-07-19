@@ -24,10 +24,16 @@
     "signetWallet": {
       "name": "Signet Wallet",
       "domain": "signetwallet.com",
+      "url": "https://signetwallet.com",
+      "pagesUrl": "https://novablockchain.it.com",
       "bundleId": "llc.anakatech.signetwallet",
       "role": "self-custody multi-chain web wallet — regal Signet branding; NovaONE (#8B5CF6) + NRW World (#A855F7) chain colors",
       "repoPath": ".",
-      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6"
+      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6",
+      "deploy": {
+        "githubPages": "gh-pages + Actions workflow deploy-signet.yml → novablockchain.it.com",
+        "nginx": "/var/www/anakatechllc-com/signet via deploy.sh"
+      }
     },
     "novaOneExplorer": {
       "name": "Nova Chain Explorer",
@@ -65,7 +71,9 @@
     "novaOneRpc": "https://anakatech.llc/novaone-rpc/",
     "novaOneExplorer": "https://novaone.anakatech.llc/",
     "dbisRpc": "https://rpc.defi-oracle.io",
-    "anakaBridge": "https://bridge.anakachain.com"
+    "anakaBridge": "https://bridge.anakachain.com",
+    "signetWallet": "https://signetwallet.com",
+    "signetWalletPages": "https://novablockchain.it.com"
   },
   "onexLocal": {
     "bridgeBase": "http://127.0.0.1:9338",
