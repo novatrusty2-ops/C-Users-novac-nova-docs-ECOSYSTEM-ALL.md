@@ -4,8 +4,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'node:path'
 
 export default defineConfig({
-  // Pages mirror lives at /signet/ — canonical production is signetwallet.com (not Nova)
+  // Canonical production: https://signetwallet.com (NOT Nova / novablockchain.it.com)
   base: process.env.VITE_BASE || '/',
+
   plugins: [
     react(),
     VitePWA({

@@ -18,11 +18,11 @@ export const PARTNERS: PartnerWallet[] = [
     name: 'Signet Wallet',
     role: 'Institutional self-custody · Anaka mesh + Safe',
     url: 'https://signetwallet.com',
-    secondaryUrl: 'https://novablockchain.it.com/signet/',
     accent: '#C9A84C',
     sharedChains: [22016, 33001, 138, 11013, 651940, 1, 56],
     notes:
-      'Separate product (regal institutional) at signetwallet.com. Same BIP44 path (m/44\'/60\'/0\'/0/n) — import your Nova phrase into Signet to share addresses. Nova owns novablockchain.it.com; Signet is not embedded in Nova.',
+      'Completely separate product at signetwallet.com (not on Nova’s host). Same BIP44 path (m/44\'/60\'/0\'/0/n) — import your Nova phrase into Signet to share addresses across the mesh.',
+
 
 
   },

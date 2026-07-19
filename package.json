@@ -2,7 +2,8 @@
   "name": "anakatech-wallets",
   "version": "1.0.0",
   "private": true,
-  "description": "Anakatech wallets monorepo — Signet (regal institutional) and Nova (trading mobile signer) are separate products",
+  "description": "Anakatech wallets monorepo — Nova (novablockchain.it.com) and Signet (signetwallet.com) are separate products and hosts",
+
   "workspaces": [
     "apps/signet",
     "apps/nova"
