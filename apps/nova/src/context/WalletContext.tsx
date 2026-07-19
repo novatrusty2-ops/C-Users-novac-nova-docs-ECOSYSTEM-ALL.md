@@ -15,8 +15,9 @@ import {
   loadAccounts,
   setActiveAccountId,
 } from '@/lib/accounts'
-import { JsonRpcProvider, formatUnits } from 'ethers'
+import { Contract, JsonRpcProvider, formatUnits } from 'ethers'
 import { getActiveChainId, setActiveChainId } from '@/lib/activeChain'
+import { tokensOnChain } from '@/lib/chains'
 import { allKnownChains, getEnabledChainIds } from '@/lib/networks'
 import { resolveUsdPrice } from '@/lib/prices'
 import {
@@ -56,37 +57,52 @@ interface WalletContextValue {
 
 const WalletContext = createContext<WalletContextValue | null>(null)
 
+const ERC20_BALANCE_ABI = ['function balanceOf(address) view returns (uint256)']
+
+async function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error('rpc timeout')), ms)
+    p.then((v) => {
+      clearTimeout(t)
+      resolve(v)
+    }).catch((e) => {
+      clearTimeout(t)
+      reject(e)
+    })
+  })
+}
+
 async function fetchChainBalances(
   account: WalletAccount,
   chain: ChainDefinition,
 ): Promise<TokenBalanceRow[]> {
+  let provider: JsonRpcProvider | null = null
   let nativeRaw = 0n
   try {
     const rpc = chain.rpcUrls[0]
     if (rpc) {
-      const provider = new JsonRpcProvider(rpc, chain.id, { staticNetwork: true })
-      nativeRaw = await new Promise<bigint>((resolve, reject) => {
-        const t = setTimeout(() => reject(new Error('rpc timeout')), 4500)
-        provider
-          .getBalance(account.address)
-          .then((v) => {
-            clearTimeout(t)
-            resolve(v)
-          })
-          .catch((e) => {
-            clearTimeout(t)
-            reject(e)
-          })
-      })
+      provider = new JsonRpcProvider(rpc, chain.id, { staticNetwork: true })
+      nativeRaw = await withTimeout(provider.getBalance(account.address), 4500)
     }
   } catch {
     nativeRaw = 0n
   }
 
+  const tokens = tokensOnChain(chain.id)
   const rows: TokenBalanceRow[] = []
-  for (const token of chain.tokens) {
-    const isNative = token.address == null
-    const balanceRaw = isNative ? nativeRaw : 0n
+  for (const token of tokens) {
+    let balanceRaw = 0n
+    if (token.address == null && token.standard === 'native') {
+      balanceRaw = nativeRaw
+    } else if (token.address && provider) {
+      try {
+        const c = new Contract(token.address, ERC20_BALANCE_ABI, provider)
+        balanceRaw = (await withTimeout(c.balanceOf(account.address) as Promise<bigint>, 4000)) ?? 0n
+      } catch {
+        balanceRaw = 0n
+      }
+    }
+
     const balance = formatUnits(balanceRaw, token.decimals)
     const usdPrice = token.usd ?? (await resolveUsdPrice(token.symbol, token.coingeckoId)) ?? null
     const usdValue = usdPrice != null ? Number(balance) * usdPrice : null

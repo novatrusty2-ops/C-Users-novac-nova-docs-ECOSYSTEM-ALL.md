@@ -6,6 +6,7 @@ export const ROUTES = {
   swap: '/swap',
   activity: '/activity',
   settings: '/settings',
+  ecosystem: '/ecosystem',
   send: '/send',
   receive: '/receive',
 } as const

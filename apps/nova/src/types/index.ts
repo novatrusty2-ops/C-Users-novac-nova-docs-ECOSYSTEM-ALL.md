@@ -11,7 +11,7 @@ export interface NativeCurrency {
   decimals: number
 }
 
-export type ChainCategory = 'nova' | 'public' | 'custom'
+export type ChainCategory = 'nova' | 'partner' | 'public' | 'custom'
 
 export interface ChainToken {
   symbol: string
@@ -36,6 +36,8 @@ export interface ChainDefinition {
   isOptional: boolean
   tokens: ChainToken[]
   zeroGas?: boolean
+  ecosystemRole?: 'trading' | 'settlement' | 'custody' | 'bridge' | 'external'
+  partner?: 'pouchpay' | 'signet'
 }
 
 export interface TokenBalanceRow {

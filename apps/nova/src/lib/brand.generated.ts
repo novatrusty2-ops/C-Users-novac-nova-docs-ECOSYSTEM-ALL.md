@@ -22,5 +22,9 @@ export const BRAND = {
   chainColors: {
     novaone: '#0EA5E9',
     nrw: '#14B8A6',
+    novaProduction: '#38BDF8',
+    defiOracle: '#2DD4BF',
+    anaka: '#F59E0B',
+    alltra: '#E8D48B',
   },
 } as const

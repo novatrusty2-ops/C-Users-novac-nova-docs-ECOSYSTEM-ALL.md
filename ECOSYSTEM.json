@@ -18,21 +18,36 @@
     "novaWallet": {
       "name": "Nova Wallet",
       "bundleId": "llc.anakatech.novawallet",
-      "role": "trading-first non-custodial mobile signer — NovaONE + NRW World only by default",
+      "role": "trading-first non-custodial mobile signer — full Nova ecosystem EVMs + partner wallets",
       "repoPath": "apps/nova",
       "theme": "navy/teal/cyan (NOT Signet regal)",
       "chainColors": {
         "novaone": "#0EA5E9",
         "nrw": "#14B8A6"
       },
+      "defaultChains": [22016, 33001, 9001, 138, 11013, 651940],
+      "integrations": ["signetWallet", "pouchPay", "novaBank", "novaSwap"],
+      "tokenImport": {
+        "novaOne": 22016,
+        "nrwWorld": 33001,
+        "catalog": "apps/nova/src/lib/ecosystemTokens.ts"
+      },
       "storagePrefix": "nova.",
       "ports": { "dev": 5174, "preview": 4174 },
-      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 — lean tab shell, no institutional gate",
+      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 — lean tab shell",
       "deploy": {
         "nginx": "/var/www/anakatechllc-com/nova via apps/nova/deploy.sh",
         "ci": ".github/workflows/deploy-nova.yml (build artifact)"
       },
       "separateFrom": "signetWallet"
+    },
+    "pouchPay": {
+      "name": "PouchPay Wallet",
+      "role": "ALLTRA / PouchPay payments wallet — partner to Nova on Alltra Global World (651940)",
+      "playStore": "https://play.google.com/store/apps/details?id=global.alltra.app",
+      "url": "https://alltra.global/",
+      "chainId": 651940,
+      "integratedIn": "apps/nova"
     },
     "signetWallet": {
       "name": "Signet Wallet",

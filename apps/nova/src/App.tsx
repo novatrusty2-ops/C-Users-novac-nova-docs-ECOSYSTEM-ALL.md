@@ -11,6 +11,7 @@ import { Portfolio } from '@/pages/Portfolio'
 import { Swap } from '@/pages/Swap'
 import { Activity } from '@/pages/Activity'
 import { Settings } from '@/pages/Settings'
+import { Ecosystem } from '@/pages/Ecosystem'
 import { Send } from '@/pages/Send'
 import { Receive } from '@/pages/Receive'
 import type { ReactNode } from 'react'
@@ -78,6 +79,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.ecosystem}
+          element={
+            <ProtectedRoute>
+              <Ecosystem />
             </ProtectedRoute>
           }
         />

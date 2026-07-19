@@ -3,17 +3,28 @@ import { Button } from '@/components/common/Button'
 import { Spinner } from '@/components/common/Spinner'
 import { TopBar } from '@/components/layout/TopBar'
 import { useWallet } from '@/context/WalletContext'
+import { useToast } from '@/context/ToastContext'
 import { useTokenBalances } from '@/hooks/useTokenBalances'
 import { useDisplaySettings } from '@/hooks/useDisplaySettings'
-import { primaryChains } from '@/lib/chains'
 import { ROUTES } from '@/lib/routes'
+import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
+import { useState } from 'react'
 
 export function Portfolio() {
   const { activeAccount, refreshBalances } = useWallet()
+  const { push } = useToast()
   const { rows, loading, formattedTotal } = useTokenBalances()
   const { hideBalances } = useDisplaySettings()
+  const [imported, setImported] = useState(() => loadUserTokens().length)
 
-  const meshRows = rows.filter((r) => primaryChains().some((c) => c.id === r.chainId))
+  const meshRows = rows.filter((r) => [22016, 33001, 9001, 138, 11013, 651940].includes(r.chainId))
+
+  function handleImport() {
+    const r = importEcosystemTokensFromMesh('ecosystem')
+    setImported(r.total)
+    push(r.added ? `Imported ${r.added} tokens (22016 + 33001)` : 'Tokens already imported', 'success')
+    void refreshBalances()
+  }
 
   return (
     <>
@@ -41,9 +52,22 @@ export function Portfolio() {
           </Link>
         </div>
 
+        <div className="flex gap-2">
+          <Button variant="ghost" className="flex-1 text-xs" onClick={handleImport}>
+            Import 22016/33001 tokens
+          </Button>
+          <Link to={ROUTES.ecosystem} className="flex-1">
+            <Button variant="ghost" className="w-full text-xs">
+              Ecosystem · Signet · PouchPay
+            </Button>
+          </Link>
+        </div>
+
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-sm font-semibold text-nova-ink">NovaONE · NRW</h2>
+            <h2 className="font-display text-sm font-semibold text-nova-ink">
+              NovaONE · NRW {imported > 0 ? `· ${imported} imported` : ''}
+            </h2>
             <button
               type="button"
               className="text-xs text-nova-highlight"
@@ -62,7 +86,10 @@ export function Portfolio() {
           ) : (
             <ul className="space-y-2">
               {meshRows.map((row) => (
-                <li key={`${row.chainId}-${row.symbol}`} className="card-surface flex items-center gap-3">
+                <li
+                  key={`${row.chainId}-${row.symbol}-${row.address ?? 'native'}`}
+                  className="card-surface flex items-center gap-3"
+                >
                   <span
                     className="flex h-10 w-10 items-center justify-center rounded-full text-xs font-bold"
                     style={{ background: `${row.iconColor}22`, color: row.iconColor }}
