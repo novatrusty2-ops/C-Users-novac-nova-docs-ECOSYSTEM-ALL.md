@@ -1,22 +1,19 @@
 {
-  "name": "nova-wallet-monorepo",
+  "name": "nova-wallet",
   "version": "1.0.0",
   "private": true,
-  "description": "Nova Wallet \u2014 https://novablockchain.it.com/",
+  "description": "Nova Wallet — https://novablockchain.it.com/",
   "workspaces": [
-    "apps/signet",
     "apps/nova"
   ],
   "scripts": {
-    "dev:signet": "npm run dev -w signet-wallet",
+    "dev": "npm run dev -w nova-wallet",
     "dev:nova": "npm run dev -w nova-wallet",
-    "build:signet": "npm run build -w signet-wallet",
+    "build": "npm run build -w nova-wallet",
     "build:nova": "npm run build -w nova-wallet",
-    "build": "npm run build:signet && npm run build:nova",
-    "test:signet": "npm run test -w signet-wallet",
+    "test": "npm run test -w nova-wallet",
     "test:nova": "npm run test -w nova-wallet",
-    "test": "npm run test:signet && npm run test:nova",
-    "typecheck": "npm run typecheck -w signet-wallet && npm run typecheck -w nova-wallet"
+    "typecheck": "npm run typecheck -w nova-wallet"
   },
   "engines": {
     "node": ">=20"

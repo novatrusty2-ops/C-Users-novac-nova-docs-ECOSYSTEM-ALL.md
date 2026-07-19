@@ -27,9 +27,24 @@ describe('usertokens import', () => {
     expect(loadUserTokens().length).toBe(second.total)
   })
 
-  it('supports signet source tag', () => {
-    const r = importEcosystemTokensFromMesh('signet')
-    expect(r.added).toBeGreaterThan(0)
-    expect(loadUserTokens().every((t) => t.source === 'signet')).toBe(true)
+  it('normalizes legacy source tags to ecosystem', () => {
+    localStorage.setItem(
+      'nova.usertokens.v1',
+      JSON.stringify([
+        {
+          chainId: 22016,
+          token: {
+            symbol: 'NOVA',
+            name: 'Nova',
+            decimals: 18,
+            address: null,
+            standard: 'native',
+          },
+          source: 'signet',
+          importedAt: Date.now(),
+        },
+      ]),
+    )
+    expect(loadUserTokens()[0]?.source).toBe('ecosystem')
   })
 })

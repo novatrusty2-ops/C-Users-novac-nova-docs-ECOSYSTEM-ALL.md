@@ -37,7 +37,7 @@ export interface ChainDefinition {
   tokens: ChainToken[]
   zeroGas?: boolean
   ecosystemRole?: 'trading' | 'settlement' | 'custody' | 'bridge' | 'external'
-  partner?: 'pouchpay' | 'signet'
+  partner?: 'pouchpay'
 }
 
 export interface TokenBalanceRow {
