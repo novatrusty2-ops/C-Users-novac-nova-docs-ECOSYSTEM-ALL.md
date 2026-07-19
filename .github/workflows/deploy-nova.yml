@@ -1,7 +1,6 @@
 name: Deploy Nova Wallet
 
-# Nova Wallet ONLY — owns https://novablockchain.it.com/
-# Signet is a separate product (signetwallet.com) and is NOT deployed here.
+# Nova Wallet alone — https://novablockchain.it.com/
 on:
   push:
     branches: [main]
@@ -44,54 +43,23 @@ jobs:
           npm run test
           npm run build
 
-      - name: Assemble Nova-only site
+      - name: Assemble Nova site
         run: |
           rm -rf site
-          mkdir -p site/signet
+          mkdir -p site
           cp -a apps/nova/dist/. site/
           cp site/index.html site/404.html
           touch site/.nojekyll
           echo 'novablockchain.it.com' > site/CNAME
-          # Signet is NOT hosted here — point old /signet/ bookmarks at canonical domain
-          cat > site/signet/index.html <<'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8" />
-            <meta http-equiv="refresh" content="0;url=https://signetwallet.com/" />
-            <link rel="canonical" href="https://signetwallet.com/" />
-            <title>Signet Wallet — separate product</title>
-            <style>
-              body { margin:0; min-height:100vh; display:grid; place-items:center;
-                     background:#1A0A0A; color:#F5E6C8; font-family:system-ui,sans-serif; text-align:center; }
-              a { color:#C9A84C; }
-            </style>
-          </head>
-          <body>
-            <p>
-              <strong>Signet Wallet</strong> is a separate product from Nova Wallet.<br />
-              <a href="https://signetwallet.com/">Continue to signetwallet.com →</a>
-            </p>
-          </body>
-          </html>
-          EOF
           cat > site/wallets.json <<'EOF'
           {
-            "nova": {
-              "url": "https://novablockchain.it.com/",
-              "name": "Nova Wallet",
-              "host": "novablockchain.it.com"
-            },
-            "signet": {
-              "url": "https://signetwallet.com/",
-              "name": "Signet Wallet",
-              "note": "Separate product — not hosted on Nova Pages"
-            },
-            "split": true
+            "name": "Nova Wallet",
+            "url": "https://novablockchain.it.com/",
+            "product": "nova-wallet"
           }
           EOF
-          grep -q 'Nova Wallet' site/index.html
-          test ! -d site/signet/assets
+          grep -qi 'nova' site/index.html
+          test ! -e site/signet
 
       - uses: actions/upload-pages-artifact@v3
         with:

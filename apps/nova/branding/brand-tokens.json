@@ -31,6 +31,6 @@
     "anaka": "#F59E0B",
     "alltra": "#E8D48B"
   },
-  "layout": "okx-wallet / nova-bank-dashboard",
-  "separateFrom": "signetWallet"
+  "layout": "okx-wallet / nova-bank-dashboard"
 }
+

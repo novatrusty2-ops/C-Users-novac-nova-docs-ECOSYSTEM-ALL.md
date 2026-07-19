@@ -1,4 +1,4 @@
-/** Cross-wallet / ecosystem partner integrations for Nova Wallet */
+/** Ecosystem partner integrations for Nova Wallet */
 
 export interface PartnerWallet {
   id: string
@@ -13,19 +13,6 @@ export interface PartnerWallet {
 }
 
 export const PARTNERS: PartnerWallet[] = [
-  {
-    id: 'signet',
-    name: 'Signet Wallet',
-    role: 'Institutional self-custody · Anaka mesh + Safe',
-    url: 'https://signetwallet.com',
-    accent: '#C9A84C',
-    sharedChains: [22016, 33001, 138, 11013, 651940, 1, 56],
-    notes:
-      'Completely separate product at signetwallet.com (not on Nova’s host). Same BIP44 path (m/44\'/60\'/0\'/0/n) — import your Nova phrase into Signet to share addresses across the mesh.',
-
-
-
-  },
   {
     id: 'pouchpay',
     name: 'PouchPay Wallet',

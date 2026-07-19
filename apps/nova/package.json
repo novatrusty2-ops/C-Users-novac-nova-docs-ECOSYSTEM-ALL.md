@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Nova Wallet — trading-first mobile signer for NovaONE + NRW World (llc.anakatech.novawallet). Separate product from Signet Wallet.",
+  "description": "Nova Wallet — trading-first mobile signer for NovaONE + NRW World (llc.anakatech.novawallet).",
+
   "scripts": {
     "dev": "vite --port 5174",
     "build": "tsc -b && vite build",

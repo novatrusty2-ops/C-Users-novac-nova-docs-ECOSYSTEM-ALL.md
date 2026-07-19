@@ -7,8 +7,9 @@ import { Web3Provider } from '@/context/Web3Context'
 import App from '@/App'
 import '@/index.css'
 
-/** Nova owns production root at novablockchain.it.com — separate from Signet at /signet/ */
+/** Production: https://novablockchain.it.com/ */
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

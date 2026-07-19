@@ -1,61 +1,16 @@
-# Anakatech Wallets
+# Nova Wallet
 
-Two **separate** wallet products — different brands, themes, storage, UX, and deploy targets.
+**Production:** https://novablockchain.it.com/
 
-| | **Signet Wallet** | **Nova Wallet** |
-|---|---|---|
-| Path | `apps/signet` | `apps/nova` |
-| Domain | [signetwallet.com](https://signetwallet.com) | [novablockchain.it.com](https://novablockchain.it.com/) |
-| Role | Institutional self-custody SPA | Trading-first mobile signer |
-| Theme | Regal burgundy / gold / cream | OKX black / teal trading dashboard |
-| Default chains | Full Anaka mesh + public EVMs | **NovaONE + NRW World** only |
-| Chain accents | NovaONE `#8B5CF6` · NRW `#A855F7` | NovaONE `#0EA5E9` · NRW `#14B8A6` |
-| Storage keys | `signet.*` | `nova.*` |
-| Ports | `5173` / `4173` | `5174` / `4174` |
-| Deploy | Anakatech VPS (`deploy.sh`) | GitHub Pages (Nova-only) |
-
-They do **not** share UI themes, localStorage namespaces, or product positioning.
-
-## Quick start
+OKX-style trading wallet for NovaONE, NRW World, and the Nova mesh.
 
 ```bash
-npm install                 # workspaces: apps/signet + apps/nova
-
-npm run dev:signet          # http://localhost:5173
-npm run dev:nova            # http://localhost:5174
-
-npm run build:signet
+npm install
+npm run dev:nova          # http://localhost:5174
 npm run build:nova
-npm test
+npm test:nova
 ```
 
-## Signet (`apps/signet`)
+App source: [`apps/nova`](apps/nova)
 
-Self-custody multi-chain wallet — Safe multisig, WalletConnect, institutional gate, banks directory, bridge/swap, PWA.
-
-```bash
-cd apps/signet && npm run dev
-cd apps/signet && ./deploy.sh   # nginx atomic deploy
-```
-
-## Nova (`apps/nova`)
-
-OKX Wallet / Nova Bank dashboard layout — Assets · Trade · History · Me. Separate product from Signet.
-
-
-Lean trading wallet for the Nova mesh — Portfolio / Swap / Activity / Settings tabs. No institutional gate, no Safe UI, no Signet branding.
-
-```bash
-cd apps/nova && npm run dev
-cd apps/nova && ./deploy.sh
-```
-
-## Production — fully separate hosts
-
-| Product | Production URL | Deploy |
-|---------|----------------|--------|
-| **Nova Wallet** | https://novablockchain.it.com/ | `.github/workflows/deploy-nova.yml` (Pages, Nova-only) |
-| **Signet Wallet** | https://signetwallet.com | `.github/workflows/deploy-signet.yml` artifact + `apps/signet/deploy.sh` (VPS) |
-
-They do **not** share a production path. `/signet/` on the Nova host only redirects to signetwallet.com.
-
+Deploy: [`.github/workflows/deploy-nova.yml`](.github/workflows/deploy-nova.yml) → GitHub Pages (`novablockchain.it.com`).

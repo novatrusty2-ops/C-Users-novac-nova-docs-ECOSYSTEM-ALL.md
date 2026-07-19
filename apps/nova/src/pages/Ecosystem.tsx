@@ -86,15 +86,8 @@ export function Ecosystem() {
           >
             Import NovaONE + NRW tokens
           </Button>
-          <Button
-            variant="ghost"
-            className="w-full"
-            disabled={importing}
-            onClick={() => importMeshTokens('signet')}
-          >
-            Import via Signet catalog
-          </Button>
         </section>
+
 
         <section className="card-surface space-y-4">
           <h2 className="font-display text-sm font-semibold text-nova-ink">Partner wallets</h2>
