@@ -7,15 +7,20 @@ import {
   setHideBalances,
 } from '@/lib/settings'
 
+function subscribe(onStoreChange: () => void) {
+  window.addEventListener('nova-settings', onStoreChange)
+  return () => window.removeEventListener('nova-settings', onStoreChange)
+}
+
 export function useDisplaySettings() {
   const currency = useSyncExternalStore(
-    () => () => {},
+    subscribe,
     () => getDisplayCurrency(),
     () => 'USD' as DisplayCurrency,
   )
 
   const hideBalances = useSyncExternalStore(
-    () => () => {},
+    subscribe,
     () => getHideBalances(),
     () => false,
   )
@@ -30,5 +35,10 @@ export function useDisplaySettings() {
     window.dispatchEvent(new Event('nova-settings'))
   }, [])
 
-  return { currency, hideBalances, updateCurrency, updateHideBalances }
+  const toggleHideBalances = useCallback(() => {
+    setHideBalances(!getHideBalances())
+    window.dispatchEvent(new Event('nova-settings'))
+  }, [])
+
+  return { currency, hideBalances, updateCurrency, updateHideBalances, toggleHideBalances }
 }

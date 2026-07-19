@@ -11,14 +11,42 @@ import { getAutolockMinutes, setAutolockMinutes } from '@/lib/settings'
 import type { AutolockMinutes, DisplayCurrency } from '@/types'
 import { ROUTES } from '@/lib/routes'
 import { BRAND } from '@/lib/brand'
-import { PARTNERS } from '@/lib/partners'
+import { ECOSYSTEM_LINKS, PARTNERS } from '@/lib/partners'
 import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
 import { useToast } from '@/context/ToastContext'
+
+function Row({
+  label,
+  children,
+  href,
+  to,
+}: {
+  label: string
+  children?: React.ReactNode
+  href?: string
+  to?: string
+}) {
+  const inner = (
+    <div className="flex items-center justify-between gap-3 border-b border-nova-border px-4 py-3.5 last:border-0">
+      <span className="text-sm text-nova-ink">{label}</span>
+      <div className="flex items-center gap-2 text-sm text-nova-muted">{children ?? '›'}</div>
+    </div>
+  )
+  if (to) return <Link to={to}>{inner}</Link>
+  if (href)
+    return (
+      <a href={href} target="_blank" rel="noreferrer">
+        {inner}
+      </a>
+    )
+  return inner
+}
 
 export function Settings() {
   const navigate = useNavigate()
   const { push } = useToast()
-  const { lockWallet, wipeWallet, switchChain, activeChainId, refreshBalances } = useWallet()
+  const { lockWallet, wipeWallet, switchChain, activeChainId, refreshBalances, activeAccount } =
+    useWallet()
   const { currency, hideBalances, updateCurrency, updateHideBalances } = useDisplaySettings()
   const [enabled, setEnabled] = useState(() => getEnabledChainIds())
   const [autolock, setAutolock] = useState<AutolockMinutes>(() => getAutolockMinutes())
@@ -54,38 +82,44 @@ export function Settings() {
 
   return (
     <>
-      <TopBar title="Settings" showNetwork={false} />
-      <div className="page-container space-y-6">
-        <section className="card-surface space-y-3">
-          <h2 className="font-display text-sm font-semibold text-nova-ink">Ecosystem</h2>
-          <Link to={ROUTES.ecosystem} className="btn-primary w-full text-center block py-2.5 rounded-lg">
-            Open ecosystem hub
-          </Link>
-          <Button variant="ghost" className="w-full" onClick={handleImportTokens}>
-            Import NovaONE + NRW tokens ({imported})
-          </Button>
-          <div className="flex flex-wrap gap-2">
-            {PARTNERS.map((p) => (
-              <a
-                key={p.id}
-                href={p.url}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-ghost text-xs py-1.5 px-3"
-                style={{ borderColor: `${p.accent}55` }}
-              >
-                {p.name}
-              </a>
-            ))}
-          </div>
+      <TopBar title="Me" showNetwork={false} />
+      <div className="page-container space-y-4">
+        {/* Profile header — OKX Me tab */}
+        <section className="rounded-xl bg-nova-surface px-4 py-4">
+          <p className="font-display text-lg font-bold text-nova-ink">{BRAND.name}</p>
+          <p className="mt-1 truncate font-mono text-xs text-nova-muted">
+            {activeAccount?.address ?? 'No account'}
+          </p>
         </section>
 
-        <section className="card-surface space-y-3">
-          <h2 className="font-display text-sm font-semibold text-nova-ink">Display</h2>
-          <label className="flex items-center justify-between text-sm">
-            <span className="text-nova-muted">Currency</span>
+        <section className="overflow-hidden rounded-xl bg-nova-surface">
+          <p className="px-4 pt-3 pb-1 text-[11px] uppercase tracking-wider text-nova-muted">
+            Nova Bank
+          </p>
+          <Row label="Ecosystem hub" to={ROUTES.ecosystem} />
+          <Row label="Nova Bank dashboard" href={ECOSYSTEM_LINKS.novaBank} />
+          <Row label="Nova Swap" href={ECOSYSTEM_LINKS.novaSwap} />
+          <button type="button" className="w-full text-left" onClick={handleImportTokens}>
+            <Row label={`Import mesh tokens (${imported})`} />
+          </button>
+        </section>
+
+        <section className="overflow-hidden rounded-xl bg-nova-surface">
+          <p className="px-4 pt-3 pb-1 text-[11px] uppercase tracking-wider text-nova-muted">
+            Partners
+          </p>
+          {PARTNERS.map((p) => (
+            <Row key={p.id} label={p.name} href={p.url} />
+          ))}
+        </section>
+
+        <section className="overflow-hidden rounded-xl bg-nova-surface">
+          <p className="px-4 pt-3 pb-1 text-[11px] uppercase tracking-wider text-nova-muted">
+            Display
+          </p>
+          <Row label="Currency">
             <select
-              className="input-field w-auto"
+              className="bg-transparent text-right text-nova-ink outline-none"
               value={currency}
               onChange={(e) => updateCurrency(e.target.value as DisplayCurrency)}
             >
@@ -93,85 +127,76 @@ export function Settings() {
               <option value="EUR">EUR</option>
               <option value="GBP">GBP</option>
             </select>
-          </label>
-          <label className="flex items-center justify-between text-sm">
-            <span className="text-nova-muted">Hide balances</span>
+          </Row>
+          <Row label="Hide balances">
             <input
               type="checkbox"
               checked={hideBalances}
               onChange={(e) => updateHideBalances(e.target.checked)}
             />
-          </label>
+          </Row>
         </section>
 
-        <section className="card-surface space-y-3">
-          <h2 className="font-display text-sm font-semibold text-nova-ink">Networks</h2>
-          <p className="text-xs text-nova-muted">Nova ecosystem (always available):</p>
+        <section className="overflow-hidden rounded-xl bg-nova-surface">
+          <p className="px-4 pt-3 pb-1 text-[11px] uppercase tracking-wider text-nova-muted">
+            Networks
+          </p>
           {mesh.map((chain) => (
-            <label key={chain.id} className="flex items-center justify-between text-sm">
-              <span className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full" style={{ background: chain.iconColor }} />
-                {chain.name}
-                {chain.partner === 'pouchpay' ? (
-                  <span className="text-[10px] text-nova-muted">PouchPay</span>
-                ) : null}
-              </span>
+            <Row key={chain.id} label={chain.name}>
               <input
                 type="checkbox"
                 checked={enabled.includes(chain.id)}
                 onChange={() => handleToggleChain(chain.id)}
               />
-            </label>
+            </Row>
           ))}
-          <p className="text-xs text-nova-muted pt-2">Optional public chains:</p>
           {optional.map((chain) => (
-            <label key={chain.id} className="flex items-center justify-between text-sm">
-              <span className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full" style={{ background: chain.iconColor }} />
-                {chain.name}
-              </span>
+            <Row key={chain.id} label={`${chain.name} (opt)`}>
               <input
                 type="checkbox"
                 checked={enabled.includes(chain.id)}
                 onChange={() => handleToggleChain(chain.id)}
               />
-            </label>
+            </Row>
           ))}
-          <p className="text-xs text-nova-muted">Active chain: {activeChainId}</p>
+          <Row label="Active chain ID">{activeChainId}</Row>
         </section>
 
-        <section className="card-surface space-y-3">
-          <h2 className="font-display text-sm font-semibold text-nova-ink">Security</h2>
-          <label className="flex items-center justify-between text-sm">
-            <span className="text-nova-muted">Auto-lock (minutes)</span>
+        <section className="overflow-hidden rounded-xl bg-nova-surface">
+          <p className="px-4 pt-3 pb-1 text-[11px] uppercase tracking-wider text-nova-muted">
+            Security
+          </p>
+          <Row label="Auto-lock">
             <select
-              className="input-field w-auto"
+              className="bg-transparent text-right text-nova-ink outline-none"
               value={autolock}
               onChange={(e) => handleAutolock(Number(e.target.value) as AutolockMinutes)}
             >
               <option value={0}>Off</option>
-              <option value={1}>1</option>
-              <option value={5}>5</option>
-              <option value={15}>15</option>
-              <option value={30}>30</option>
+              <option value={1}>1m</option>
+              <option value={5}>5m</option>
+              <option value={15}>15m</option>
+              <option value={30}>30m</option>
             </select>
-          </label>
-          <Button variant="ghost" className="w-full" onClick={lockWallet}>
-            Lock wallet
-          </Button>
-          <Button variant="danger" className="w-full" onClick={() => setConfirmWipe(true)}>
-            Remove wallet
-          </Button>
+          </Row>
+          <button type="button" className="w-full text-left" onClick={lockWallet}>
+            <Row label="Lock wallet" />
+          </button>
+          <button type="button" className="w-full text-left" onClick={() => setConfirmWipe(true)}>
+            <div className="flex items-center justify-between gap-3 px-4 py-3.5">
+              <span className="text-sm text-nova-danger">Remove wallet</span>
+              <span className="text-nova-danger">›</span>
+            </div>
+          </button>
         </section>
 
-        <section className="text-center text-xs text-nova-muted pb-4">
-          <p>{BRAND.name}</p>
-          <p>{BRAND.bundleId}</p>
-        </section>
+        <p className="pb-4 text-center text-[11px] text-nova-muted">
+          {BRAND.bundleId} · separate from Signet Wallet
+        </p>
       </div>
 
       <Modal open={confirmWipe} title="Remove wallet?" onClose={() => setConfirmWipe(false)}>
-        <p className="text-sm text-nova-muted mb-4">
+        <p className="mb-4 text-sm text-nova-muted">
           This deletes the encrypted keystore from this device. Back up your recovery phrase first.
         </p>
         <Button variant="danger" className="w-full" onClick={handleWipe}>

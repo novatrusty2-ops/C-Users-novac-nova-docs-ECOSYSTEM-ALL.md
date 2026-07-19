@@ -18,11 +18,12 @@ export const PARTNERS: PartnerWallet[] = [
     name: 'Signet Wallet',
     role: 'Institutional self-custody · Anaka mesh + Safe',
     url: 'https://signetwallet.com',
-    secondaryUrl: 'https://novablockchain.it.com',
+    secondaryUrl: 'https://novablockchain.it.com/',
     accent: '#C9A84C',
     sharedChains: [22016, 33001, 138, 11013, 651940, 1, 56],
     notes:
-      'Signet uses the same BIP44 path (m/44\'/60\'/0\'/0/n). Import your Nova recovery phrase into Signet (or vice versa) to share addresses across the mesh.',
+      'Separate product (regal institutional). Same BIP44 path (m/44\'/60\'/0\'/0/n) — import your Nova phrase into Signet to share addresses. Nova Wallet is not hosted inside Signet.',
+
   },
   {
     id: 'pouchpay',
