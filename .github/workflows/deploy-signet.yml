@@ -3,6 +3,9 @@ name: Deploy Signet Wallet
 on:
   push:
     branches: [main]
+    paths:
+      - 'apps/signet/**'
+      - '.github/workflows/deploy-signet.yml'
   workflow_dispatch:
 
 permissions:
@@ -11,18 +14,22 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-signet
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/signet
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+          cache-dependency-path: apps/signet/package-lock.json
       - run: npm ci
       - run: npm run build
       - name: SPA fallback + CNAME
@@ -32,7 +39,7 @@ jobs:
           echo 'novablockchain.it.com' > dist/CNAME
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: apps/signet/dist
 
   deploy:
     needs: build

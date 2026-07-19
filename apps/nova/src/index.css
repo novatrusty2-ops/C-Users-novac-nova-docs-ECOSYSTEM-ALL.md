@@ -1,0 +1,83 @@
+@import './brand/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-nova-bg text-nova-ink font-body antialiased;
+  }
+
+  ::selection {
+    background: rgba(20, 184, 166, 0.35);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply min-h-[100dvh] overflow-x-hidden;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(20, 184, 166, 0.22), transparent 55%),
+      radial-gradient(800px 400px at 80% 20%, rgba(34, 211, 238, 0.1), transparent 50%),
+      var(--color-bg);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold transition;
+    @apply bg-teal-gradient text-nova-bg shadow-teal;
+    @apply hover:brightness-110 active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-nova-muted transition;
+    border-color: var(--color-border);
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(20, 184, 166, 0.45);
+    color: var(--color-highlight);
+  }
+
+  .input-field {
+    @apply w-full rounded-xl px-4 py-3 text-nova-ink outline-none transition font-mono text-sm;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .input-field::placeholder {
+    color: var(--color-muted);
+  }
+
+  .input-field:focus {
+    border-color: rgba(34, 211, 238, 0.5);
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.25);
+  }
+
+  .card-surface {
+    @apply rounded-2xl p-4;
+    border: 1px solid var(--color-border);
+    background: rgba(14, 36, 54, 0.85);
+  }
+
+  .page-container {
+    @apply relative z-10 mx-auto w-full max-w-lg px-4 pb-28 pt-4;
+  }
+
+  .hero-gradient {
+    background:
+      linear-gradient(165deg, #071422 0%, #0a1929 35%, rgba(20, 184, 166, 0.18) 100%);
+  }
+
+  .tab-bar {
+    @apply fixed bottom-0 inset-x-0 z-40 border-t backdrop-blur-md;
+    border-color: var(--color-border);
+    background: rgba(7, 20, 34, 0.92);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}

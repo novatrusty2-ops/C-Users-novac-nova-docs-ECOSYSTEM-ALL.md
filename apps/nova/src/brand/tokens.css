@@ -1,0 +1,16 @@
+:root {
+  --color-bg: #071422;
+  --color-bg-alt: #0a1929;
+  --color-surface: #0e2436;
+  --color-surface-raised: #143044;
+  --color-accent: #14b8a6;
+  --color-highlight: #22d3ee;
+  --color-ink: #e8f6f8;
+  --color-muted: #8ba3b5;
+  --color-border: rgba(20, 184, 166, 0.22);
+  --color-danger: #ef4444;
+  --color-success: #14b8a6;
+  --color-novaone: #0ea5e9;
+  --color-nrw: #14b8a6;
+  --teal-gradient: linear-gradient(135deg, #14b8a6 0%, #22d3ee 50%, #0ea5e9 100%);
+}

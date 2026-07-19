@@ -18,8 +18,21 @@
     "novaWallet": {
       "name": "Nova Wallet",
       "bundleId": "llc.anakatech.novawallet",
-      "role": "non-custodial mobile signer — NovaONE + NRW World",
-      "repoPath": "apps/wallet"
+      "role": "trading-first non-custodial mobile signer — NovaONE + NRW World only by default",
+      "repoPath": "apps/nova",
+      "theme": "navy/teal/cyan (NOT Signet regal)",
+      "chainColors": {
+        "novaone": "#0EA5E9",
+        "nrw": "#14B8A6"
+      },
+      "storagePrefix": "nova.",
+      "ports": { "dev": 5174, "preview": 4174 },
+      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 — lean tab shell, no institutional gate",
+      "deploy": {
+        "nginx": "/var/www/anakatechllc-com/nova via apps/nova/deploy.sh",
+        "ci": ".github/workflows/deploy-nova.yml (build artifact)"
+      },
+      "separateFrom": "signetWallet"
     },
     "signetWallet": {
       "name": "Signet Wallet",
@@ -27,13 +40,21 @@
       "url": "https://signetwallet.com",
       "pagesUrl": "https://novablockchain.it.com",
       "bundleId": "llc.anakatech.signetwallet",
-      "role": "self-custody multi-chain web wallet — regal Signet branding; NovaONE (#8B5CF6) + NRW World (#A855F7) chain colors",
-      "repoPath": ".",
-      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6",
+      "role": "institutional self-custody multi-chain SPA — Safe, WalletConnect, banks gate, full mesh",
+      "repoPath": "apps/signet",
+      "theme": "regal burgundy/gold/cream (NOT Nova navy/teal)",
+      "chainColors": {
+        "novaone": "#8B5CF6",
+        "nrw": "#A855F7"
+      },
+      "storagePrefix": "signet.",
+      "ports": { "dev": 5173, "preview": 4173 },
+      "stack": "Vite 8 + React 19 + TypeScript 6 + ethers v6 + Safe + WalletConnect + PWA",
       "deploy": {
-        "githubPages": "gh-pages + Actions workflow deploy-signet.yml → novablockchain.it.com",
-        "nginx": "/var/www/anakatechllc-com/signet via deploy.sh"
-      }
+        "githubPages": "Actions deploy-signet.yml → novablockchain.it.com",
+        "nginx": "/var/www/anakatechllc-com/signet via apps/signet/deploy.sh"
+      },
+      "separateFrom": "novaWallet"
     },
     "novaOneExplorer": {
       "name": "Nova Chain Explorer",
@@ -73,7 +94,20 @@
     "dbisRpc": "https://rpc.defi-oracle.io",
     "anakaBridge": "https://bridge.anakachain.com",
     "signetWallet": "https://signetwallet.com",
-    "signetWalletPages": "https://novablockchain.it.com"
+    "signetWalletPages": "https://novablockchain.it.com",
+    "novaWalletRepo": "apps/nova",
+    "signetWalletRepo": "apps/signet"
+  },
+  "walletProductSplit": {
+    "note": "Nova Wallet and Signet Wallet are separate products — different themes, storage keys, default chains, UX shells, and deploy targets. Do not reuse Signet regal tokens in Nova or Nova navy/teal in Signet.",
+    "nova": {
+      "path": "apps/nova",
+      "colors": { "bg": "#071422", "accent": "#14B8A6", "highlight": "#22D3EE", "novaone": "#0EA5E9", "nrw": "#14B8A6" }
+    },
+    "signet": {
+      "path": "apps/signet",
+      "colors": { "bg": "#1A0A0A", "accent": "#C9A84C", "burgundy": "#8C2A3E", "novaone": "#8B5CF6", "nrw": "#A855F7" }
+    }
   },
   "onexLocal": {
     "bridgeBase": "http://127.0.0.1:9338",
