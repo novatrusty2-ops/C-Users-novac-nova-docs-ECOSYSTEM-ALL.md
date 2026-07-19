@@ -1,9 +1,12 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { BRAND, brandMarkUrl } from '@/lib/brand'
 import { ROUTES } from '@/lib/routes'
 import { Button } from '@/components/common/Button'
+import { ConnectWalletButton } from '@/components/wallet/ConnectWalletButton'
 
 export function LandingPage() {
+  const navigate = useNavigate()
+
   return (
     <section className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 text-center">
       <div
@@ -33,21 +36,29 @@ export function LandingPage() {
             Self-custody, regal by design
           </h1>
           <p className="text-base text-signet-ink-muted">
-            Multi-chain wallet for NovaOne, NRW World, and the Anaka mesh.
+            Connect MetaMask, Trust, SafePal, Gate, and other Web3 wallets — or open a Signet
+            keystore.
           </p>
         </div>
-        <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <Link to={ROUTES.onboarding}>
-            <Button shimmer className="text-base px-8 py-3">
-              Open Wallet
-            </Button>
-          </Link>
-          <Link
-            to={ROUTES.import}
-            className="text-sm text-signet-gold-muted underline-offset-4 hover:text-signet-gold hover:underline"
-          >
-            Import existing
-          </Link>
+        <div className="flex flex-col items-center gap-3">
+          <ConnectWalletButton
+            className="min-w-[220px]"
+            label="Connect Web3 wallet"
+            onConnected={() => navigate(ROUTES.portfolio)}
+          />
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link to={ROUTES.onboarding}>
+              <Button shimmer className="text-base px-8 py-3">
+                Create Signet wallet
+              </Button>
+            </Link>
+            <Link
+              to={ROUTES.import}
+              className="text-sm text-signet-gold-muted underline-offset-4 hover:text-signet-gold hover:underline"
+            >
+              Import existing
+            </Link>
+          </div>
         </div>
       </div>
     </section>

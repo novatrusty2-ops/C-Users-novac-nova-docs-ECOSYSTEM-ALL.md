@@ -13,3 +13,11 @@ tsconfig.tsbuildinfo
 apps/*/node_modules/
 apps/*/dist/
 apps/nova/.netlify/
+
+# Custody / API secrets (never commit)
+*.pem
+secrets/
+.secrets/
+.env
+.env.*
+!.env.example

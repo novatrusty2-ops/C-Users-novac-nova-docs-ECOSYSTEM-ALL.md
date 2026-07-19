@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { WalletProvider } from '@/context/WalletContext'
+import { Web3Provider } from '@/context/Web3Context'
 import { ToastProvider } from '@/context/ToastContext'
 import App from '@/App'
 import '@/index.css'
@@ -17,7 +18,9 @@ createRoot(root).render(
     <BrowserRouter basename={basename}>
       <ToastProvider>
         <WalletProvider>
-          <App />
+          <Web3Provider>
+            <App />
+          </Web3Provider>
         </WalletProvider>
       </ToastProvider>
     </BrowserRouter>

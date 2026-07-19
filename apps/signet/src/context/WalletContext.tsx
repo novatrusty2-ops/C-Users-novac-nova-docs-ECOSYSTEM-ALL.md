@@ -36,12 +36,15 @@ import { useToast } from './ToastContext'
 interface WalletContextValue {
   hasWallet: boolean
   unlocked: boolean
+  sessionReady: boolean
   accounts: WalletAccount[]
   activeAccount: WalletAccount | null
   activeChainId: number
   activeChain: ChainDefinition | undefined
   balances: TokenBalanceRow[]
   balancesLoading: boolean
+  externalAccount: WalletAccount | null
+  attachExternalAccount: (account: WalletAccount | null) => void
   create: (password: string) => Promise<{ address: string; mnemonic: string }>
   importPhrase: (phrase: string, password: string) => Promise<{ address: string }>
   importKey: (key: string, password: string) => Promise<{ address: string }>
@@ -118,19 +121,26 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [activeChainId, setChainId] = useState(getActiveChainId())
   const [balances, setBalances] = useState<TokenBalanceRow[]>([])
   const [balancesLoading, setBalancesLoading] = useState(false)
+  const [externalAccount, setExternalAccount] = useState<WalletAccount | null>(null)
 
-  const activeAccount = useMemo(
+  const localAccount = useMemo(
     () => (activeAccountId ? getAccountById(activeAccountId) ?? null : null),
     [activeAccountId, accounts],
   )
+  const activeAccount = externalAccount ?? localAccount
+  const sessionReady = unlocked || !!externalAccount
 
   const activeChain = useMemo(
     () => allKnownChains().find((c) => c.id === activeChainId),
     [activeChainId],
   )
 
+  const attachExternalAccount = useCallback((account: WalletAccount | null) => {
+    setExternalAccount(account)
+  }, [])
+
   const refreshBalances = useCallback(async () => {
-    if (!activeAccount || !unlocked) {
+    if (!activeAccount || !sessionReady) {
       setBalances([])
       return
     }
@@ -150,7 +160,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     } finally {
       setBalancesLoading(false)
     }
-  }, [activeAccount, activeChainId, unlocked])
+  }, [activeAccount, activeChainId, sessionReady])
 
   useEffect(() => {
     void refreshBalances()
@@ -253,12 +263,15 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     () => ({
       hasWallet,
       unlocked,
+      sessionReady,
       accounts,
       activeAccount,
       activeChainId,
       activeChain,
       balances,
       balancesLoading,
+      externalAccount,
+      attachExternalAccount,
       create,
       importPhrase,
       importKey,
@@ -273,12 +286,15 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     [
       hasWallet,
       unlocked,
+      sessionReady,
       accounts,
       activeAccount,
       activeChainId,
       activeChain,
       balances,
       balancesLoading,
+      externalAccount,
+      attachExternalAccount,
       create,
       importPhrase,
       importKey,
