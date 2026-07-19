@@ -1,0 +1,7 @@
+{
+  "name": "@anakatech/custody",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DFNS + Cobo WaaS client helpers (credentials via env only — see ../../.env.example)"
+}

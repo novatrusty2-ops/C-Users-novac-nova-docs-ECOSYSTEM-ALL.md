@@ -1853,5 +1853,22 @@
       "anakachain",
       "protocol"
     ]
+  },
+  "custody": {
+    "dfns": {
+      "apiBase": "https://api.dfns.io",
+      "sdk": "@dfns/sdk + @dfns/sdk-keysigner",
+      "docs": "https://docs.dfns.co/sdks/backend/typescript",
+      "credentials": "env: DFNS_* + secrets/dfns-rsa2048.pem (gitignored)",
+      "smokeTest": "npm run custody:smoke"
+    },
+    "cobo": {
+      "apiBase": "https://api.cobo.com/v2",
+      "auth": "Ed25519 Biz-Api-Key / Nonce / Signature",
+      "docs": "https://www.cobo.com/developers/v2/guides/overview/cobo-auth",
+      "credentials": "env: COBO_API_KEY, COBO_API_SECRET (gitignored)",
+      "notes": "Temporary key expires 2026-08-01; no callback URL yet; IP whitelist for permanent key",
+      "smokeTest": "npm run custody:smoke"
+    }
   }
 }
