@@ -1,20 +1,22 @@
-/** Nova Plus — NovaONE + NRW World + Nova Production mesh */
+/** Nova Plus — production mesh wallet: NovaONE + NRW World + Nova Plus chain */
 
 export const NOVA_PLUS_CHAINS = {
   novaOne: 22016,
   nrwWorld: 33001,
-  novaProduction: 9001,
+  /** Nova Plus production / custody chain (formerly Nova Production 9001) */
+  novaPlus: 9001,
 } as const
 
 export const NOVA_PLUS_CHAIN_IDS = [
   NOVA_PLUS_CHAINS.novaOne,
   NOVA_PLUS_CHAINS.nrwWorld,
-  NOVA_PLUS_CHAINS.novaProduction,
+  NOVA_PLUS_CHAINS.novaPlus,
 ] as const
 
 export type NovaPlusChainId = (typeof NOVA_PLUS_CHAIN_IDS)[number]
 
 export const NOVA_PLUS_LABEL = 'Nova Plus'
+export const NOVA_PLUS_WALLET_NAME = 'Nova Plus Wallet'
 
 export function isNovaPlusChain(chainId: number): boolean {
   return (NOVA_PLUS_CHAIN_IDS as readonly number[]).includes(chainId)
@@ -27,7 +29,7 @@ export function novaPlusChainLabel(chainId: number): string {
     case 33001:
       return 'NRW World'
     case 9001:
-      return 'Nova Production'
+      return 'Nova Plus'
     default:
       return `Chain ${chainId}`
   }

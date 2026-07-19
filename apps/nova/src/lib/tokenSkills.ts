@@ -1,5 +1,6 @@
 import type { NovaPlusTokenSnap } from './novaPlusSnapshot'
 import { isNovaPlusChain } from './novaPlus'
+import { isBridgeCurrency } from './bridgeCurrencies'
 
 export type TokenSkillId =
   | 'trade'
@@ -9,6 +10,7 @@ export type TokenSkillId =
   | 'liquidity'
   | 'custody'
   | 'fiat'
+  | 'bridge'
   | 'mesh'
 
 export interface TokenSkill {
@@ -76,6 +78,12 @@ export function buildTokenSkills(
       label: 'Fiat',
       description: 'Fiat ledger asset',
       enabled: fiat,
+    },
+    {
+      id: 'bridge',
+      label: 'Bridge',
+      description: 'One of the 7 Nova Bank bridge currencies',
+      enabled: isBridgeCurrency(snap.symbol),
     },
     {
       id: 'mesh',

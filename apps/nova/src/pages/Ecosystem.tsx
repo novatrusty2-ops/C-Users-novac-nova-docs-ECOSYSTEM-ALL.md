@@ -75,10 +75,11 @@ export function Ecosystem() {
             Import tokens · Nova Plus
           </h2>
           <p className="text-xs text-nova-muted">
-            All Nova Plus tokens auto-import when you unlock or connect Web3. Chains{' '}
-            <span className="font-mono">22016</span>, <span className="font-mono">33001</span>,{' '}
-            <span className="font-mono">9001</span> — price, liquidity, charts, skills. Listed:{' '}
-            {tokenCount}
+            Nova Plus Wallet auto-imports the full production catalog when you unlock or connect
+            Web3 — chains <span className="font-mono">22016</span>,{' '}
+            <span className="font-mono">33001</span>, <span className="font-mono">9001</span>, plus
+            bridge <span className="font-mono">11013</span> with the 7 bridge currencies (USD · EUR ·
+            GBP · AUD · CHF · JPY · SDG). Listed: {tokenCount}
           </p>
           <Button
             className="w-full"

@@ -1,6 +1,6 @@
 import { ECOSYSTEM_LINKS } from './partners'
-import { NOVA_PLUS_CHAIN_IDS, NOVA_PLUS_SNAPSHOT, type NovaPlusTokenSnap } from './novaPlusSnapshot'
-import { NOVA_PLUS_CHAINS } from './novaPlus'
+import { NOVA_PLUS_SNAPSHOT, type NovaPlusTokenSnap } from './novaPlusSnapshot'
+import { NOVA_PLUS_CHAIN_IDS, NOVA_PLUS_CHAINS } from './novaPlus'
 
 interface BankTokenRaw {
   symbol: string
@@ -18,7 +18,8 @@ interface BankTokenRaw {
 const SLUG_TO_CHAIN: Record<string, number> = {
   'nova-one': NOVA_PLUS_CHAINS.novaOne,
   'nrw-world': NOVA_PLUS_CHAINS.nrwWorld,
-  'nova-production': NOVA_PLUS_CHAINS.novaProduction,
+  'nova-production': NOVA_PLUS_CHAINS.novaPlus,
+  'nova-plus': NOVA_PLUS_CHAINS.novaPlus,
 }
 
 function mapChains(raw: BankTokenRaw): number[] {

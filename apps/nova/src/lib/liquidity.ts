@@ -2,6 +2,7 @@ import { oracleUsdPrice } from './oracle'
 import { resolveUsdPrice } from './prices'
 import { NOVA_PLUS_CHAIN_IDS, quoteAssetForChain } from './novaPlus'
 import { NOVA_PLUS_SNAPSHOT } from './novaPlusSnapshot'
+import { bridgeLiquidityBook, isBridgeCurrency } from './bridgeCurrencies'
 
 export type PriceSource = 'peg' | 'coingecko' | 'oracle' | 'mesh'
 
@@ -93,6 +94,10 @@ function bookKey(chainId: number, symbol: string): string {
 
 export function meshLiquidity(chainId: number, symbol: string) {
   const sym = symbol.trim()
+  if (isBridgeCurrency(sym)) {
+    const bridge = bridgeLiquidityBook(chainId, sym)
+    if (bridge) return bridge
+  }
   return (
     MESH_BOOKS[bookKey(chainId, sym)] ??
     MESH_BOOKS[bookKey(chainId, sym.toUpperCase())] ??

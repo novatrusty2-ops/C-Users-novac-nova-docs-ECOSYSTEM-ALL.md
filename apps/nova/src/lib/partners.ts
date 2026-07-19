@@ -14,6 +14,17 @@ export interface PartnerWallet {
 
 export const PARTNERS: PartnerWallet[] = [
   {
+    id: 'novaplus',
+    name: 'Nova Plus Wallet',
+    role: 'Production mesh wallet — NovaONE · NRW · Nova Plus + 7 bridge currencies',
+    url: 'https://novablockchain.it.com/',
+    secondaryUrl: 'https://nova-bank-api-production-7311.up.railway.app',
+    accent: '#38BDF8',
+    sharedChains: [22016, 33001, 9001, 11013],
+    notes:
+      'Nova Plus Wallet shares your HD address across NovaONE (22016), NRW World (33001), Nova Plus (9001), and Anaka Bridge (11013). All production tokens plus USD·EUR·GBP·AUD·CHF·JPY·SDG bridge currencies auto-import with full price & liquidity.',
+  },
+  {
     id: 'pouchpay',
     name: 'PouchPay Wallet',
     role: 'ALLTRA / PouchPay payments wallet',

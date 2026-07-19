@@ -23,6 +23,16 @@ describe('usertokens import', () => {
     expect(userTokensForChain(22016).some((t) => t.symbol === 'AnA' && t.address)).toBe(true)
   })
 
+  it('auto-transfers all 7 bridge currencies onto Nova Plus + bridge', () => {
+    importEcosystemTokensFromMesh('ecosystem')
+    for (const sym of ['USD', 'EUR', 'GBP', 'AUD', 'CHF', 'JPY', 'SDG']) {
+      expect(userTokensForChain(22016).some((t) => t.symbol === sym)).toBe(true)
+      expect(userTokensForChain(33001).some((t) => t.symbol === sym)).toBe(true)
+      expect(userTokensForChain(9001).some((t) => t.symbol === sym)).toBe(true)
+      expect(userTokensForChain(11013).some((t) => t.symbol === sym)).toBe(true)
+    }
+  })
+
   it('is idempotent on second import', () => {
     importEcosystemTokensFromMesh()
     const second = importEcosystemTokensFromMesh()

@@ -1,6 +1,7 @@
 import type { ChainToken } from '@/types'
 import { NOVA_PLUS_SNAPSHOT, type NovaPlusTokenSnap } from './novaPlusSnapshot'
 import { NOVA_PLUS_CHAIN_IDS } from './novaPlus'
+import { bridgeCurrencyTokenDefs, isBridgeCurrency } from './bridgeCurrencies'
 
 /**
  * Nova Plus token catalogs — NovaONE (22016) + NRW (33001) + Nova Production (9001).
@@ -101,6 +102,10 @@ function buildCatalog(): EcosystemTokenDef[] {
   for (const t of fromSnap) {
     map.set(`${t.chainIds[0]}:${t.symbol.toUpperCase()}:${t.address ?? 'native'}`, t)
   }
+  // Production 7 bridge currencies override fiat rows + add Anaka Bridge (11013)
+  for (const t of bridgeCurrencyTokenDefs()) {
+    map.set(`${t.chainIds[0]}:${t.symbol.toUpperCase()}:${t.address ?? 'native'}`, t)
+  }
   // Prefer verified contracts over address-less watchlist twins
   for (const t of CONTRACT_TOKENS) {
     const watchKey = `${t.chainIds[0]}:${t.symbol.toUpperCase()}:native`
@@ -153,7 +158,9 @@ export function tokensForNovaPlus(): EcosystemTokenDef[] {
   return ECOSYSTEM_TOKENS.filter(
     (t) =>
       t.importable &&
-      t.chainIds.some((id) => (NOVA_PLUS_CHAIN_IDS as readonly number[]).includes(id)),
+      (t.chainIds.some((id) => (NOVA_PLUS_CHAIN_IDS as readonly number[]).includes(id)) ||
+        // Include Anaka Bridge listings for the 7 bridge currencies
+        (t.chainIds.includes(11013) && isBridgeCurrency(t.symbol))),
   )
 }
 

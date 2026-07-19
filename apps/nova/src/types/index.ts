@@ -61,7 +61,8 @@ export interface TokenBalanceRow {
   priceSource?: 'peg' | 'coingecko' | 'oracle' | 'mesh' | null
 }
 
-export type DisplayCurrency = 'USD' | 'EUR' | 'GBP'
+/** Nova Bank 7 bridge / display currencies */
+export type DisplayCurrency = 'USD' | 'EUR' | 'GBP' | 'AUD' | 'CHF' | 'JPY' | 'SDG'
 
 export interface DisplaySettings {
   currency: DisplayCurrency

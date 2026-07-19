@@ -21,6 +21,7 @@ import { tokensOnChain } from '@/lib/chains'
 import { quoteLiquidity } from '@/lib/liquidity'
 import { allKnownChains, getEnabledChainIds, setEnabledChainIds } from '@/lib/networks'
 import { NOVA_PLUS_CHAIN_IDS } from '@/lib/novaPlus'
+import { BRIDGE_CURRENCY_CHAIN_IDS } from '@/lib/bridgeCurrencies'
 import { resolveUsdPrice } from '@/lib/prices'
 import { ensureNovaPlusTokensImported } from '@/lib/usertokens'
 import {
@@ -175,7 +176,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
     // Always keep the full Nova Plus catalog + enable the 3 mesh chains
     ensureNovaPlusTokensImported('ecosystem')
-    setEnabledChainIds([...new Set([...getEnabledChainIds(), ...NOVA_PLUS_CHAIN_IDS])])
+    setEnabledChainIds([
+      ...new Set([...getEnabledChainIds(), ...BRIDGE_CURRENCY_CHAIN_IDS, ...NOVA_PLUS_CHAIN_IDS]),
+    ])
     setBalancesLoading(true)
     try {
       const enabled = new Set(getEnabledChainIds())

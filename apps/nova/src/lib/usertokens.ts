@@ -16,7 +16,7 @@ export type UserTokenSource = 'ecosystem' | 'manual' | 'pouchpay'
 /** Bump when the Nova Plus catalog grows so sessions re-sync automatically */
 export function novaPlusCatalogFingerprint(): string {
   const defs = tokensForNovaPlus()
-  return `nova-plus:${defs.length}:${NOVA_PLUS_CHAIN_IDS.join(',')}`
+  return `nova-plus:${defs.length}:bridge7:${NOVA_PLUS_CHAIN_IDS.join(',')}:11013`
 }
 
 export interface UserTokenRecord {
@@ -65,20 +65,39 @@ function tokenKey(chainId: number, t: ChainToken): string {
   return `${chainId}:${t.symbol.toUpperCase()}:${(t.address ?? 'native').toLowerCase()}`
 }
 
-export function mergeUserTokens(incoming: UserTokenRecord[]): { added: number; total: number } {
+export function mergeUserTokens(
+  incoming: UserTokenRecord[],
+  opts?: { refreshPrices?: boolean },
+): { added: number; total: number; records: UserTokenRecord[] } {
   const existing = loadUserTokens()
   const map = new Map(existing.map((r) => [tokenKey(r.chainId, r.token), r]))
   let added = 0
   for (const rec of incoming) {
     const k = tokenKey(rec.chainId, rec.token)
-    if (!map.has(k)) {
+    const prev = map.get(k)
+    if (!prev) {
       map.set(k, rec)
       added++
+      continue
+    }
+    if (opts?.refreshPrices) {
+      map.set(k, {
+        ...prev,
+        token: {
+          ...prev.token,
+          usd: rec.token.usd ?? prev.token.usd,
+          coingeckoId: rec.token.coingeckoId ?? prev.token.coingeckoId,
+          name: rec.token.name || prev.token.name,
+          // Prefer verified contract addresses
+          address: prev.token.address || rec.token.address,
+          standard: prev.token.address || rec.token.address ? 'erc20' : prev.token.standard,
+        },
+      })
     }
   }
   const next = [...map.values()]
   saveUserTokens(next)
-  return { added, total: next.length }
+  return { added, total: next.length, records: next }
 }
 
 /**

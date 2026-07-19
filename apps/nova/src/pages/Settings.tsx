@@ -11,6 +11,7 @@ import { CHAINS } from '@/lib/chains'
 import { getEnabledChainIds, toggleChain } from '@/lib/networks'
 import { getAutolockMinutes, setAutolockMinutes } from '@/lib/settings'
 import type { AutolockMinutes, DisplayCurrency } from '@/types'
+import { DISPLAY_CURRENCIES } from '@/lib/settings'
 import { ROUTES } from '@/lib/routes'
 import { BRAND } from '@/lib/brand'
 import { ECOSYSTEM_LINKS, PARTNERS } from '@/lib/partners'
@@ -144,9 +145,11 @@ export function Settings() {
               value={currency}
               onChange={(e) => updateCurrency(e.target.value as DisplayCurrency)}
             >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
+              {DISPLAY_CURRENCIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </Row>
           <Row label="Hide balances">

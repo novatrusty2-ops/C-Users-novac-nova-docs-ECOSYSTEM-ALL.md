@@ -13,9 +13,10 @@ import { ROUTES } from '@/lib/routes'
 import { ECOSYSTEM_LINKS } from '@/lib/partners'
 import { ensureNovaPlusTokensImported, loadUserTokens } from '@/lib/usertokens'
 import { formatCompactUsd } from '@/lib/liquidity'
-import { NOVA_PLUS_CHAIN_IDS, NOVA_PLUS_LABEL } from '@/lib/novaPlus'
+import { NOVA_PLUS_CHAIN_IDS, NOVA_PLUS_LABEL, NOVA_PLUS_WALLET_NAME } from '@/lib/novaPlus'
+import { BRIDGE_CURRENCY_SYMBOLS, isBridgeCurrency } from '@/lib/bridgeCurrencies'
 
-type AssetTab = 'crypto' | 'plus'
+type AssetTab = 'plus' | 'bridge' | 'crypto'
 
 export function Portfolio() {
   const { activeAccount, refreshBalances } = useWallet()
@@ -24,7 +25,6 @@ export function Portfolio() {
   const [imported, setImported] = useState(() => loadUserTokens().length)
   const [tab, setTab] = useState<AssetTab>('plus')
 
-  // Auto-import full catalog on Assets view (covers Web3 + returning sessions)
   useEffect(() => {
     const r = ensureNovaPlusTokensImported('ecosystem')
     setImported(r.total)
@@ -47,8 +47,22 @@ export function Portfolio() {
   const plusRows = meshRows.filter((r) =>
     (NOVA_PLUS_CHAIN_IDS as readonly number[]).includes(r.chainId),
   )
+
+  const bridgeRows = useMemo(() => {
+    const order = new Map(BRIDGE_CURRENCY_SYMBOLS.map((s, i) => [s, i]))
+    return [...rows]
+      .filter((r) => isBridgeCurrency(r.symbol))
+      .sort((a, b) => {
+        const ao = order.get(a.symbol.toUpperCase() as (typeof BRIDGE_CURRENCY_SYMBOLS)[number]) ?? 99
+        const bo = order.get(b.symbol.toUpperCase() as (typeof BRIDGE_CURRENCY_SYMBOLS)[number]) ?? 99
+        if (ao !== bo) return ao - bo
+        return a.chainId - b.chainId
+      })
+  }, [rows])
+
   const totalLiq = plusRows.reduce((s, r) => s + (r.liquidityUsd ?? 0), 0)
-  const listRows = tab === 'plus' ? plusRows : meshRows
+  const bridgeLiq = bridgeRows.reduce((s, r) => s + (r.liquidityUsd ?? 0), 0)
+  const listRows = tab === 'plus' ? plusRows : tab === 'bridge' ? bridgeRows : meshRows
 
   return (
     <>
@@ -77,6 +91,12 @@ export function Portfolio() {
               </span>
             </span>
             <span>
+              Bridge liq{' '}
+              <span className="font-mono text-nova-accent">
+                {hideBalances ? '••••' : formatCompactUsd(bridgeLiq)}
+              </span>
+            </span>
+            <span>
               {listRows.length} assets
               {!hideBalances && totalUsd > 0 ? ' · spot' : ''}
             </span>
@@ -97,8 +117,10 @@ export function Portfolio() {
           className="flex items-center justify-between rounded-xl bg-nova-surface px-4 py-3 transition hover:bg-nova-surface-raised"
         >
           <div>
-            <p className="text-sm font-semibold text-nova-ink">Nova Plus · Bank</p>
-            <p className="text-xs text-nova-muted">NovaONE · NRW · Production · charts · skills</p>
+            <p className="text-sm font-semibold text-nova-ink">{NOVA_PLUS_WALLET_NAME}</p>
+            <p className="text-xs text-nova-muted">
+              3 chains · 7 bridge currencies · price & liquidity
+            </p>
           </div>
           <span className="text-xs font-medium text-nova-accent">Open →</span>
         </a>
@@ -116,16 +138,28 @@ export function Portfolio() {
             <button
               type="button"
               className="okx-segment-btn"
+              data-active={tab === 'bridge'}
+              onClick={() => setTab('bridge')}
+            >
+              Bridge 7
+            </button>
+            <button
+              type="button"
+              className="okx-segment-btn"
               data-active={tab === 'crypto'}
               onClick={() => setTab('crypto')}
             >
-              All crypto
+              All
             </button>
           </div>
 
           <div className="mb-1 flex items-center justify-between px-0.5 pt-3">
             <p className="text-xs text-nova-muted">
-              {imported > 0 ? `${imported} auto-listed` : 'Assets'}
+              {tab === 'bridge'
+                ? 'USD · EUR · GBP · AUD · CHF · JPY · SDG'
+                : imported > 0
+                  ? `${imported} auto-listed`
+                  : 'Assets'}
             </p>
             <button
               type="button"

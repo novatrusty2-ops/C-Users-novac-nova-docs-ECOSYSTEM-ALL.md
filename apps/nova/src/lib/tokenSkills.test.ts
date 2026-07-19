@@ -22,7 +22,7 @@ describe('tokenSkills', () => {
     expect(ids).toContain('mesh')
   })
 
-  it('marks fiat custody skill', () => {
+  it('marks fiat custody + bridge skill for the 7 currencies', () => {
     const p = buildTokenSkills(
       {
         symbol: 'USD',
@@ -37,6 +37,7 @@ describe('tokenSkills', () => {
     const ids = enabledSkills(p).map((s) => s.id)
     expect(ids).toContain('fiat')
     expect(ids).toContain('custody')
+    expect(ids).toContain('bridge')
     expect(ids).not.toContain('trade')
   })
 })
