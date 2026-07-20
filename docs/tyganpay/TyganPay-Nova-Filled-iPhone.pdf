@@ -1,0 +1,1080 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<<
+/Producer (pypdf)
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Count 3
+/Kids [ 4 0 R 10 0 R 13 0 R ]
+>>
+endobj
+3 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+4 0 obj
+<<
+/Contents 5 0 R
+/MediaBox [ 0 0 595.2756 841.8898 ]
+/Resources <<
+/Font <<
+/F1 6 0 R
+/F1-0 7 0 R
+/F2 8 0 R
+/F3 9 0 R
+>>
+/ProcSet [ /ImageB /ImageC /ImageI /PDF /Text ]
+>>
+/Rotate 0
+/Trans <<
+>>
+/Type /Page
+/Parent 2 0 R
+>>
+endobj
+5 0 obj
+<<
+/Length 4864
+>>
+stream
+q
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+.039216 .090196 .066667 rg
+n 0 769.8898 595.2756 72 re f*
+1 1 1 rg
+BT /F2 20 Tf 24 TL ET
+BT 1 0 0 1 42 801.8898 Tm (TyganPay) Tj T* ET
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 428.2356 803.8898 Tm (API Readiness Return Form) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F1 8 Tf 9.6 TL ET
+BT 1 0 0 1 42 22 Tm (Return this completed PDF by replying to the same TyganPay email thread.) Tj T* ET
+BT 1 0 0 1 512.3556 22 Tm (Page 1 of 3) Tj T* ET
+.078431 .133333 .101961 rg
+BT /F2 16 Tf 19.2 TL ET
+BT 1 0 0 1 42 743.8898 Tm (Simple instructions) Tj T* ET
+BT /F1 10 Tf 12 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 42 721.8898 Tm (Complete the white fields, tick the confirmations, save the PDF, and reply with it attached to the same email thread.) Tj T* ET
+BT 1 0 0 1 42 707.8898 Tm (Your technical person may complete it. Do not enter passwords, tokens, private keys, signing secrets or other) Tj T* ET
+BT 1 0 0 1 42 693.8898 Tm (credentials.) Tj T* ET
+1 .972549 .905882 rg
+n
+48 623.8898 m
+547.2756 623.8898 l
+550.5924 623.8898 553.2756 626.573 553.2756 629.8898 c
+553.2756 669.8898 l
+553.2756 673.2066 550.5924 675.8898 547.2756 675.8898 c
+48 675.8898 l
+44.6832 675.8898 42 673.2066 42 669.8898 c
+42 629.8898 l
+42 626.573 44.6832 623.8898 48 623.8898 c
+h
+f*
+BT /F1 9 Tf 10.8 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 52 661.8898 Tm (Important: the submission API is where Nova sends requests to TyganPay. The callback URL is where Nova receives) Tj T* ET
+BT 1 0 0 1 52 649.8898 Tm (status callbacks. The outbound source IP is the public address Nova uses when calling TyganPay. These are three) Tj T* ET
+BT 1 0 0 1 52 637.8898 Tm (different items.) Tj T* ET
+.917647 .956863 .937255 rg
+n
+47 585.8898 m
+548.2756 585.8898 l
+551.0396 585.8898 553.2756 588.1258 553.2756 590.8898 c
+553.2756 606.8898 l
+553.2756 609.6538 551.0396 611.8898 548.2756 611.8898 c
+47 611.8898 l
+44.236 611.8898 42 609.6538 42 606.8898 c
+42 590.8898 l
+42 588.1258 44.236 585.8898 47 585.8898 c
+h
+f*
+.058824 .419608 .321569 rg
+BT /F2 12 Tf 14.4 TL ET
+BT 1 0 0 1 52 593.8898 Tm (1. Client and technical contact) Tj T* ET
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 571.8898 Tm (Client legal/company name) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 459.4881 571.8898 Tm (Example: Nova Bank Online) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 541.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 522.8898 Tm (TyganPay client ID) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 437.3856 522.8898 Tm (Example: TPCL-20260712-000001) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 492.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 473.8898 Tm (Technical contact full name) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 489.9156 473.8898 Tm (Example: Sam Lee) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 443.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 424.8898 Tm (Technical contact role) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 452.3931 424.8898 Tm (Example: Integration Engineer) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 394.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 375.8898 Tm (Technical contact email) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 438.5481 375.8898 Tm (Example: api-team@example.com) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 345.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 326.8898 Tm (Technical contact phone \(optional\)) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 463.4256 326.8898 Tm (Example: +27 00 000 0000) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 296.3898 510.2756 24 re B*
+Q
+ 
+
+Q
+q
+0.0 0.0 595.2756 841.8898 re
+W
+n
+1 0 0 1 0 0 cm
+BT
+/F1-0 12 Tf
+14.4 TL
+ET
+1 1 1 rg
+n
+42.5 541.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 553.8898 Tm
+(Nova Bank Online) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 492.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 504.8898 Tm
+(TPCL\05520260712\055000001) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 443.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 455.8898 Tm
+(Nova Trusty) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 394.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 406.8898 Tm
+(Integration Engineer) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 345.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 357.8898 Tm
+(novatrusty2\100gmail\056com) Tj
+T*
+ET
+Q
+
+endstream
+endobj
+6 0 obj
+<<
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+/Name /F1
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+7 0 obj
+<<
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+/Name /F1
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+8 0 obj
+<<
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+/Name /F2
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+9 0 obj
+<<
+/BaseFont /Helvetica-Oblique
+/Encoding /WinAnsiEncoding
+/Name /F3
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+10 0 obj
+<<
+/Contents 11 0 R
+/MediaBox [ 0 0 595.2756 841.8898 ]
+/Resources <<
+/Font <<
+/F1 6 0 R
+/F1-0 12 0 R
+/F2 8 0 R
+/F3 9 0 R
+>>
+/ProcSet [ /ImageB /ImageC /ImageI /PDF /Text ]
+>>
+/Rotate 0
+/Trans <<
+>>
+/Type /Page
+/Parent 2 0 R
+>>
+endobj
+11 0 obj
+<<
+/Length 6701
+>>
+stream
+q
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+.039216 .090196 .066667 rg
+n 0 769.8898 595.2756 72 re f*
+1 1 1 rg
+BT /F2 20 Tf 24 TL ET
+BT 1 0 0 1 42 801.8898 Tm (TyganPay) Tj T* ET
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 428.2356 803.8898 Tm (API Readiness Return Form) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F1 8 Tf 9.6 TL ET
+BT 1 0 0 1 42 22 Tm (Return this completed PDF by replying to the same TyganPay email thread.) Tj T* ET
+BT 1 0 0 1 512.3556 22 Tm (Page 2 of 3) Tj T* ET
+.917647 .956863 .937255 rg
+n
+47 721.8898 m
+548.2756 721.8898 l
+551.0396 721.8898 553.2756 724.1258 553.2756 726.8898 c
+553.2756 742.8898 l
+553.2756 745.6538 551.0396 747.8898 548.2756 747.8898 c
+47 747.8898 l
+44.236 747.8898 42 745.6538 42 742.8898 c
+42 726.8898 l
+42 724.1258 44.236 721.8898 47 721.8898 c
+h
+f*
+.058824 .419608 .321569 rg
+BT /F2 12 Tf 14.4 TL ET
+BT 1 0 0 1 52 729.8898 Tm (2. Endpoints and callback contract) Tj T* ET
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 707.8898 Tm (Nova submission API URL) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 418.6356 707.8898 Tm (Example: https://api.example.com/api/v1) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 677.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 658.8898 Tm (Nova callback receiver URL \(required\)) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 375.2856 658.8898 Tm (Example: https://api.example.com/callbacks/tyganpay) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 628.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 609.8898 Tm (Callback HTTP method \(required\)) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 499.5081 609.8898 Tm (Example: POST) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 579.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 560.8898 Tm (Expected callback success status \(required\)) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 484.0731 560.8898 Tm (Example: 200 or 204) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 530.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 511.8898 Tm (Callback authentication method name only) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 406.9731 511.8898 Tm (Example: HMAC-SHA256 header; no secret) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 481.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 462.8898 Tm (Non-secret health URL \(optional\)) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 418.2156 462.8898 Tm (Example: https://api.example.com/health) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 432.3898 510.2756 24 re B*
+Q
+.917647 .956863 .937255 rg
+n
+47 391.8898 m
+548.2756 391.8898 l
+551.0396 391.8898 553.2756 394.1258 553.2756 396.8898 c
+553.2756 412.8898 l
+553.2756 415.6538 551.0396 417.8898 548.2756 417.8898 c
+47 417.8898 l
+44.236 417.8898 42 415.6538 42 412.8898 c
+42 396.8898 l
+42 394.1258 44.236 391.8898 47 391.8898 c
+h
+f*
+.058824 .419608 .321569 rg
+BT /F2 12 Tf 14.4 TL ET
+BT 1 0 0 1 52 399.8898 Tm (3. Network and test window) Tj T* ET
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 377.8898 Tm (Stable public outbound source IPv4/IPv6 \(required\)) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 397.7781 377.8898 Tm (Example: 203.0.113.10; not an ingress/DNS IP) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 330.3898 510.2756 41 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 311.8898 Tm (Must Nova allowlist TyganPay source IPs? Give details.) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 395.2956 311.8898 Tm (Example: No, or Yes - please supply addresses) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 268.3898 510.2756 37 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 249.8898 Tm (Preferred review-only test window in SAST) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 415.7031 249.8898 Tm (Example: 2026-07-21, 10:00-11:00 SAST) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 219.3898 510.2756 24 re B*
+Q
+.039216 .090196 .066667 rg
+n 0 769.8898 595.2756 72 re f*
+1 1 1 rg
+BT /F2 20 Tf 24 TL ET
+BT 1 0 0 1 42 801.8898 Tm (TyganPay) Tj T* ET
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 428.2356 803.8898 Tm (API Readiness Return Form) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F1 8 Tf 9.6 TL ET
+BT 1 0 0 1 42 22 Tm (Return this completed PDF by replying to the same TyganPay email thread.) Tj T* ET
+BT 1 0 0 1 512.3556 22 Tm (Page 2 of 3) Tj T* ET
+ 
+
+Q
+q
+0.0 0.0 595.2756 841.8898 re
+W
+n
+1 0 0 1 0 0 cm
+BT
+/F1-0 12 Tf
+14.4 TL
+ET
+1 1 1 rg
+n
+42.5 677.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 689.8898 Tm
+(https\072\057\057nova\055bank\055api\055production\0557311\056up\056railway\056app\057api\057v1) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 628.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 640.8898 Tm
+(https\072\057\057nova\055bank\055api\055production\0557311\056up\056railway\056app\057api\057v1\057webhooks\057tyganpay) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 579.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 591.8898 Tm
+(POST) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 530.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 542.8898 Tm
+(200) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 481.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 493.8898 Tm
+(HMAC\055SHA256 header X\055Nova\055Signature\073 no secret) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 432.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 444.8898 Tm
+(https\072\057\057nova\055bank\055api\055production\0557311\056up\056railway\056app\057api\057v1\057health) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 330.3898 510.2756 41 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 359.8898 Tm
+(IPv4 51\05675\05664\05628\073 IPv6 2001\07241d0\072701\0721100\072\072cf8d \050OVH VPS\051) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 268.3898 510.2756 37 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 293.8898 Tm
+(No \227 publicly reachable\073 TyganPay source IP allowlisting not required\056) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 219.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 231.8898 Tm
+(2026\05507\05521\054 10\07200\05511\07200 SAST) Tj
+T*
+ET
+Q
+
+endstream
+endobj
+12 0 obj
+<<
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+/Name /F1
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+13 0 obj
+<<
+/Contents 14 0 R
+/MediaBox [ 0 0 595.2756 841.8898 ]
+/Resources <<
+/Font <<
+/F1 6 0 R
+/F1-0 15 0 R
+/F2 8 0 R
+/F2-0 16 0 R
+/F3 9 0 R
+/F3-0 17 0 R
+>>
+/ProcSet [ /ImageB /ImageC /ImageI /PDF /Text ]
+>>
+/Rotate 0
+/Trans <<
+>>
+/Type /Page
+/Parent 2 0 R
+>>
+endobj
+14 0 obj
+<<
+/Length 6445
+>>
+stream
+q
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+.039216 .090196 .066667 rg
+n 0 769.8898 595.2756 72 re f*
+1 1 1 rg
+BT /F2 20 Tf 24 TL ET
+BT 1 0 0 1 42 801.8898 Tm (TyganPay) Tj T* ET
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 428.2356 803.8898 Tm (API Readiness Return Form) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F1 8 Tf 9.6 TL ET
+BT 1 0 0 1 42 22 Tm (Return this completed PDF by replying to the same TyganPay email thread.) Tj T* ET
+BT 1 0 0 1 512.3556 22 Tm (Page 3 of 3) Tj T* ET
+.917647 .956863 .937255 rg
+n
+47 721.8898 m
+548.2756 721.8898 l
+551.0396 721.8898 553.2756 724.1258 553.2756 726.8898 c
+553.2756 742.8898 l
+553.2756 745.6538 551.0396 747.8898 548.2756 747.8898 c
+47 747.8898 l
+44.236 747.8898 42 745.6538 42 742.8898 c
+42 726.8898 l
+42 724.1258 44.236 721.8898 47 721.8898 c
+h
+f*
+.058824 .419608 .321569 rg
+BT /F2 12 Tf 14.4 TL ET
+BT 1 0 0 1 52 729.8898 Tm (4. Confirmations) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 705.3898 12 12 re B*
+Q
+BT /F1 9 Tf 10.8 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 63 714.8898 Tm (The callback hostname resolves publicly.) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 676.3898 12 12 re B*
+Q
+BT /F1 9 Tf 10.8 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 63 685.8898 Tm (The callback presents a currently valid TLS certificate.) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 647.3898 12 12 re B*
+Q
+BT /F1 9 Tf 10.8 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 63 656.8898 Tm (The callback is reachable from an external server.) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 618.3898 12 12 re B*
+Q
+BT /F1 9 Tf 10.8 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 63 627.8898 Tm (The source IP address supplied is stable outbound egress, not ingress or ordinary DNS resolution.) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 589.3898 12 12 re B*
+Q
+BT /F1 9 Tf 10.8 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 63 598.8898 Tm (Nova is ready for one authenticated review-only connectivity test after TyganPay verification.) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 560.3898 12 12 re B*
+Q
+BT /F1 9 Tf 10.8 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 63 569.8898 Tm (This PDF contains no bearer token, password, private key, signing secret or other credential value.) Tj T* ET
+.917647 .956863 .937255 rg
+n
+47 505.8898 m
+548.2756 505.8898 l
+551.0396 505.8898 553.2756 508.1258 553.2756 510.8898 c
+553.2756 526.8898 l
+553.2756 529.6538 551.0396 531.8898 548.2756 531.8898 c
+47 531.8898 l
+44.236 531.8898 42 529.6538 42 526.8898 c
+42 510.8898 l
+42 508.1258 44.236 505.8898 47 505.8898 c
+h
+f*
+.058824 .419608 .321569 rg
+BT /F2 12 Tf 14.4 TL ET
+BT 1 0 0 1 52 513.8898 Tm (5. Completed by) Tj T* ET
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 491.8898 Tm (Full name) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 489.9156 491.8898 Tm (Example: Sam Lee) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 461.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 442.8898 Tm (Role) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 452.3931 442.8898 Tm (Example: Integration Engineer) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 412.3898 510.2756 24 re B*
+Q
+.078431 .133333 .101961 rg
+BT /F2 9 Tf 10.8 TL ET
+BT 1 0 0 1 42 393.8898 Tm (Date completed) Tj T* ET
+.286275 .352941 .317647 rg
+BT /F3 7.5 Tf 9 TL ET
+BT 1 0 0 1 481.5756 393.8898 Tm (Example: 2026-07-21) Tj T* ET
+q
+1 0 0 1 0 0 cm
+1 w
+.058824 .419608 .321569 RG
+1 1 1 rg
+n 42.5 363.3898 510.2756 24 re B*
+Q
+.917647 .956863 .937255 rg
+n
+48 260.8898 m
+547.2756 260.8898 l
+550.5924 260.8898 553.2756 263.573 553.2756 266.8898 c
+553.2756 340.8898 l
+553.2756 344.2066 550.5924 346.8898 547.2756 346.8898 c
+48 346.8898 l
+44.6832 346.8898 42 344.2066 42 340.8898 c
+42 266.8898 l
+42 263.573 44.6832 260.8898 48 260.8898 c
+h
+f*
+.058824 .419608 .321569 rg
+BT /F2 11 Tf 13.2 TL ET
+BT 1 0 0 1 52 326.8898 Tm (What happens after return) Tj T* ET
+BT /F1 9 Tf 10.8 TL ET
+.078431 .133333 .101961 rg
+BT 1 0 0 1 52 310.8898 Tm (TyganPay will ingest this PDF, independently verify DNS, TLS, reachability and the source-IP boundary, then create the) Tj T* ET
+BT 1 0 0 1 52 298.8898 Tm (required internal readiness record. If all checks pass, TyganPay will coordinate a short-lived one-time credential reveal and) Tj T* ET
+BT 1 0 0 1 52 286.8898 Tm (one review-only test. This form does not authorize execution or movement.) Tj T* ET
+ 
+
+Q
+q
+0.0 0.0 595.2756 841.8898 re
+W
+n
+1 0 0 1 0 0 cm
+BT
+/F1-0 12 Tf
+14.4 TL
+ET
+0.05 0.35 0.2 RG
+0.05 0.35 0.2 rg
+1.5 w
+0.9 0.97 0.93 rg
+n
+42 704.8898 13 13 re
+B*
+0.05 0.35 0.2 rg
+BT
+/F2-0 11.05 Tf
+13.26 TL
+ET
+BT
+1 0 0 1 44.32863 707.7498 Tm
+/F3-0 11.05 Tf
+13.26 TL
+(3) Tj
+/F2-0 11.05 Tf
+13.26 TL
+T*
+ET
+0.05 0.35 0.2 RG
+0.05 0.35 0.2 rg
+1.5 w
+0.9 0.97 0.93 rg
+n
+42 675.8898 13 13 re
+B*
+0.05 0.35 0.2 rg
+BT
+/F2-0 11.05 Tf
+13.26 TL
+ET
+BT
+1 0 0 1 44.32863 678.7498 Tm
+/F3-0 11.05 Tf
+13.26 TL
+(3) Tj
+/F2-0 11.05 Tf
+13.26 TL
+T*
+ET
+0.05 0.35 0.2 RG
+0.05 0.35 0.2 rg
+1.5 w
+0.9 0.97 0.93 rg
+n
+42 646.8898 13 13 re
+B*
+0.05 0.35 0.2 rg
+BT
+/F2-0 11.05 Tf
+13.26 TL
+ET
+BT
+1 0 0 1 44.32863 649.7498 Tm
+/F3-0 11.05 Tf
+13.26 TL
+(3) Tj
+/F2-0 11.05 Tf
+13.26 TL
+T*
+ET
+0.05 0.35 0.2 RG
+0.05 0.35 0.2 rg
+1.5 w
+0.9 0.97 0.93 rg
+n
+42 617.8898 13 13 re
+B*
+0.05 0.35 0.2 rg
+BT
+/F2-0 11.05 Tf
+13.26 TL
+ET
+BT
+1 0 0 1 44.32863 620.7498 Tm
+/F3-0 11.05 Tf
+13.26 TL
+(3) Tj
+/F2-0 11.05 Tf
+13.26 TL
+T*
+ET
+0.05 0.35 0.2 RG
+0.05 0.35 0.2 rg
+1.5 w
+0.9 0.97 0.93 rg
+n
+42 588.8898 13 13 re
+B*
+0.05 0.35 0.2 rg
+BT
+/F2-0 11.05 Tf
+13.26 TL
+ET
+BT
+1 0 0 1 44.32863 591.7498 Tm
+/F3-0 11.05 Tf
+13.26 TL
+(3) Tj
+/F2-0 11.05 Tf
+13.26 TL
+T*
+ET
+0.05 0.35 0.2 RG
+0.05 0.35 0.2 rg
+1.5 w
+0.9 0.97 0.93 rg
+n
+42 559.8898 13 13 re
+B*
+0.05 0.35 0.2 rg
+BT
+/F2-0 11.05 Tf
+13.26 TL
+ET
+BT
+1 0 0 1 44.32863 562.7498 Tm
+/F3-0 11.05 Tf
+13.26 TL
+(3) Tj
+/F2-0 11.05 Tf
+13.26 TL
+T*
+ET
+1 1 1 rg
+n
+42.5 461.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 473.8898 Tm
+(Nova Trusty) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 412.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 424.8898 Tm
+(Integration Engineer) Tj
+T*
+ET
+1 1 1 rg
+n
+42.5 363.3898 510.2756 24 re
+f*
+0.05 0.08 0.12 rg
+BT
+/F1-0 10 Tf
+12 TL
+ET
+BT
+1 0 0 1 45 375.8898 Tm
+(2026\05507\05520) Tj
+T*
+ET
+Q
+
+endstream
+endobj
+15 0 obj
+<<
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+/Name /F1
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+16 0 obj
+<<
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+/Name /F2
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+17 0 obj
+<<
+/BaseFont /ZapfDingbats
+/Name /F3
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+xref
+0 18
+0000000000 65535 f 
+0000000015 00000 n 
+0000000054 00000 n 
+0000000127 00000 n 
+0000000176 00000 n 
+0000000417 00000 n 
+0000005333 00000 n 
+0000005440 00000 n 
+0000005547 00000 n 
+0000005659 00000 n 
+0000005774 00000 n 
+0000006018 00000 n 
+0000012772 00000 n 
+0000012880 00000 n 
+0000013150 00000 n 
+0000019648 00000 n 
+0000019756 00000 n 
+0000019869 00000 n 
+trailer
+<<
+/Size 18
+/Root 3 0 R
+/Info 1 0 R
+>>
+startxref
+19953
+%%EOF
