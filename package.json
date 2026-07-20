@@ -19,7 +19,8 @@
     "sync:ecosystem": "bash scripts/fetch-api.sh && python3 scripts/sync-ecosystem.py",
     "verify:ecosystem": "node scripts/verify-ecosystem.mjs",
     "verify:openpayd": "python3 scripts/verify-openpayd-malta.py",
-    "verify:openpayd:live": "python3 scripts/verify-openpayd-malta.py --live"
+    "verify:openpayd:live": "python3 scripts/verify-openpayd-malta.py --live",
+    "test:openpayd": "npm test --prefix patches/nova-bank-api/openpayd-emi"
   },
   "engines": {
     "node": ">=20"

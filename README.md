@@ -29,6 +29,7 @@ Live Nova Bank API names **OpenPayd** as EMI partner for **Nova Bank Malta Ltd**
 | Artifact | Path |
 |----------|------|
 | Setup (ecosystem + Railway checklist) | [`docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md`](docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md) |
+| NestJS drop-in patch (Railway) | [`patches/nova-bank-api/openpayd-emi/`](patches/nova-bank-api/openpayd-emi/) |
 | Exhaustive handoff / gaps | [`docs/OPENPAYD-MALTA-EMI-HANDOFF.md`](docs/OPENPAYD-MALTA-EMI-HANDOFF.md) |
 | Env template | [`.env.example`](.env.example) |
 

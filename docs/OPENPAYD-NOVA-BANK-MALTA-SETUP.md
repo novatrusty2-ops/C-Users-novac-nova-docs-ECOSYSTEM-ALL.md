@@ -89,9 +89,23 @@ npm run sync:ecosystem
 
 ---
 
-## 3. NestJS / Railway OpenPayd integration (outside this repo)
+## 3. NestJS / Railway OpenPayd integration
 
-The NestJS Nova Bank application is **not** checked out here. Use this as the credentials + wiring checklist for that service.
+The NestJS Nova Bank application is **not** checked out here. A drop-in module for that service ships in this repo:
+
+| Artifact | Path |
+|----------|------|
+| NestJS patch | [`patches/nova-bank-api/openpayd-emi/`](../patches/nova-bank-api/openpayd-emi/) |
+| Install README | [`patches/nova-bank-api/openpayd-emi/README.md`](../patches/nova-bank-api/openpayd-emi/README.md) |
+
+```bash
+# Into nova monorepo NestJS API
+mkdir -p apps/api/src/openpayd
+cp -R patches/nova-bank-api/openpayd-emi/src/* /path/to/nova/apps/api/src/openpayd/
+# then OpenPaydModule.register() in app.module.ts — see patch README
+```
+
+Use the credentials + wiring checklist below on Railway after copying the patch.
 
 ### 3.1 Official OpenPayd API surface
 
@@ -207,10 +221,11 @@ test -n "$OPENPAYD_USERNAME" && test -n "$OPENPAYD_PASSWORD" && test -n "$OPENPA
 
 ---
 
-## 6. Still blocked until NestJS work lands
+## 6. Still blocked until Railway secrets + deploy
 
-1. Actual OpenPayd HTTP client in NestJS (not in this repo).
-2. Real `EMI_OPENPAYD_API_KEY` / OAuth credentials in Railway.
+1. Copy [`patches/nova-bank-api/openpayd-emi`](../patches/nova-bank-api/openpayd-emi) into NestJS and deploy to Railway.
+2. Real `EMI_OPENPAYD_API_KEY` / OAuth credentials in Railway (not in git).
 3. Settlement IBAN + ownership proof for Nova Bank Malta Ltd.
-4. Webhook endpoint deployed and signed.
-5. Public status leaving `banking.provider=sandbox` / `realMoney=false` when intentionally going live.
+4. Webhook URL registered in OpenPayd portal + `OPENPAYD_WEBHOOK_SECRET` set.
+5. Implement `OpenPaydLedgerHook` against the Nova ledger.
+6. Public status leaving `banking.provider=sandbox` / `realMoney=false` when intentionally going live.

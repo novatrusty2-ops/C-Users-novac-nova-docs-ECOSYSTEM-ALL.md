@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ECO = ROOT / "ECOSYSTEM.json"
 ENV_EXAMPLE = ROOT / ".env.example"
 SETUP_DOC = ROOT / "docs" / "OPENPAYD-NOVA-BANK-MALTA-SETUP.md"
+PATCH_DIR = ROOT / "patches" / "nova-bank-api" / "openpayd-emi"
 STATUS_URL = "https://nova-bank-api-production-7311.up.railway.app/api/v1/global/status"
 INTEGRATIONS_URL = (
     "https://nova-bank-api-production-7311.up.railway.app/api/v1/international/integrations"
@@ -56,7 +57,19 @@ def main() -> None:
     if not SETUP_DOC.exists():
         fail("docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md missing")
 
-    print("OK: ECOSYSTEM.json Malta/OpenPayd metadata + .env.example + setup doc")
+    required_patch = [
+        PATCH_DIR / "README.md",
+        PATCH_DIR / "src" / "openpayd.module.ts",
+        PATCH_DIR / "src" / "openpayd.client.mjs",
+        PATCH_DIR / "src" / "openpayd.config.mjs",
+        PATCH_DIR / "src" / "openpayd.controller.ts",
+        PATCH_DIR / "src" / "openpayd.webhook.mjs",
+    ]
+    for path in required_patch:
+        if not path.exists():
+            fail(f"NestJS patch missing {path.relative_to(ROOT)}")
+
+    print("OK: ECOSYSTEM.json Malta/OpenPayd metadata + .env.example + setup doc + NestJS patch")
 
     if "--live" in sys.argv:
         with urllib.request.urlopen(STATUS_URL, timeout=15) as resp:

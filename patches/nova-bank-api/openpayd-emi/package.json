@@ -1,0 +1,12 @@
+{
+  "name": "@nova/openpayd-emi-patch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Drop-in NestJS OpenPayd EMI module for Nova Bank Malta Ltd (Railway Nova Bank API)",
+  "scripts": {
+    "test": "node --test test/openpayd-client.test.mjs test/openpayd-webhook.test.mjs"
+  },
+  "peerDependencies": {
+    "@nestjs/common": ">=10"
+  }
+}
