@@ -1,7 +1,7 @@
 import type { ChainToken } from '@/types'
 
 /**
- * Curated NovaONE (22016) + NRW World (33001) token catalogs for import into Nova Wallet.
+ * Curated NovaONE (22016) + NRW World (33001) + DeFi Oracle / DBIS (138) token catalogs.
  * Native tokens use address:null; known ERC-20s use verified mesh contracts where available.
  */
 export interface EcosystemTokenDef extends ChainToken {
@@ -12,6 +12,26 @@ export interface EcosystemTokenDef extends ChainToken {
 
 const NOVAONE = 22016
 const NRW = 33001
+const DBIS = 138
+
+/** Symbols that must remain available on chain 138 (custody) with price + liquidity */
+export const DBIS_CATALOG_SYMBOLS = [
+  'ETH',
+  'USDC',
+  'USDT',
+  'BTC',
+  'SHIVA',
+  'ACX',
+  'ICX',
+  'XRP',
+  'E1111',
+  'AUSDT',
+  'VICTORYA',
+  'KUSD',
+  'ANAKA',
+  'CUSDT',
+  'CUSDC',
+] as const
 
 /** Known mesh ERC-20 contracts (from Anaka mesh registry) */
 export const MESH_CONTRACTS = {
@@ -45,6 +65,17 @@ export const ECOSYSTEM_TOKENS: EcosystemTokenDef[] = [
     assetClass: 'native',
     importable: true,
   },
+  {
+    symbol: 'ETH',
+    name: 'Ether',
+    decimals: 18,
+    address: null,
+    standard: 'native',
+    coingeckoId: 'ethereum',
+    chainIds: [DBIS],
+    assetClass: 'native',
+    importable: true,
+  },
   // Known ERC-20s on NovaONE
   {
     symbol: 'AnA',
@@ -68,22 +99,22 @@ export const ECOSYSTEM_TOKENS: EcosystemTokenDef[] = [
     assetClass: 'erc20',
     importable: true,
   },
-  // Ecosystem crypto catalog (watchlist — same HD address across mesh)
-  ...makeMeshCrypto('USDC', 'USD Coin', 6, 1),
-  ...makeMeshCrypto('USDT', 'Tether USD', 6, 1),
-  ...makeMeshCrypto('ETH', 'Ether', 18, undefined, 'ethereum'),
-  ...makeMeshCrypto('BTC', 'Bitcoin', 8, undefined, 'bitcoin'),
-  ...makeMeshCrypto('SHIVA', 'Shiva Coin', 6, 0.1),
-  ...makeMeshCrypto('ACX', 'ACX', 6, 0.1),
-  ...makeMeshCrypto('ICX', 'ICX', 6, 0.1),
-  ...makeMeshCrypto('XRP', 'XRP', 6, 0.5),
-  ...makeMeshCrypto('E1111', '11:11 Coin', 6, 0.05),
-  ...makeMeshCrypto('AUSDT', 'Australian USDT', 6, 1),
-  ...makeMeshCrypto('VICTORYA', 'Victoria Coin', 6, 0.05),
-  ...makeMeshCrypto('KUSD', 'K USD', 6, 1),
-  ...makeMeshCrypto('ANAKA', 'Anaka Coin', 6, 0.1),
-  ...makeMeshCrypto('CUSDT', 'Custodial USDT', 6, 1),
-  ...makeMeshCrypto('CUSDC', 'Custodial USDC', 6, 1),
+  // Ecosystem crypto catalog — NovaONE + NRW + DBIS 138 (watchlist; live price + mesh liquidity)
+  ...makeMeshCrypto('USDC', 'USD Coin', 6, 1, 'usd-coin', [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('USDT', 'Tether USD', 6, 1, 'tether', [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('ETH', 'Ether', 18, undefined, 'ethereum', [NOVAONE, NRW]),
+  ...makeMeshCrypto('BTC', 'Bitcoin', 8, undefined, 'bitcoin', [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('SHIVA', 'Shiva Coin', 6, 0.1, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('ACX', 'ACX', 6, 0.1, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('ICX', 'ICX', 6, 0.1, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('XRP', 'XRP', 6, 0.5, 'ripple', [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('E1111', '11:11 Coin', 6, 0.05, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('AUSDT', 'Australian USDT', 6, 1, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('VICTORYA', 'Victoria Coin', 6, 0.05, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('KUSD', 'K USD', 6, 1, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('ANAKA', 'Anaka Coin', 6, 0.1, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('CUSDT', 'Custodial USDT', 6, 1, undefined, [NOVAONE, NRW, DBIS]),
+  ...makeMeshCrypto('CUSDC', 'Custodial USDC', 6, 1, undefined, [NOVAONE, NRW, DBIS]),
 ]
 
 function makeMeshCrypto(
@@ -92,9 +123,10 @@ function makeMeshCrypto(
   decimals: number,
   usd?: number,
   coingeckoId?: string,
+  chainIds: number[] = [NOVAONE, NRW],
 ): EcosystemTokenDef[] {
   // Catalog entries — shown with live/oracle price + mesh liquidity even at zero balance
-  return [NOVAONE, NRW].map((chainId) => ({
+  return chainIds.map((chainId) => ({
     symbol,
     name,
     decimals,
@@ -132,6 +164,15 @@ export function tokensForChain(chainId: number): EcosystemTokenDef[] {
 export function tokensForNovaOneAndNrw(): EcosystemTokenDef[] {
   return ECOSYSTEM_TOKENS.filter(
     (t) => t.importable && (t.chainIds.includes(NOVAONE) || t.chainIds.includes(NRW)),
+  )
+}
+
+/** NovaONE + NRW + DeFi Oracle (138) — full mesh import set */
+export function tokensForMeshCatalog(): EcosystemTokenDef[] {
+  return ECOSYSTEM_TOKENS.filter(
+    (t) =>
+      t.importable &&
+      (t.chainIds.includes(NOVAONE) || t.chainIds.includes(NRW) || t.chainIds.includes(DBIS)),
   )
 }
 

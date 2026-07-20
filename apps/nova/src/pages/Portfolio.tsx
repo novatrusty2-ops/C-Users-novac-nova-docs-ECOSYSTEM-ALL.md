@@ -37,7 +37,10 @@ export function Portfolio() {
       })
   }, [rows])
 
-  const focusRows = meshRows.filter((r) => r.chainId === 22016 || r.chainId === 33001)
+  // Mesh tab: NovaONE + NRW + DeFi Oracle (138) — keep custody liquidity/value in totals
+  const focusRows = meshRows.filter(
+    (r) => r.chainId === 22016 || r.chainId === 33001 || r.chainId === 138,
+  )
   const totalLiq = focusRows.reduce((s, r) => s + (r.liquidityUsd ?? 0), 0)
   const listRows = tab === 'mesh' ? focusRows : meshRows
 

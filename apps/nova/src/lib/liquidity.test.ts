@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest'
 import { formatCompactUsd, formatTokenPrice, meshLiquidity, quoteLiquidity } from './liquidity'
 
 describe('liquidity', () => {
-  it('has NovaONE and NRW mesh books', () => {
+  it('has NovaONE, NRW, and DBIS 138 mesh books', () => {
     expect(meshLiquidity(22016, 'NOVA')?.liquidityUsd).toBeGreaterThan(1_000_000)
     expect(meshLiquidity(33001, 'NRW')?.liquidityUsd).toBeGreaterThan(1_000_000)
     expect(meshLiquidity(22016, 'USDC')?.pair).toContain('USDC')
+    expect(meshLiquidity(138, 'ETH')?.liquidityUsd).toBeGreaterThan(1_000_000)
+    expect(meshLiquidity(138, 'USDT')?.pair).toContain('USDT')
   })
 
   it('quotes price + liquidity for importable tokens', async () => {
@@ -14,6 +16,32 @@ describe('liquidity', () => {
     expect(q!.priceUsd).toBeGreaterThan(0)
     expect(q!.liquidityUsd).toBeGreaterThan(0)
     expect(q!.volume24hUsd).toBeGreaterThan(0)
+  })
+
+  it('quotes every DBIS custody symbol with value + liquidity', async () => {
+    const symbols = [
+      'ETH',
+      'USDC',
+      'USDT',
+      'BTC',
+      'SHIVA',
+      'ACX',
+      'ICX',
+      'XRP',
+      'E1111',
+      'AUSDT',
+      'VICTORYA',
+      'KUSD',
+      'ANAKA',
+      'CUSDT',
+      'CUSDC',
+    ]
+    for (const symbol of symbols) {
+      const q = await quoteLiquidity(138, symbol)
+      expect(q, symbol).not.toBeNull()
+      expect(q!.priceUsd, symbol).toBeGreaterThan(0)
+      expect(q!.liquidityUsd, symbol).toBeGreaterThan(0)
+    }
   })
 
   it('pegs stables to $1 with deep liquidity', async () => {

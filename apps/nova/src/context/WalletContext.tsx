@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { ChainDefinition, TokenBalanceRow, WalletAccount } from '@/types'
+import type { ChainDefinition, ChainToken, TokenBalanceRow, WalletAccount } from '@/types'
 import {
   ensureDefaultAccount,
   getAccountById,
@@ -19,6 +19,11 @@ import { Contract, JsonRpcProvider, formatUnits } from 'ethers'
 import { getActiveChainId, setActiveChainId } from '@/lib/activeChain'
 import { tokensOnChain } from '@/lib/chains'
 import { quoteLiquidity } from '@/lib/liquidity'
+import {
+  DBIS_CHAIN_ID,
+  fetchAccountTokenBalances,
+  fetchNativeBalanceExplorer,
+} from '@/lib/explorerApi'
 import { allKnownChains, getEnabledChainIds } from '@/lib/networks'
 import { resolveUsdPrice } from '@/lib/prices'
 import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
@@ -94,19 +99,68 @@ async function fetchChainBalances(
     nativeRaw = 0n
   }
 
+  // Chain 138: Blockscout Etherscan-compatible API supplements RPC (token discovery + native fallback)
+  const explorerBalances =
+    chain.id === DBIS_CHAIN_ID
+      ? await fetchAccountTokenBalances(chain.id, account.address, chain.blockExplorerUrls)
+      : []
+  const explorerByKey = new Map(
+    explorerBalances.map((e) => [
+      `${e.symbol.toUpperCase()}:${(e.contractAddress ?? 'native').toLowerCase()}`,
+      e,
+    ]),
+  )
+  if (chain.id === DBIS_CHAIN_ID && nativeRaw === 0n) {
+    const fromExplorer = await fetchNativeBalanceExplorer(
+      chain.id,
+      account.address,
+      chain.blockExplorerUrls,
+    )
+    if (fromExplorer != null) nativeRaw = fromExplorer
+  }
+
   const tokens = tokensOnChain(chain.id)
+  // Include explorer-discovered ERC-20s not yet in the catalog so value is never dropped
+  const discovered = explorerBalances.filter((e) => {
+    if (e.type === 'native') return false
+    const key = `${e.symbol.toUpperCase()}:${(e.contractAddress ?? 'native').toLowerCase()}`
+    return !tokens.some(
+      (t) =>
+        `${t.symbol.toUpperCase()}:${(t.address ?? 'native').toLowerCase()}` === key ||
+        (e.contractAddress &&
+          t.address &&
+          t.address.toLowerCase() === e.contractAddress.toLowerCase()),
+    )
+  })
+
   const rows: TokenBalanceRow[] = []
-  for (const token of tokens) {
+  const allTokens: ChainToken[] = [
+    ...tokens,
+    ...discovered.map((e) => ({
+      symbol: e.symbol,
+      name: e.name,
+      decimals: e.decimals,
+      address: e.contractAddress,
+      standard: 'erc20' as const,
+    })),
+  ]
+
+  for (const token of allTokens) {
     let balanceRaw = 0n
+    const explorKey = `${token.symbol.toUpperCase()}:${(token.address ?? 'native').toLowerCase()}`
+    const explor = explorerByKey.get(explorKey)
+
     if (token.address == null && token.standard === 'native') {
-      balanceRaw = nativeRaw
+      balanceRaw = explor?.balanceRaw ?? nativeRaw
     } else if (token.address && provider) {
       try {
         const c = new Contract(token.address, ERC20_BALANCE_ABI, provider)
         balanceRaw = (await withTimeout(c.balanceOf(account.address) as Promise<bigint>, 4000)) ?? 0n
       } catch {
-        balanceRaw = 0n
+        balanceRaw = explor?.balanceRaw ?? 0n
       }
+    } else if (explor) {
+      balanceRaw = explor.balanceRaw
     }
 
     const balance = formatUnits(balanceRaw, token.decimals)
@@ -176,7 +230,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     try {
       const enabled = new Set(getEnabledChainIds())
       const chains = allKnownChains().filter((c) => enabled.has(c.id))
-      const priority = [activeChainId, 22016, 33001]
+      const priority = [activeChainId, 22016, 33001, DBIS_CHAIN_ID]
       const ordered = [
         ...priority.map((id) => chains.find((c) => c.id === id)).filter(Boolean),
         ...chains.filter((c) => !priority.includes(c.id)),

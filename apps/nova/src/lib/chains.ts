@@ -80,15 +80,27 @@ export const CHAINS: ChainDefinition[] = [
     slug: 'defi-oracle',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://rpc.defi-oracle.io', 'https://rpc.public-0138.defi-oracle.io'],
-    blockExplorerUrls: ['https://explorer.defi-oracle.io'],
+    // Blockscout hosts (Etherscan-compatible /api) — not etherscan.io
+    blockExplorerUrls: [
+      'https://explorer.defi-oracle.io',
+      'https://explorer.d-bis.org',
+      'https://blockscout.defi-oracle.io',
+    ],
     iconColor: C.defiOracle ?? '#2DD4BF',
     category: 'nova',
     isDefault: true,
     isOptional: false,
     ecosystemRole: 'custody',
-    tokens: [
-      { symbol: 'ETH', name: 'Ether', decimals: 18, address: null, standard: 'native', coingeckoId: 'ethereum' },
-    ],
+    tokens: meshTokens(138, [
+      {
+        symbol: 'ETH',
+        name: 'Ether',
+        decimals: 18,
+        address: null,
+        standard: 'native',
+        coingeckoId: 'ethereum',
+      },
+    ]),
   },
   {
     id: 11013,

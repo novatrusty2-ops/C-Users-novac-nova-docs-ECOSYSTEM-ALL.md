@@ -1,6 +1,6 @@
 import type { ChainToken } from '@/types'
 import {
-  tokensForChain,
+  tokensForMeshCatalog,
   toChainToken,
   withPricedHints,
   type EcosystemTokenDef,
@@ -73,11 +73,11 @@ export function mergeUserTokens(incoming: UserTokenRecord[]): { added: number; t
   return { added, total: next.length }
 }
 
-/** Import curated NovaONE (22016) + NRW (33001) ecosystem token catalogs with price hints */
+/** Import NovaONE + NRW + DeFi Oracle (138) catalogs with price + liquidity hints */
 export function importEcosystemTokensFromMesh(
   source: UserTokenRecord['source'] = 'ecosystem',
 ): { added: number; total: number; count: number } {
-  const defs = withPricedHints([...tokensForChain(22016), ...tokensForChain(33001)])
+  const defs = withPricedHints(tokensForMeshCatalog())
   const now = Date.now()
   const records: UserTokenRecord[] = defs.map((d: EcosystemTokenDef) => {
     const token = toChainToken(d)

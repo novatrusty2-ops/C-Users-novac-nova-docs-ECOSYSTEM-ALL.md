@@ -16,7 +16,7 @@ export interface LiquidityQuote {
   pair: string
 }
 
-/** Mesh liquidity books for NovaONE (22016) and NRW (33001) */
+/** Mesh liquidity books for NovaONE (22016), NRW (33001), and DeFi Oracle / DBIS (138) */
 const MESH_BOOKS: Record<
   string,
   { liquidityUsd: number; volume24hUsd: number; pair: string; chainId: number }
@@ -57,6 +57,24 @@ const MESH_BOOKS: Record<
   '33001:ANAKA': { liquidityUsd: 300_000, volume24hUsd: 40_000, pair: 'ANAKA/NRW', chainId: 33001 },
   '33001:CUSDT': { liquidityUsd: 610_000, volume24hUsd: 95_000, pair: 'CUSDT/USDT', chainId: 33001 },
   '33001:CUSDC': { liquidityUsd: 630_000, volume24hUsd: 98_000, pair: 'CUSDC/USDC', chainId: 33001 },
+
+  // DeFi Oracle / DBIS custody mesh (138) — full token book, no symbol dropped
+  '138:ETH': { liquidityUsd: 1_850_000, volume24hUsd: 320_000, pair: 'ETH/USDC', chainId: 138 },
+  '138:USDC': { liquidityUsd: 2_200_000, volume24hUsd: 640_000, pair: 'USDC/ETH', chainId: 138 },
+  '138:USDT': { liquidityUsd: 2_050_000, volume24hUsd: 610_000, pair: 'USDT/ETH', chainId: 138 },
+  '138:BTC': { liquidityUsd: 1_350_000, volume24hUsd: 160_000, pair: 'BTC/ETH', chainId: 138 },
+  '138:SHIVA': { liquidityUsd: 280_000, volume24hUsd: 36_000, pair: 'SHIVA/USDC', chainId: 138 },
+  '138:ACX': { liquidityUsd: 250_000, volume24hUsd: 34_000, pair: 'ACX/USDC', chainId: 138 },
+  '138:ICX': { liquidityUsd: 175_000, volume24hUsd: 24_000, pair: 'ICX/USDC', chainId: 138 },
+  '138:XRP': { liquidityUsd: 560_000, volume24hUsd: 88_000, pair: 'XRP/USDC', chainId: 138 },
+  '138:E1111': { liquidityUsd: 90_000, volume24hUsd: 11_000, pair: 'E1111/USDC', chainId: 138 },
+  '138:AUSDT': { liquidityUsd: 480_000, volume24hUsd: 66_000, pair: 'AUSDT/USDT', chainId: 138 },
+  '138:VICTORYA': { liquidityUsd: 100_000, volume24hUsd: 12_500, pair: 'VICTORYA/USDC', chainId: 138 },
+  '138:KUSD': { liquidityUsd: 430_000, volume24hUsd: 58_000, pair: 'KUSD/USDC', chainId: 138 },
+  '138:ANAKA': { liquidityUsd: 320_000, volume24hUsd: 44_000, pair: 'ANAKA/ETH', chainId: 138 },
+  '138:CUSDT': { liquidityUsd: 650_000, volume24hUsd: 102_000, pair: 'CUSDT/USDT', chainId: 138 },
+  '138:CUSDC': { liquidityUsd: 670_000, volume24hUsd: 105_000, pair: 'CUSDC/USDC', chainId: 138 },
+  '138:DFO': { liquidityUsd: 420_000, volume24hUsd: 55_000, pair: 'DFO/ETH', chainId: 138 },
 }
 
 function bookKey(chainId: number, symbol: string): string {
