@@ -7,7 +7,7 @@ import { useWallet } from '@/context/WalletContext'
 import { CHAINS, defaultChainIds } from '@/lib/chains'
 import { ECOSYSTEM_LINKS, PARTNERS } from '@/lib/partners'
 import { setEnabledChainIds, getEnabledChainIds } from '@/lib/networks'
-import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
+import { ensureNovaPlusTokensImported, loadUserTokens } from '@/lib/usertokens'
 import { CopyButton } from '@/components/common/CopyButton'
 import { ROUTES } from '@/lib/routes'
 
@@ -26,12 +26,12 @@ export function Ecosystem() {
   function importMeshTokens(source: 'ecosystem' | 'pouchpay' = 'ecosystem') {
     setImporting(true)
     try {
-      const result = importEcosystemTokensFromMesh(source)
+      const result = ensureNovaPlusTokensImported(source)
       setTokenCount(result.total)
       push(
         result.added > 0
-          ? `Imported ${result.added} tokens with price + liquidity`
-          : `Priced catalog ready (${result.total} tokens)`,
+          ? `Synced ${result.added} Nova Plus tokens · price + liquidity`
+          : `Nova Plus auto-listed (${result.total} tokens)`,
         'success',
       )
       void refreshBalances()
@@ -72,19 +72,21 @@ export function Ecosystem() {
 
         <section className="card-surface space-y-3">
           <h2 className="font-display text-sm font-semibold text-nova-ink">
-            Import tokens · NovaONE & NRW
+            Import tokens · Nova Plus
           </h2>
           <p className="text-xs text-nova-muted">
-            Pull curated tokens for chains <span className="font-mono">22016</span> and{' '}
-            <span className="font-mono">33001</span> (NOVA, NRW, AnA, WAGAS, USDC/USDT catalog, mesh
-            assets). Imported: {tokenCount}
+            Nova Plus Wallet auto-imports the full production catalog when you unlock or connect
+            Web3 — chains <span className="font-mono">22016</span>,{' '}
+            <span className="font-mono">33001</span>, <span className="font-mono">9001</span>, plus
+            bridge <span className="font-mono">11013</span> with the 7 bridge currencies (USD · EUR ·
+            GBP · AUD · CHF · JPY · SDG). Listed: {tokenCount}
           </p>
           <Button
             className="w-full"
             disabled={importing}
             onClick={() => importMeshTokens('ecosystem')}
           >
-            Import NovaONE + NRW tokens
+            Re-sync Nova Plus catalog
           </Button>
         </section>
 

@@ -11,10 +11,11 @@ import { CHAINS } from '@/lib/chains'
 import { getEnabledChainIds, toggleChain } from '@/lib/networks'
 import { getAutolockMinutes, setAutolockMinutes } from '@/lib/settings'
 import type { AutolockMinutes, DisplayCurrency } from '@/types'
+import { DISPLAY_CURRENCIES } from '@/lib/settings'
 import { ROUTES } from '@/lib/routes'
 import { BRAND } from '@/lib/brand'
 import { ECOSYSTEM_LINKS, PARTNERS } from '@/lib/partners'
-import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
+import { ensureNovaPlusTokensImported, loadUserTokens } from '@/lib/usertokens'
 import { useToast } from '@/context/ToastContext'
 
 function Row({
@@ -75,9 +76,14 @@ export function Settings() {
   }
 
   function handleImportTokens() {
-    const r = importEcosystemTokensFromMesh('ecosystem')
+    const r = ensureNovaPlusTokensImported('ecosystem')
     setImported(r.total)
-    push(r.added ? `Imported ${r.added} mesh tokens` : 'Mesh tokens already present', 'success')
+    push(
+      r.added > 0
+        ? `Synced ${r.added} Nova Plus tokens`
+        : `${r.total} Nova Plus tokens already auto-listed`,
+      'success',
+    )
     void refreshBalances()
   }
 
@@ -116,7 +122,7 @@ export function Settings() {
           <Row label="Nova Bank dashboard" href={ECOSYSTEM_LINKS.novaBank} />
           <Row label="Nova Swap" href={ECOSYSTEM_LINKS.novaSwap} />
           <button type="button" className="w-full text-left" onClick={handleImportTokens}>
-            <Row label={`Import mesh tokens (${imported})`} />
+            <Row label={`Import Nova Plus tokens (${imported})`} />
           </button>
         </section>
 
@@ -139,9 +145,11 @@ export function Settings() {
               value={currency}
               onChange={(e) => updateCurrency(e.target.value as DisplayCurrency)}
             >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
+              {DISPLAY_CURRENCIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </Row>
           <Row label="Hide balances">

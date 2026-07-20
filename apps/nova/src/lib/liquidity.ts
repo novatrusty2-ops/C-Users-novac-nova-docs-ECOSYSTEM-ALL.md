@@ -1,5 +1,8 @@
 import { oracleUsdPrice } from './oracle'
 import { resolveUsdPrice } from './prices'
+import { NOVA_PLUS_CHAIN_IDS, quoteAssetForChain } from './novaPlus'
+import { NOVA_PLUS_SNAPSHOT } from './novaPlusSnapshot'
+import { bridgeLiquidityBook, isBridgeCurrency } from './bridgeCurrencies'
 
 export type PriceSource = 'peg' | 'coingecko' | 'oracle' | 'mesh'
 
@@ -16,11 +19,10 @@ export interface LiquidityQuote {
   pair: string
 }
 
-/** Mesh liquidity books for NovaONE (22016) and NRW (33001) */
-const MESH_BOOKS: Record<
-  string,
-  { liquidityUsd: number; volume24hUsd: number; pair: string; chainId: number }
-> = {
+type Book = { liquidityUsd: number; volume24hUsd: number; pair: string; chainId: number }
+
+/** Hand-tuned deep books for core mesh pairs */
+const CORE_BOOKS: Record<string, Book> = {
   '22016:NOVA': { liquidityUsd: 2_450_000, volume24hUsd: 380_000, pair: 'NOVA/USDC', chainId: 22016 },
   '22016:ANA': { liquidityUsd: 890_000, volume24hUsd: 120_000, pair: 'AnA/NOVA', chainId: 22016 },
   '22016:AnA': { liquidityUsd: 890_000, volume24hUsd: 120_000, pair: 'AnA/NOVA', chainId: 22016 },
@@ -29,35 +31,62 @@ const MESH_BOOKS: Record<
   '22016:USDT': { liquidityUsd: 2_800_000, volume24hUsd: 860_000, pair: 'USDT/NOVA', chainId: 22016 },
   '22016:ETH': { liquidityUsd: 1_200_000, volume24hUsd: 210_000, pair: 'ETH/NOVA', chainId: 22016 },
   '22016:BTC': { liquidityUsd: 1_550_000, volume24hUsd: 175_000, pair: 'BTC/NOVA', chainId: 22016 },
-  '22016:SHIVA': { liquidityUsd: 310_000, volume24hUsd: 42_000, pair: 'SHIVA/USDC', chainId: 22016 },
-  '22016:ACX': { liquidityUsd: 275_000, volume24hUsd: 38_000, pair: 'ACX/USDC', chainId: 22016 },
-  '22016:ICX': { liquidityUsd: 190_000, volume24hUsd: 28_000, pair: 'ICX/USDC', chainId: 22016 },
-  '22016:XRP': { liquidityUsd: 640_000, volume24hUsd: 95_000, pair: 'XRP/USDC', chainId: 22016 },
-  '22016:E1111': { liquidityUsd: 95_000, volume24hUsd: 12_000, pair: 'E1111/USDC', chainId: 22016 },
-  '22016:AUSDT': { liquidityUsd: 520_000, volume24hUsd: 70_000, pair: 'AUSDT/USDC', chainId: 22016 },
-  '22016:VICTORYA': { liquidityUsd: 110_000, volume24hUsd: 14_000, pair: 'VICTORYA/USDC', chainId: 22016 },
-  '22016:KUSD': { liquidityUsd: 480_000, volume24hUsd: 65_000, pair: 'KUSD/USDC', chainId: 22016 },
-  '22016:ANAKA': { liquidityUsd: 360_000, volume24hUsd: 48_000, pair: 'ANAKA/NOVA', chainId: 22016 },
-  '22016:CUSDT': { liquidityUsd: 700_000, volume24hUsd: 110_000, pair: 'CUSDT/USDT', chainId: 22016 },
-  '22016:CUSDC': { liquidityUsd: 720_000, volume24hUsd: 115_000, pair: 'CUSDC/USDC', chainId: 22016 },
 
   '33001:NRW': { liquidityUsd: 1_980_000, volume24hUsd: 290_000, pair: 'NRW/USDT', chainId: 33001 },
   '33001:USDC': { liquidityUsd: 2_400_000, volume24hUsd: 720_000, pair: 'USDC/NRW', chainId: 33001 },
   '33001:USDT': { liquidityUsd: 2_650_000, volume24hUsd: 780_000, pair: 'USDT/NRW', chainId: 33001 },
   '33001:ETH': { liquidityUsd: 980_000, volume24hUsd: 150_000, pair: 'ETH/NRW', chainId: 33001 },
   '33001:BTC': { liquidityUsd: 1_100_000, volume24hUsd: 140_000, pair: 'BTC/NRW', chainId: 33001 },
-  '33001:SHIVA': { liquidityUsd: 260_000, volume24hUsd: 35_000, pair: 'SHIVA/USDT', chainId: 33001 },
-  '33001:ACX': { liquidityUsd: 240_000, volume24hUsd: 32_000, pair: 'ACX/USDT', chainId: 33001 },
-  '33001:ICX': { liquidityUsd: 170_000, volume24hUsd: 22_000, pair: 'ICX/USDT', chainId: 33001 },
-  '33001:XRP': { liquidityUsd: 510_000, volume24hUsd: 80_000, pair: 'XRP/USDT', chainId: 33001 },
-  '33001:E1111': { liquidityUsd: 80_000, volume24hUsd: 10_000, pair: 'E1111/USDT', chainId: 33001 },
-  '33001:AUSDT': { liquidityUsd: 450_000, volume24hUsd: 60_000, pair: 'AUSDT/USDT', chainId: 33001 },
-  '33001:VICTORYA': { liquidityUsd: 95_000, volume24hUsd: 11_000, pair: 'VICTORYA/USDT', chainId: 33001 },
-  '33001:KUSD': { liquidityUsd: 400_000, volume24hUsd: 55_000, pair: 'KUSD/USDT', chainId: 33001 },
-  '33001:ANAKA': { liquidityUsd: 300_000, volume24hUsd: 40_000, pair: 'ANAKA/NRW', chainId: 33001 },
-  '33001:CUSDT': { liquidityUsd: 610_000, volume24hUsd: 95_000, pair: 'CUSDT/USDT', chainId: 33001 },
-  '33001:CUSDC': { liquidityUsd: 630_000, volume24hUsd: 98_000, pair: 'CUSDC/USDC', chainId: 33001 },
+
+  '9001:NOVA': { liquidityUsd: 1_750_000, volume24hUsd: 210_000, pair: 'NOVA/USDC', chainId: 9001 },
+  '9001:USDC': { liquidityUsd: 1_900_000, volume24hUsd: 420_000, pair: 'USDC/NOVA', chainId: 9001 },
+  '9001:USDT': { liquidityUsd: 1_850_000, volume24hUsd: 400_000, pair: 'USDT/NOVA', chainId: 9001 },
 }
+
+function hash(s: string): number {
+  let h = 0
+  for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0
+  return Math.abs(h)
+}
+
+function syntheticBook(chainId: number, symbol: string): Book {
+  const price = oracleUsdPrice(symbol) ?? 0.05
+  const h = hash(`${chainId}:${symbol}`)
+  const depthMul = 0.55 + (h % 100) / 100
+  const base =
+    price >= 1000 ? 1_200_000 : price >= 1 ? 450_000 : price >= 0.1 ? 220_000 : 95_000
+  const liquidityUsd = Math.round(base * depthMul)
+  const volume24hUsd = Math.round(liquidityUsd * (0.08 + (h % 40) / 200))
+  const quote = quoteAssetForChain(chainId)
+  return {
+    liquidityUsd,
+    volume24hUsd,
+    pair: `${symbol}/${quote}`,
+    chainId,
+  }
+}
+
+/** Full Nova Plus liquidity books — core + snapshot symbols on all 3 chains */
+function buildMeshBooks(): Record<string, Book> {
+  const books: Record<string, Book> = { ...CORE_BOOKS }
+  for (const snap of NOVA_PLUS_SNAPSHOT) {
+    for (const chainId of snap.chainIds) {
+      if (!(NOVA_PLUS_CHAIN_IDS as readonly number[]).includes(chainId)) continue
+      const key = `${chainId}:${snap.symbol}`
+      if (!books[key]) books[key] = syntheticBook(chainId, snap.symbol)
+      const upper = `${chainId}:${snap.symbol.toUpperCase()}`
+      if (!books[upper]) books[upper] = books[key]!
+    }
+  }
+  // AnA / WAGAS extras
+  for (const sym of ['AnA', 'WAGAS', 'ANA']) {
+    const key = `22016:${sym}`
+    if (!books[key]) books[key] = syntheticBook(22016, sym)
+  }
+  return books
+}
+
+const MESH_BOOKS = buildMeshBooks()
 
 function bookKey(chainId: number, symbol: string): string {
   return `${chainId}:${symbol}`
@@ -65,12 +94,34 @@ function bookKey(chainId: number, symbol: string): string {
 
 export function meshLiquidity(chainId: number, symbol: string) {
   const sym = symbol.trim()
+  if (isBridgeCurrency(sym)) {
+    const bridge = bridgeLiquidityBook(chainId, sym)
+    if (bridge) return bridge
+  }
   return (
     MESH_BOOKS[bookKey(chainId, sym)] ??
     MESH_BOOKS[bookKey(chainId, sym.toUpperCase())] ??
-    null
+    ((NOVA_PLUS_CHAIN_IDS as readonly number[]).includes(chainId)
+      ? syntheticBook(chainId, sym)
+      : null)
   )
 }
+
+const PEGS = new Set([
+  'USDC',
+  'USDT',
+  'USD',
+  'DAI',
+  'AUSDT',
+  'AUSDC',
+  'CUSDT',
+  'CUSDC',
+  'KUSD',
+  'USDT-LEGACY',
+  'USDT-TRC20',
+  'USDT-BNB',
+  'NSB-AUSDT',
+])
 
 export async function quoteLiquidity(
   chainId: number,
@@ -81,9 +132,7 @@ export async function quoteLiquidity(
   if (price == null) return null
 
   const book = meshLiquidity(chainId, symbol)
-  const peg = ['USDC', 'USDT', 'USD', 'DAI', 'AUSDT', 'CUSDT', 'CUSDC', 'KUSD'].includes(
-    symbol.toUpperCase(),
-  )
+  const peg = PEGS.has(symbol.toUpperCase())
   const source: PriceSource = peg
     ? 'peg'
     : coingeckoId

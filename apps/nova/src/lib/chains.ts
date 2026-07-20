@@ -60,8 +60,8 @@ export const CHAINS: ChainDefinition[] = [
   },
   {
     id: 9001,
-    name: 'Nova Production',
-    slug: 'nova-production',
+    name: 'Nova Plus',
+    slug: 'nova-plus',
     nativeCurrency: { name: 'Nova Token', symbol: 'NOVA', decimals: 18 },
     rpcUrls: ['https://novablockchainsystem.com/rpc', 'http://51.75.64.28:28545/rpc'],
     blockExplorerUrls: ['http://51.75.64.28:28545/explorer/'],
@@ -70,9 +70,9 @@ export const CHAINS: ChainDefinition[] = [
     isDefault: true,
     isOptional: false,
     ecosystemRole: 'custody',
-    tokens: [
+    tokens: meshTokens(9001, [
       { symbol: 'NOVA', name: 'Nova Token', decimals: 18, address: null, standard: 'native', usd: 1 },
-    ],
+    ]),
   },
   {
     id: 138,
@@ -102,9 +102,9 @@ export const CHAINS: ChainDefinition[] = [
     isDefault: true,
     isOptional: false,
     ecosystemRole: 'bridge',
-    tokens: [
+    tokens: meshTokens(11013, [
       { symbol: 'ANKA', name: 'AnakaChain', decimals: 18, address: null, standard: 'native' },
-    ],
+    ]),
   },
   {
     id: 651940,

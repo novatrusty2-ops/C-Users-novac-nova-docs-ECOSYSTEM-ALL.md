@@ -39,9 +39,19 @@
         "novaSwap"
       ],
       "tokenImport": {
+        "novaPlus": true,
+        "novaPlusWallet": true,
         "novaOne": 22016,
         "nrwWorld": 33001,
-        "catalog": "apps/nova/src/lib/ecosystemTokens.ts"
+        "novaPlusChain": 9001,
+        "anakaBridge": 11013,
+        "bridgeCurrencies": ["USD", "EUR", "GBP", "AUD", "CHF", "JPY", "SDG"],
+        "catalog": "apps/nova/src/lib/ecosystemTokens.ts",
+        "snapshot": "apps/nova/src/lib/novaPlusSnapshot.ts",
+        "bridgeCurrenciesModule": "apps/nova/src/lib/bridgeCurrencies.ts",
+        "charts": true,
+        "skills": true,
+        "autoImport": true
       },
       "storagePrefix": "nova.",
       "ports": {

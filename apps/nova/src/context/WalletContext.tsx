@@ -19,9 +19,12 @@ import { Contract, JsonRpcProvider, formatUnits } from 'ethers'
 import { getActiveChainId, setActiveChainId } from '@/lib/activeChain'
 import { tokensOnChain } from '@/lib/chains'
 import { quoteLiquidity } from '@/lib/liquidity'
-import { allKnownChains, getEnabledChainIds } from '@/lib/networks'
+import { allKnownChains, getEnabledChainIds, setEnabledChainIds } from '@/lib/networks'
+import { NOVA_PLUS_CHAIN_IDS } from '@/lib/novaPlus'
+import { BRIDGE_CURRENCY_CHAIN_IDS } from '@/lib/bridgeCurrencies'
 import { resolveUsdPrice } from '@/lib/prices'
-import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
+import { ensureNovaPlusTokensImported } from '@/lib/usertokens'
+import { transferNovaPlusToWallet } from '@/lib/novaPlusTransfer'
 import {
   createWallet,
   deriveAccount,
@@ -172,11 +175,16 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setBalances([])
       return
     }
+    // Always keep the full Nova Plus catalog + enable the 3 mesh chains
+    ensureNovaPlusTokensImported('ecosystem')
+    setEnabledChainIds([
+      ...new Set([...getEnabledChainIds(), ...BRIDGE_CURRENCY_CHAIN_IDS, ...NOVA_PLUS_CHAIN_IDS]),
+    ])
     setBalancesLoading(true)
     try {
       const enabled = new Set(getEnabledChainIds())
       const chains = allKnownChains().filter((c) => enabled.has(c.id))
-      const priority = [activeChainId, 22016, 33001]
+      const priority = [activeChainId, 22016, 33001, 9001]
       const ordered = [
         ...priority.map((id) => chains.find((c) => c.id === id)).filter(Boolean),
         ...chains.filter((c) => !priority.includes(c.id)),
@@ -188,6 +196,25 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setBalancesLoading(false)
     }
   }, [activeAccount, activeChainId, sessionReady])
+
+  // Auto-transfer full Nova Plus catalog + 7 bridge currencies (snapshot then live sync)
+  useEffect(() => {
+    if (!sessionReady) return
+    const r = ensureNovaPlusTokensImported('ecosystem')
+    if (r.added > 0) {
+      push(`Nova Plus · ${r.added} tokens added automatically`, 'success')
+    }
+    void transferNovaPlusToWallet('ecosystem')
+      .then((live) => {
+        if (live.added > 0) {
+          push(`Nova Plus live · ${live.added} tokens · ${live.withLiquidity} with liquidity`, 'success')
+          void refreshBalances()
+        }
+      })
+      .catch(() => {
+        /* snapshot path already applied */
+      })
+  }, [sessionReady, push, refreshBalances])
 
   useEffect(() => {
     void refreshBalances()
@@ -205,8 +232,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setHasWallet(true)
       setUnlocked(true)
       syncAccounts()
-      const r = importEcosystemTokensFromMesh('ecosystem')
-      push(`Wallet created · ${r.added} tokens with prices`, 'success')
+      const r = ensureNovaPlusTokensImported('ecosystem')
+      push(`Wallet created · ${r.total} Nova Plus tokens ready`, 'success')
       return result
     },
     [push, syncAccounts],
@@ -219,8 +246,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setHasWallet(true)
       setUnlocked(true)
       syncAccounts()
-      const r = importEcosystemTokensFromMesh('ecosystem')
-      push(`Wallet imported · ${r.added} priced tokens`, 'success')
+      const r = ensureNovaPlusTokensImported('ecosystem')
+      push(`Wallet imported · ${r.total} Nova Plus tokens ready`, 'success')
       return result
     },
     [push, syncAccounts],
@@ -233,7 +260,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setHasWallet(true)
       setUnlocked(true)
       syncAccounts()
-      push('Private key imported', 'success')
+      const r = ensureNovaPlusTokensImported('ecosystem')
+      push(`Private key imported · ${r.total} Nova Plus tokens ready`, 'success')
       return result
     },
     [push, syncAccounts],
@@ -244,12 +272,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       await unlock(password)
       setUnlocked(true)
       syncAccounts()
-      if (loadUserTokens().length === 0) {
-        const r = importEcosystemTokensFromMesh('ecosystem')
-        push(`Unlocked · imported ${r.added} priced mesh tokens`, 'success')
-      } else {
-        push('Wallet unlocked', 'success')
-      }
+      const r = ensureNovaPlusTokensImported('ecosystem')
+      push(
+        r.added > 0
+          ? `Unlocked · ${r.added} Nova Plus tokens added`
+          : `Unlocked · ${r.total} Nova Plus tokens ready`,
+        'success',
+      )
     },
     [push, syncAccounts],
   )
