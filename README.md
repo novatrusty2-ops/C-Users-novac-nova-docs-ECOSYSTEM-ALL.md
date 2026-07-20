@@ -22,6 +22,16 @@ npm run verify:ecosystem
 
 Chain 138 docs: [`docs/dbis-138.md`](docs/dbis-138.md) (Blockscout / Etherscan-compatible API — not etherscan.io).
 
+### OpenPayd · Nova Bank Malta Ltd
+
+Live Nova Bank API names **OpenPayd** as EMI partner for **Nova Bank Malta Ltd** (`features.malta.emiPartner`). This repo carries ecosystem metadata + env template; NestJS/Railway holds secrets.
+
+| Artifact | Path |
+|----------|------|
+| Setup (ecosystem + Railway checklist) | [`docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md`](docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md) |
+| Exhaustive handoff / gaps | [`docs/OPENPAYD-MALTA-EMI-HANDOFF.md`](docs/OPENPAYD-MALTA-EMI-HANDOFF.md) |
+| Env template | [`.env.example`](.env.example) |
+
 App source: [`apps/nova`](apps/nova)
 
 Deploy: [`.github/workflows/deploy-nova.yml`](.github/workflows/deploy-nova.yml) → GitHub Pages (`novablockchain.it.com`).

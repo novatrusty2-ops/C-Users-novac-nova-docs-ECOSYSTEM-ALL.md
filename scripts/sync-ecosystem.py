@@ -123,6 +123,102 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text())
 
 
+def load_optional_json(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text())
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def fetch_json(url: str, timeout: float = 12.0) -> dict:
+    req = urllib.request.Request(
+        url,
+        method="GET",
+        headers={"Accept": "application/json", "User-Agent": "nova-ecosystem-sync"},
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def load_global_status() -> dict:
+    """Prefer fetch-api snapshot; fall back to live Nova Bank status."""
+    snapshot = load_optional_json(API_DIR / "global-status.json")
+    if snapshot.get("features"):
+        return snapshot
+    try:
+        return fetch_json(f"{NOVA_BANK_API}/global/status")
+    except Exception as exc:
+        print(f"Warning: could not load global/status for Malta EMI sync: {exc}")
+        return snapshot
+
+
+def apply_malta_emi(eco: dict, status: dict) -> None:
+    """Copy features.malta into products.novaBankOnline + products.openpayd."""
+    malta = (status.get("features") or {}).get("malta") or {}
+    products = eco.setdefault("products", {})
+    if malta and "novaBankOnline" in products:
+        product = products["novaBankOnline"]
+        if malta.get("entityName"):
+            product["legalEntity"] = malta["entityName"]
+        if malta.get("emiPartner"):
+            product["emiPartner"] = malta["emiPartner"]
+        if "vfaLicensed" in malta:
+            product["vfaLicensed"] = malta["vfaLicensed"]
+
+    openpayd = products.setdefault(
+        "openpayd",
+        {
+            "name": "OpenPayd",
+            "role": "EMI partner for Nova Bank Malta Ltd — SEPA/IBAN/multi-currency rails",
+            "domain": "emi_banking",
+            "regions": ["EU", "UK"],
+            "capabilities": ["sepa", "account_iban", "multi_currency", "swift_mt"],
+            "access": "direct_api",
+            "readiness": "gateway_ready",
+            "novaIntegrationId": "openpayd",
+            "novaConfigHint": "EMI_OPENPAYD_API_KEY",
+            "docs": {
+                "api": "https://apidocs.openpayd.com/",
+                "sandbox": "https://sandbox.openpayd.com",
+                "setup": "docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md",
+                "handoff": "docs/OPENPAYD-MALTA-EMI-HANDOFF.md",
+            },
+            "envTemplate": ".env.example",
+            "implementationRepo": (
+                "Nova Bank NestJS API (Railway) — not this ecosystem/wallet repo"
+            ),
+            "secretsInThisRepo": False,
+        },
+    )
+    openpayd["legalEntity"] = malta.get("entityName") or openpayd.get(
+        "legalEntity", "Nova Bank Malta Ltd"
+    )
+    openpayd["novaStatusSource"] = (
+        "GET /api/v1/global/status → features.malta.emiPartner"
+    )
+    openpayd["novaCatalogSource"] = (
+        "GET /api/v1/international/integrations → id=openpayd"
+    )
+    if malta:
+        openpayd["featuresMalta"] = {
+            "entityName": malta.get("entityName"),
+            "emiPartner": malta.get("emiPartner"),
+            "vfaLicensed": malta.get("vfaLicensed"),
+            "liveRailsEnabled": malta.get("liveRailsEnabled"),
+            "institutionApiLive": malta.get("institutionApiLive"),
+            "cryptoLiveEnabled": malta.get("cryptoLiveEnabled"),
+            "nrwTestnetOnly": malta.get("nrwTestnetOnly"),
+        }
+
+    if "tyganPay" in eco and malta.get("entityName"):
+        eco["tyganPay"]["clientEntityFromNovaApi"] = malta["entityName"]
+        eco["tyganPay"]["platformOperator"] = eco.get("organization")
+        eco["tyganPay"]["emiPartnerFromNovaApi"] = malta.get("emiPartner")
+
+
 def dedupe(items: list[str]) -> list[str]:
     seen: set[str] = set()
     out: list[str] = []
@@ -367,6 +463,7 @@ def main() -> None:
     prod_node = load_json(API_DIR / "production-node-status.json") if (
         API_DIR / "production-node-status.json"
     ).exists() else {}
+    status_snapshot = load_global_status()
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
     eco["generatedAt"] = now
@@ -740,12 +837,27 @@ def main() -> None:
             "summary": "Ethereum source bridge address not deployed",
             "fixIn": "Bridge deployment",
         },
+        {
+            "id": "openpayd-emi-credentials-external",
+            "severity": "high",
+            "component": "OpenPayd EMI (Nova Bank Malta Ltd)",
+            "summary": (
+                "Public API names emiPartner=openpayd and catalog id=openpayd "
+                "(configHint EMI_OPENPAYD_API_KEY), but credentials and NestJS "
+                "client live outside this repo; banking provider still sandbox / realMoney=false"
+            ),
+            "fixIn": "Nova Bank NestJS Railway secrets + OpenPayd partner portal",
+        },
     ]
+
+    # Malta EMI partner metadata from Nova Bank global/status (OpenPayd).
+    apply_malta_emi(eco, status_snapshot)
 
     ECO_PATH.write_text(json.dumps(eco, indent=2) + "\n")
     dbis_token_count = sum(
         1 for t in eco["tradableTokens"] if "dbis-138" in t.get("networks", [])
     )
+    malta_product = eco.get("products", {}).get("novaBankOnline", {})
     print(f"Updated {ECO_PATH}")
     print(f"  version: {eco['version']}")
     print(f"  walletNetworks: {len(eco['walletNetworks'])}")
@@ -754,6 +866,12 @@ def main() -> None:
     print(f"  dbisRpc primary: {dbis_rpc}")
     print(f"  dbisExplorer primary: {dbis_explorer}")
     print(f"  urlHealth.summary: {eco['urlHealth']['summary']}")
+    print(
+        "  malta EMI: "
+        f"legalEntity={malta_product.get('legalEntity')!r} "
+        f"emiPartner={malta_product.get('emiPartner')!r} "
+        f"vfaLicensed={malta_product.get('vfaLicensed')!r}"
+    )
 
 
 if __name__ == "__main__":

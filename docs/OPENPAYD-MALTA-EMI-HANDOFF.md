@@ -1,14 +1,16 @@
 # Openpayd / Malta EMI / IBAN — Complete Integration Handoff Report
 
-**Generated:** 2026-07-20  
-**Workspace:** Nova Bank ecosystem manifest + Nova/Signet wallets (`main` at generation)  
-**Search coverage:** current working tree; git history; remote branches `origin/cursor/tyganpay-nova-onboarding-205e` and `origin/cursor/tyganpay-readiness-pdf-cd3e`; `.env*` templates; Docker/k8s/Helm/Terraform; CI/CD; docs; scripts; comments; live readonly probe of Nova Bank `GET /api/v1/global/status`.
+**Generated:** 2026-07-20 (updated with ecosystem wiring + setup checklist)  
+**Workspace:** Nova Bank ecosystem manifest + Nova/Signet wallets  
+**Search coverage:** current working tree; git history; remote branches `origin/cursor/tyganpay-nova-onboarding-205e` and `origin/cursor/tyganpay-readiness-pdf-cd3e`; `.env*` templates; Docker/k8s/Helm/Terraform; CI/CD; docs; scripts; comments; live readonly probe of Nova Bank `GET /api/v1/global/status` and `GET /api/v1/international/integrations`.
+
+**Operational setup (how to wire NestJS/Railway):** [`OPENPAYD-NOVA-BANK-MALTA-SETUP.md`](OPENPAYD-NOVA-BANK-MALTA-SETUP.md) · env template [`.env.example`](../.env.example)
 
 ---
 
 ## Executive verdict
 
-**There is no Openpayd API integration in this repository.** Openpayd appears only as a **named EMI partner string** (`emiPartner: "openpayd"`) associated with legal entity **Nova Bank Malta Ltd**, sourced from the live Nova Bank public status endpoint. **No settlement IBAN value for the Malta EMI account is present** in source, config, secrets, or docs. Production Openpayd credentials, endpoints, mTLS, webhooks, and client code are **not in this workspace** (they would live in the separate Nova Bank NestJS application / Railway secrets, which this repo explicitly is not).
+**There is no OpenPayd HTTP client in this repository.** OpenPayd appears as a **named EMI partner** (`emiPartner: "openpayd"`) for **Nova Bank Malta Ltd** on the live Nova Bank public status endpoint, and as catalog item `id=openpayd` with `configHint: EMI_OPENPAYD_API_KEY` on `GET /api/v1/international/integrations`. This ecosystem repo now mirrors that metadata in `ECOSYSTEM.json` and provides an env/setup checklist. **No settlement IBAN value** and **no live credentials** are present in git — NestJS/Railway must hold secrets.
 
 This document enumerates every discovered item with file and line citations where available, and **explicitly states absences** rather than inventing values.
 
@@ -30,21 +32,28 @@ This document enumerates every discovered item with file and line citations wher
 
 ## 1. Complete `.env` specification for Openpayd
 
-### 1.1 Openpayd-specific environment variables
+### 1.1 OpenPayd-specific environment variables
+
+Template (empty values only): [`.env.example`](../.env.example). **No runtime consumer in this repo** — NestJS/Railway must load them.
 
 
 | Variable | Required vs optional | Default | Format / type / example | Files referencing | Services consuming | Dev / staging / UAT / prod |
 |----------|----------------------|---------|-------------------------|-------------------|--------------------|----------------------------|
-| Any `OPENPAYD_*` | N/A | N/A | N/A | **Not present** in current tree or git history | **None** | **Not present** |
-| Openpayd OAuth client id / secret | N/A | N/A | N/A | **Not present** | **None** | **Not present** |
-| Openpayd API key / username / password | N/A | N/A | N/A | **Not present** | **None** | **Not present** |
-| Openpayd webhook secret / signing key | N/A | N/A | N/A | **Not present** | **None** | **Not present** |
-| Openpayd base URL / sandbox URL | N/A | N/A | N/A | **Not present** | **None** | **Not present** |
-| Openpayd account / linked-client IDs | N/A | N/A | N/A | **Not present** | **None** | **Not present** |
-| Certificate / mTLS paths for Openpayd | N/A | N/A | N/A | **Not present** | **None** | **Not present** |
+| `EMI_OPENPAYD_API_KEY` | Required on NestJS (Nova catalog hint) | *(none)* | secret string | [`.env.example`](../.env.example), [`docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md`](OPENPAYD-NOVA-BANK-MALTA-SETUP.md); live catalog `configHint` | NestJS Nova Bank API (Railway) | Same name all envs; value differs |
+| `OPENPAYD_USERNAME` | Required on NestJS | *(none)* | OpenPayd portal username | `.env.example` | NestJS OAuth Basic auth | Sandbox vs prod portal users |
+| `OPENPAYD_PASSWORD` | Required on NestJS | *(none)* | secret | `.env.example` | NestJS OAuth Basic auth | Sandbox vs prod |
+| `OPENPAYD_ACCOUNT_HOLDER_ID` | Required on NestJS | *(none)* | UUID | `.env.example` | NestJS `x-account-holder-id` | Per tenant |
+| `OPENPAYD_BASE_URL` | Required on NestJS | `https://sandbox.openpayd.com` | URL | `.env.example` | NestJS HTTP client | Sandbox URL vs production tenant URL |
+| `OPENPAYD_ENV` | Recommended | `sandbox` | `sandbox` \| `production` | `.env.example` | NestJS feature flags | See setup matrix |
+| `OPENPAYD_ACCOUNT_ID` | Recommended | *(none)* | account id string | `.env.example` | NestJS payments | Per env |
+| `OPENPAYD_CLIENT_ID` / `OPENPAYD_REFERRAL_ID` | Optional | *(none)* | UUID | `.env.example` | NestJS linked-client context | Per tenant |
+| `OPENPAYD_WEBHOOK_SECRET` | Recommended | *(none)* | secret | `.env.example` | NestJS webhook verify | Per env |
+| `OPENPAYD_WEBHOOK_URL` | Recommended | *(none)* | HTTPS URL | `.env.example` | OpenPayd portal + NestJS | Per env |
+| `OPENPAYD_SETTLEMENT_IBAN` / `OPENPAYD_SETTLEMENT_BIC` | Ops | *(none)* | IBAN / BIC | `.env.example` | Ops/compliance (not git) | Production settlement |
+| Certificate / mTLS paths | N/A | N/A | N/A | **Not present** | **None documented** | OpenPayd public API uses TLS + OAuth; mTLS **not found** in this repo |
 
 
-**Conclusion:** There is **no** `.env` specification in this repo that can fully run an Openpayd integration, because **no Openpayd client exists here**. No defaults, formats, consumers, or environment-specific variants can be cited from code.
+**Conclusion:** This repo now ships an **env template + setup checklist**. It still cannot “fully run” OpenPayd because **no OpenPayd client exists here** — secrets and NestJS code live on Railway.
 
 ### 1.2 Environment variables that *do* exist in this repository (not Openpayd)
 
@@ -215,9 +224,9 @@ All of the following exist only on **`origin/cursor/tyganpay-nova-onboarding-205
 | `scripts/sync-ecosystem.py` | 300–311 | Copies `features.malta` → `ECOSYSTEM.json` `legalEntity` / `emiPartner` / `vfaLicensed` |
 
 
-**Current `main` [`ECOSYSTEM.json`](../ECOSYSTEM.json):** `products.novaBankOnline` has `name` / `url` / `api` / `role` only (lines 7–11) — **no** `legalEntity` / `emiPartner` / `vfaLicensed`.
+**Current branch [`ECOSYSTEM.json`](../ECOSYSTEM.json):** `products.novaBankOnline` includes `legalEntity` / `emiPartner` / `vfaLicensed`; `products.openpayd` holds catalog metadata + `novaConfigHint: EMI_OPENPAYD_API_KEY`.
 
-**Current `main` [`scripts/sync-ecosystem.py`](../scripts/sync-ecosystem.py):** **does not** contain the historical malta sync block (lines 300–311 on the tyganpay branch).
+**Current [`scripts/sync-ecosystem.py`](../scripts/sync-ecosystem.py):** `apply_malta_emi()` refreshes those fields from `GET /api/v1/global/status` (snapshot or live).
 
 ### 3.3 Settlement IBAN
 
