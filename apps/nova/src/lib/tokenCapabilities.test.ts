@@ -68,4 +68,15 @@ describe('tokenCapabilities', () => {
     })
     expect(gate.ok).toBe(true)
   })
+
+  it('keeps ethereum/bsc stables swappable and transferable', () => {
+    const eth = defaultTokenFlags(1, {
+      symbol: 'USDT',
+      standard: 'erc20',
+      address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+    })
+    expect(eth.tradable).toBe(true)
+    expect(eth.swappable).toBe(true)
+    expect(eth.transferable).toBe(true)
+  })
 })

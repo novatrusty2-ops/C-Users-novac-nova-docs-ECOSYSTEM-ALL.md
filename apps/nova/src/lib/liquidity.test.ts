@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { formatCompactUsd, formatTokenPrice, meshLiquidity, quoteLiquidity } from './liquidity'
+import {
+  formatCompactUsd,
+  formatTokenPrice,
+  meshLiquidity,
+  quoteLiquidity,
+  resolveLiquidityBook,
+} from './liquidity'
 
 describe('liquidity', () => {
   it('has NovaONE, NRW, and DBIS 138 mesh books', () => {
@@ -16,6 +22,7 @@ describe('liquidity', () => {
     expect(q!.priceUsd).toBeGreaterThan(0)
     expect(q!.liquidityUsd).toBeGreaterThan(0)
     expect(q!.volume24hUsd).toBeGreaterThan(0)
+    expect(q!.sentiment.workable).toBe(true)
   })
 
   it('quotes every DBIS custody symbol with value + liquidity', async () => {
@@ -41,13 +48,31 @@ describe('liquidity', () => {
       expect(q, symbol).not.toBeNull()
       expect(q!.priceUsd, symbol).toBeGreaterThan(0)
       expect(q!.liquidityUsd, symbol).toBeGreaterThan(0)
+      expect(q!.swappable, symbol).toBe(true)
     }
   })
 
-  it('pegs stables to $1 with deep liquidity', async () => {
+  it('pegs stables to $1 with deep workable liquidity', async () => {
     const q = await quoteLiquidity(33001, 'USDT')
     expect(q!.priceUsd).toBe(1)
     expect(q!.liquidityUsd).toBeGreaterThan(100_000)
+    expect(q!.swappable).toBe(true)
+    expect(q!.transferable).toBe(true)
+    expect(q!.sentiment.workable).toBe(true)
+  })
+
+  it('falls back to sentiment books for unknown stable chains', () => {
+    const { book, mode } = resolveLiquidityBook(99999, 'USDC', 1)
+    expect(mode).toBe('sentiment')
+    expect(book.liquidityUsd).toBeGreaterThanOrEqual(750_000)
+  })
+
+  it('has ethereum and bsc stable books for external withdraw rails', async () => {
+    const eth = await quoteLiquidity(1, 'USDT')
+    const bsc = await quoteLiquidity(56, 'USDC')
+    expect(eth!.swappable).toBe(true)
+    expect(bsc!.swappable).toBe(true)
+    expect(eth!.liquidityUsd).toBeGreaterThan(1_000_000)
   })
 
   it('formats compact usd and prices', () => {

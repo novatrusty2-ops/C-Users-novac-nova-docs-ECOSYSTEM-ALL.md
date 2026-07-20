@@ -3,16 +3,18 @@ import type { TokenBalanceRow } from '@/types'
 import { formatCompactUsd, formatTokenPrice } from '@/lib/liquidity'
 import { tokenDetailPath } from '@/lib/routes'
 import { isMeshStable } from '@/lib/tokenCapabilities'
+import { sentimentTone, type SentimentLabel } from '@/lib/sentiment'
 
 interface TokenRowProps {
   row: TokenBalanceRow
   hideBalances?: boolean
 }
 
-/** OKX-style flat asset row — icon · name/price · amount/value → token chart */
+/** OKX-style flat asset row — icon · name/price/sentiment · amount/value → token chart */
 export function TokenRow({ row, hideBalances }: TokenRowProps) {
   const price = row.usdPrice
   const value = row.usdValue
+  const label = (row.sentimentLabel ?? null) as SentimentLabel | null
   const changeHint =
     row.volume24hUsd != null && row.volume24hUsd > 0
       ? row.liquidityUsd && row.liquidityUsd > 0
@@ -40,15 +42,23 @@ export function TokenRow({ row, hideBalances }: TokenRowProps) {
               <span className="ml-1 text-[10px] font-normal text-nova-muted">stable</span>
             ) : null}
           </p>
-          <p className="mt-0.5 flex items-center gap-2 text-xs text-nova-muted">
+          <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-nova-muted">
             <span className="font-mono">
               {hideBalances ? '••••' : price != null ? formatTokenPrice(price) : '—'}
             </span>
+            {label ? (
+              <span className={sentimentTone(label)}>
+                {label}
+                {row.liquidityMode === 'sentiment' ? ' · sent.' : ''}
+              </span>
+            ) : null}
             {changeHint != null ? (
               <span className={changeHint >= 0 ? 'text-nova-success' : 'text-nova-danger'}>
                 {changeHint >= 0 ? '+' : ''}
                 {changeHint.toFixed(2)}%
               </span>
+            ) : row.liquidityUsd != null ? (
+              <span className="truncate">liq {formatCompactUsd(row.liquidityUsd)}</span>
             ) : row.chainName ? (
               <span className="truncate">{row.chainName}</span>
             ) : null}
