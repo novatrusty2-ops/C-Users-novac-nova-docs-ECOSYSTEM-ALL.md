@@ -8,7 +8,44 @@
       "name": "Nova Bank Online",
       "url": "https://nova-bank-api-production-7311.up.railway.app",
       "api": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
-      "role": "custodial neobank \u2014 ledger, cards, fiat/crypto vaults"
+      "role": "custodial neobank \u2014 ledger, cards, fiat/crypto vaults",
+      "legalEntity": "Nova Bank Malta Ltd",
+      "emiPartner": "openpayd",
+      "vfaLicensed": true
+    },
+    "openpayd": {
+      "name": "OpenPayd",
+      "role": "EMI partner for Nova Bank Malta Ltd — SEPA/IBAN/multi-currency rails",
+      "legalEntity": "Nova Bank Malta Ltd",
+      "domain": "emi_banking",
+      "regions": ["EU", "UK"],
+      "capabilities": ["sepa", "account_iban", "multi_currency", "swift_mt"],
+      "access": "direct_api",
+      "readiness": "gateway_ready",
+      "novaIntegrationId": "openpayd",
+      "novaConfigHint": "EMI_OPENPAYD_API_KEY",
+      "novaStatusSource": "GET /api/v1/global/status → features.malta.emiPartner",
+      "novaCatalogSource": "GET /api/v1/international/integrations → id=openpayd",
+      "featuresMalta": {
+        "entityName": "Nova Bank Malta Ltd",
+        "emiPartner": "openpayd",
+        "vfaLicensed": true,
+        "liveRailsEnabled": true,
+        "institutionApiLive": true,
+        "cryptoLiveEnabled": false,
+        "nrwTestnetOnly": true
+      },
+      "docs": {
+        "api": "https://apidocs.openpayd.com/",
+        "sandbox": "https://sandbox.openpayd.com",
+        "setup": "docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md",
+        "handoff": "docs/OPENPAYD-MALTA-EMI-HANDOFF.md",
+        "nestjsPatch": "patches/nova-bank-api/openpayd-emi"
+      },
+      "envTemplate": ".env.example",
+      "implementationRepo": "Nova Bank NestJS API (Railway) — drop-in patch in this repo",
+      "nestjsPatch": "patches/nova-bank-api/openpayd-emi",
+      "secretsInThisRepo": false
     },
     "novaSwap": {
       "name": "Nova Swap",
