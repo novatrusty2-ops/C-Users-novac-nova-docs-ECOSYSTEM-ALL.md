@@ -12,7 +12,7 @@ const ACTIONS = [
   { to: ROUTES.receive, label: 'Receive', Icon: IconReceive },
   { to: ROUTES.send, label: 'Send', Icon: IconSend },
   { to: ROUTES.swap, label: 'Trade', Icon: IconSwap },
-  { to: ROUTES.ecosystem, label: 'Bank', Icon: IconBank },
+  { to: ROUTES.withdraw, label: 'Withdraw', Icon: IconBank },
   { to: ROUTES.settings, label: 'More', Icon: IconMore },
 ] as const
 

@@ -21,6 +21,10 @@ export interface ChainToken {
   standard: 'native' | 'erc20'
   usd?: number
   coingeckoId?: string
+  /** Production ECOSYSTEM / mesh flags */
+  tradable?: boolean
+  transferable?: boolean
+  swappable?: boolean
 }
 
 export interface ChainDefinition {
@@ -78,7 +82,7 @@ export interface ActivityItem {
   symbol: string
   timestamp: number
   status: 'pending' | 'confirmed' | 'failed'
-  kind: 'send' | 'receive' | 'swap'
+  kind: 'send' | 'receive' | 'swap' | 'withdraw'
 }
 
 export type AutolockMinutes = 1 | 5 | 15 | 30 | 0

@@ -4,16 +4,19 @@ import { Button } from '@/components/common/Button'
 import { TopBar } from '@/components/layout/TopBar'
 import { useToast } from '@/context/ToastContext'
 import { useWallet } from '@/context/WalletContext'
+import { useWeb3 } from '@/context/Web3Context'
 import { CHAINS, defaultChainIds } from '@/lib/chains'
 import { ECOSYSTEM_LINKS, PARTNERS } from '@/lib/partners'
 import { setEnabledChainIds, getEnabledChainIds } from '@/lib/networks'
 import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
 import { CopyButton } from '@/components/common/CopyButton'
 import { ROUTES } from '@/lib/routes'
+import { ConnectWalletButton } from '@/components/wallet/ConnectWalletButton'
 
 export function Ecosystem() {
   const { push } = useToast()
   const { activeAccount, refreshBalances, switchChain } = useWallet()
+  const { connected, switchWalletChain } = useWeb3()
   const [tokenCount, setTokenCount] = useState(() => loadUserTokens().length)
   const [importing, setImporting] = useState(false)
 
@@ -21,6 +24,18 @@ export function Ecosystem() {
     const ids = defaultChainIds()
     setEnabledChainIds([...new Set([...getEnabledChainIds(), ...ids])])
     push('All Nova ecosystem chains enabled', 'success')
+  }
+
+  async function selectChain(id: number) {
+    if (connected) {
+      try {
+        await switchWalletChain(id)
+        return
+      } catch {
+        /* fall through */
+      }
+    }
+    switchChain(id)
   }
 
   function importMeshTokens(source: 'ecosystem' | 'pouchpay' = 'ecosystem') {
@@ -57,7 +72,7 @@ export function Ecosystem() {
                 <button
                   type="button"
                   className="text-left text-nova-ink hover:text-nova-highlight"
-                  onClick={() => switchChain(c.id)}
+                  onClick={() => void selectChain(c.id)}
                 >
                   {c.name}
                   <span className="ml-2 text-xs text-nova-muted">{c.id}</span>
@@ -65,6 +80,7 @@ export function Ecosystem() {
               </li>
             ))}
           </ul>
+          <ConnectWalletButton className="w-full" label="Connect Web3 wallet" />
           <Button className="w-full" onClick={enableAllEcosystemChains}>
             Enable all ecosystem chains
           </Button>
@@ -72,19 +88,20 @@ export function Ecosystem() {
 
         <section className="card-surface space-y-3">
           <h2 className="font-display text-sm font-semibold text-nova-ink">
-            Import tokens · NovaONE & NRW
+            Import tokens · NovaONE, NRW & DeFi Oracle
           </h2>
           <p className="text-xs text-nova-muted">
-            Pull curated tokens for chains <span className="font-mono">22016</span> and{' '}
-            <span className="font-mono">33001</span> (NOVA, NRW, AnA, WAGAS, USDC/USDT catalog, mesh
-            assets). Imported: {tokenCount}
+            Pull curated tradable/transferable tokens for{' '}
+            <span className="font-mono">22016</span>, <span className="font-mono">33001</span>, and{' '}
+            <span className="font-mono">138</span> (stables USDC/USDT, mesh assets, custody ETH).
+            Imported: {tokenCount}
           </p>
           <Button
             className="w-full"
             disabled={importing}
             onClick={() => importMeshTokens('ecosystem')}
           >
-            Import NovaONE + NRW tokens
+            Import mesh + custody tokens
           </Button>
         </section>
 
@@ -124,7 +141,7 @@ export function Ecosystem() {
                     className="text-xs"
                     onClick={() => {
                       setEnabledChainIds([...new Set([...getEnabledChainIds(), 651940])])
-                      switchChain(651940)
+                      void selectChain(651940)
                       push('Alltra / PouchPay chain active', 'success')
                     }}
                   >

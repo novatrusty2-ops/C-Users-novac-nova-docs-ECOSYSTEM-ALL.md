@@ -9,7 +9,13 @@ export const ROUTES = {
   ecosystem: '/ecosystem',
   send: '/send',
   receive: '/receive',
+  withdraw: '/withdraw',
+  token: '/token/:chainId/:symbol',
 } as const
+
+export function tokenDetailPath(chainId: number, symbol: string): string {
+  return `/token/${chainId}/${encodeURIComponent(symbol)}`
+}
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES]
 

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { WALLET_CATALOG } from './catalog'
 import { walletIdFromProvider } from './discover'
 import type { Eip1193Provider } from './types'
+import { toHexChainId } from './ensureChain'
 
 describe('web3 wallet catalog', () => {
   it('includes MetaMask, Trust, SafePal, Gate and injected', () => {
@@ -12,6 +13,12 @@ describe('web3 wallet catalog', () => {
     expect(ids).toContain('gate')
     expect(ids).toContain('injected')
     expect(ids).toContain('walletconnect')
+  })
+
+  it('documents production injected wallets ahead of WalletConnect stub', () => {
+    const wc = WALLET_CATALOG.find((w) => w.id === 'walletconnect')
+    expect(wc?.subtitle.toLowerCase()).toContain('injected')
+    expect(toHexChainId(138)).toBe('0x8a')
   })
 
   it('detects MetaMask flag', () => {

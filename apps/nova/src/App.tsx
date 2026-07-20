@@ -14,6 +14,8 @@ import { Settings } from '@/pages/Settings'
 import { Ecosystem } from '@/pages/Ecosystem'
 import { Send } from '@/pages/Send'
 import { Receive } from '@/pages/Receive'
+import { Withdraw } from '@/pages/Withdraw'
+import { TokenDetail } from '@/pages/TokenDetail'
 import type { ReactNode } from 'react'
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -105,6 +107,22 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Receive />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.withdraw}
+          element={
+            <ProtectedRoute>
+              <Withdraw />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/token/:chainId/:symbol"
+          element={
+            <ProtectedRoute>
+              <TokenDetail />
             </ProtectedRoute>
           }
         />

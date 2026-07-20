@@ -4,12 +4,15 @@ import { Button } from '@/components/common/Button'
 import { Spinner } from '@/components/common/Spinner'
 import { IconSwap } from '@/components/layout/icons'
 import { useWallet } from '@/context/WalletContext'
+import { useWeb3 } from '@/context/Web3Context'
 import { quoteSwap, type SwapQuote } from '@/lib/swap'
 import { swapableSymbols } from '@/lib/tokens'
-import { appendActivity, createActivityId } from '@/lib/activity'
+import { ECOSYSTEM_LINKS } from '@/lib/partners'
+import { isMeshStable } from '@/lib/tokenCapabilities'
 
 export function Swap() {
   const { activeChainId, activeAccount } = useWallet()
+  const { connected, ensureActiveChain } = useWeb3()
   const symbols = swapableSymbols(activeChainId)
   const [from, setFrom] = useState(symbols[0] ?? 'USDC')
   const [to, setTo] = useState(symbols[1] ?? 'USDT')
@@ -17,28 +20,31 @@ export function Swap() {
   const [quote, setQuote] = useState<SwapQuote | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [done, setDone] = useState(false)
 
   useEffect(() => {
     const s = swapableSymbols(activeChainId)
     setFrom(s[0] ?? 'USDC')
     setTo(s[1] ?? 'USDT')
     setQuote(null)
-    setDone(false)
   }, [activeChainId])
 
   function flip() {
     setFrom(to)
     setTo(from)
     setQuote(null)
-    setDone(false)
   }
 
   async function fetchQuote() {
     setError('')
     setLoading(true)
-    setDone(false)
     try {
+      if (connected) {
+        try {
+          await ensureActiveChain(activeChainId)
+        } catch {
+          /* quote still works off-chain */
+        }
+      }
       const q = await quoteSwap(from, to, amount)
       setQuote(q)
     } catch (err) {
@@ -49,32 +55,17 @@ export function Swap() {
     }
   }
 
-  function confirmSwap() {
-    if (!quote || !activeAccount) return
-    appendActivity(activeAccount.address, {
-      id: createActivityId(),
-      chainId: activeChainId,
-      hash: `0x${createActivityId().replace(/-/g, '')}`,
-      from: activeAccount.address,
-      to: activeAccount.address,
-      value: quote.amountOut,
-      symbol: quote.toSymbol,
-      timestamp: Date.now(),
-      status: 'confirmed',
-      kind: 'swap',
-    })
-    setDone(true)
-    setAmount('')
-    setQuote(null)
-  }
+  const stablePair = isMeshStable(from) && isMeshStable(to)
 
   return (
     <>
       <TopBar title="Trade" />
       <div className="page-container space-y-4">
-        <p className="text-xs text-nova-muted">Convert · 0.3% fee · Nova mesh stables</p>
+        <p className="text-xs text-nova-muted">
+          Indicative mesh quote · stables tradable on NovaONE / NRW / DeFi Oracle (138)
+          {activeAccount ? '' : ' · connect wallet to trade'}
+        </p>
 
-        {/* OKX-style stacked trade panels */}
         <div className="relative space-y-2">
           <div className="rounded-xl bg-nova-surface p-4">
             <div className="mb-3 flex items-center justify-between">
@@ -87,6 +78,7 @@ export function Swap() {
                 {symbols.map((s) => (
                   <option key={s} value={s}>
                     {s}
+                    {isMeshStable(s) ? ' · stable' : ''}
                   </option>
                 ))}
               </select>
@@ -120,6 +112,7 @@ export function Swap() {
                 {symbols.map((s) => (
                   <option key={s} value={s}>
                     {s}
+                    {isMeshStable(s) ? ' · stable' : ''}
                   </option>
                 ))}
               </select>
@@ -153,19 +146,23 @@ export function Swap() {
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-nova-muted">Provider</span>
-              <span className="text-nova-ink">{quote.provider}</span>
+              <span className="text-nova-muted">Status</span>
+              <span className="text-nova-ink">
+                {stablePair ? 'Stable pair · tradable' : 'Mesh pair · tradable'}
+              </span>
             </div>
-            <Button className="w-full" onClick={confirmSwap}>
-              Confirm trade
-            </Button>
+            <a
+              href={ECOSYSTEM_LINKS.novaSwap}
+              target="_blank"
+              rel="noreferrer"
+              className="flex w-full items-center justify-center rounded-xl bg-nova-accent px-4 py-3 text-sm font-semibold text-nova-bg"
+            >
+              Execute on Nova Swap →
+            </a>
+            <p className="text-center text-[11px] text-nova-muted">
+              Production settlement runs on Nova Bank Swap (no fake on-wallet confirms).
+            </p>
           </div>
-        ) : null}
-
-        {done ? (
-          <p className="animate-fade-up text-center text-sm text-nova-success">
-            Trade recorded in History.
-          </p>
         ) : null}
       </div>
     </>

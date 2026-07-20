@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { BRAND } from './brand.generated'
 import { CHAINS, getChain, primaryChains, defaultChainIds } from './chains'
-import { tokensForNovaOneAndNrw } from './ecosystemTokens'
+import { DBIS_CATALOG_SYMBOLS, tokensForMeshCatalog, tokensForNovaOneAndNrw } from './ecosystemTokens'
+import { DBIS_EXPLORER_BASES } from './explorerApi'
 
 /** Colors reserved for other products — Nova must not reuse them */
 const FORBIDDEN_PURPLES = ['#8B5CF6', '#A855F7', '#8247E5']
@@ -55,5 +56,23 @@ describe('chains', () => {
     expect(defs.some((t) => t.symbol === 'AnA')).toBe(true)
     expect(defs.some((t) => t.symbol === 'WAGAS')).toBe(true)
     expect(defs.length).toBeGreaterThan(10)
+  })
+
+  it('aligns DeFi Oracle 138 explorers with Blockscout hosts', () => {
+    const dbis = getChain(138)
+    expect(dbis?.nativeCurrency.symbol).toBe('ETH')
+    expect(dbis?.blockExplorerUrls[0]).toBe(DBIS_EXPLORER_BASES[0])
+    expect(dbis?.blockExplorerUrls).toEqual(expect.arrayContaining([...DBIS_EXPLORER_BASES]))
+    expect(dbis?.blockExplorerUrls.every((u) => !u.includes('etherscan.io'))).toBe(true)
+  })
+
+  it('mesh catalog includes every DBIS custody token', () => {
+    const defs = tokensForMeshCatalog().filter((t) => t.chainIds.includes(138))
+    for (const symbol of DBIS_CATALOG_SYMBOLS) {
+      expect(
+        defs.some((t) => t.symbol === symbol),
+        `missing ${symbol} on 138`,
+      ).toBe(true)
+    }
   })
 })

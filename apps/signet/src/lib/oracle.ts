@@ -20,7 +20,7 @@ export const ORACLE_USD: Record<string, number> = {
   AGAS: 0.01,
   WAGAS: 0.01,
   AnA: 1,
-  DFO: 0.5,
+  DFO: 1.2,
   ALL: 0.08,
   TRX: 0.24,
   SHIVA: 1,
