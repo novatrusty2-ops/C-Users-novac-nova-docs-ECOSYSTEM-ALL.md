@@ -166,7 +166,7 @@ export const NOVA_PLUS_SNAPSHOT: NovaPlusTokenSnap[] = [
   },
   {
     "symbol": "CNY",
-    "name": "Sudanese Pound",
+    "name": "Chinese Yuan",
     "decimals": 2,
     "assetClass": "fiat",
     "chainIds": [
