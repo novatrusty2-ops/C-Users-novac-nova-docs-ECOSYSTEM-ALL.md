@@ -93,7 +93,7 @@ export const WALLET_CATALOG: WalletOption[] = [
   {
     id: 'walletconnect',
     name: 'WalletConnect',
-    subtitle: 'Scan with mobile wallets',
+    subtitle: 'Use MetaMask / Trust / SafePal / Gate (injected) in production',
     accent: '#3B99FC',
     installUrl: 'https://walletconnect.com/',
   },

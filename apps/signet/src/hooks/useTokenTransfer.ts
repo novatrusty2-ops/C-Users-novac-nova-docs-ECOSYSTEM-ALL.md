@@ -7,8 +7,9 @@ import {
   toTransactionRequest,
   validateTransferAmount,
 } from '@/lib/transfer'
-import { getSigner } from '@/lib/keystore'
+import { getSigner, isUnlocked } from '@/lib/keystore'
 import { useWallet } from '@/context/WalletContext'
+import { useWeb3 } from '@/context/Web3Context'
 import { useToast } from '@/context/ToastContext'
 
 export interface TransferParams {
@@ -20,6 +21,7 @@ export interface TransferParams {
 
 export function useTokenTransfer() {
   const { activeAccount, activeChain, activeChainId } = useWallet()
+  const { connected, ensureActiveChain, getInjectedSigner } = useWeb3()
   const { push } = useToast()
   const [pending, setPending] = useState(false)
 
@@ -31,9 +33,21 @@ export function useTokenTransfer() {
 
       setPending(true)
       try {
-        const signer = getSigner(activeAccount.derivationIndex ?? 0)
-        const provider = new JsonRpcProvider(rpc, activeChainId)
-        const connected = signer.connect(provider)
+        if (connected) {
+          await ensureActiveChain(activeChainId)
+        }
+
+        const injected = connected ? await getInjectedSigner() : null
+        let sender
+        if (injected) {
+          sender = injected
+        } else if (isUnlocked()) {
+          const provider = new JsonRpcProvider(rpc, activeChainId)
+          sender = getSigner(activeAccount.derivationIndex ?? 0).connect(provider)
+        } else {
+          throw new Error('Connect a Web3 wallet or unlock Signet to send')
+        }
+
         const valueWei = validateTransferAmount(amount, decimals)
 
         let txReq
@@ -46,7 +60,7 @@ export function useTokenTransfer() {
           )
         }
 
-        const tx = await connected.sendTransaction(txReq)
+        const tx = await sender.sendTransaction(txReq)
         push(`Transaction sent: ${tx.hash.slice(0, 10)}…`, 'success')
         return tx
       } catch (err) {
@@ -57,7 +71,15 @@ export function useTokenTransfer() {
         setPending(false)
       }
     },
-    [activeAccount, activeChain, activeChainId, push],
+    [
+      activeAccount,
+      activeChain,
+      activeChainId,
+      connected,
+      ensureActiveChain,
+      getInjectedSigner,
+      push,
+    ],
   )
 
   const estimateGas = useCallback(

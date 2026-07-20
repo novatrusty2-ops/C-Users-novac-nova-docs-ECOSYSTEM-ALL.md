@@ -1,6 +1,7 @@
 import { BrowserProvider } from 'ethers'
 import type { Eip1193Provider, KnownWalletId } from './types'
 import { WALLET_CATALOG } from './catalog'
+import { ensureWalletChain } from './ensureChain'
 
 const STORAGE_KEY = 'nova.web3.session.v1'
 
@@ -10,6 +11,8 @@ export interface Web3Session {
   walletId: KnownWalletId
   walletName: string
 }
+
+export { ensureWalletChain, toHexChainId, toWalletAddEthereumChainParam } from './ensureChain'
 
 export function loadWeb3Session(): Web3Session | null {
   try {
@@ -41,11 +44,23 @@ export async function connectInjected(opts: {
   provider: Eip1193Provider
   walletId: KnownWalletId
   walletName: string
+  /** Prefer switching wallet onto this chain after connect (e.g. 138 / 22016) */
+  preferChainId?: number
 }): Promise<{ session: Web3Session; provider: Eip1193Provider; browser: BrowserProvider }> {
   const accounts = await requestAccounts(opts.provider)
-  const chainId = await readChainId(opts.provider)
+  let chainId = await readChainId(opts.provider)
+
+  if (opts.preferChainId != null && opts.preferChainId !== chainId) {
+    try {
+      chainId = await ensureWalletChain(opts.provider, opts.preferChainId)
+      chainId = await readChainId(opts.provider)
+    } catch {
+      // Connected on current chain — UI can prompt switch later
+    }
+  }
+
   const session: Web3Session = {
-    address: accounts[0],
+    address: accounts[0]!,
     chainId,
     walletId: opts.walletId,
     walletName: opts.walletName,
@@ -53,6 +68,35 @@ export async function connectInjected(opts: {
   saveWeb3Session(session)
   const browser = new BrowserProvider(opts.provider)
   return { session, provider: opts.provider, browser }
+}
+
+/** Soft-restore provider after reload via eth_accounts (no popup when already authorized) */
+export async function restoreInjectedSession(opts: {
+  provider: Eip1193Provider
+  walletId: KnownWalletId
+  walletName: string
+  expectedAddress?: string
+}): Promise<{ session: Web3Session; provider: Eip1193Provider } | null> {
+  try {
+    const accounts = (await opts.provider.request({ method: 'eth_accounts' })) as string[]
+    if (!accounts?.length) return null
+    const address =
+      opts.expectedAddress &&
+      accounts.some((a) => a.toLowerCase() === opts.expectedAddress!.toLowerCase())
+        ? opts.expectedAddress
+        : accounts[0]!
+    const chainId = await readChainId(opts.provider)
+    const session: Web3Session = {
+      address,
+      chainId,
+      walletId: opts.walletId,
+      walletName: opts.walletName,
+    }
+    saveWeb3Session(session)
+    return { session, provider: opts.provider }
+  } catch {
+    return null
+  }
 }
 
 export async function tryWalletConnect(): Promise<never> {

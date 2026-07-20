@@ -20,9 +20,9 @@ export const PARTNERS: PartnerWallet[] = [
     url: 'https://play.google.com/store/apps/details?id=global.alltra.app',
     secondaryUrl: 'https://alltra.global/',
     accent: '#E8D48B',
-    sharedChains: [651940, 22016, 33001],
+    sharedChains: [651940, 22016, 33001, 138],
     notes:
-      'PouchPay-Alltra is the ALLTRA ecosystem wallet. Enable Alltra Global World (651940) in Nova Networks, then use the same EVM address for PouchPay deposits when supported.',
+      'PouchPay-Alltra is the ALLTRA ecosystem wallet. Enable Alltra Global World (651940) and DeFi Oracle (138) in Nova Networks, then use the same EVM address for PouchPay / custody deposits when supported.',
   },
 ]
 

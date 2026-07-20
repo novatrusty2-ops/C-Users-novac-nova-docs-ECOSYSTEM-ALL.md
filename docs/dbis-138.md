@@ -71,6 +71,19 @@ node scripts/verify-ecosystem.mjs
 `productionUrls.dbisExplorer` / `dbisExplorerApi`, and **ensures** every required
 symbol keeps `dbis-138` in `tradableTokens[].networks` with ref USD prices preserved.
 
+## Web3 connect (production)
+
+Nova Wallet + Signet call EIP-3326 / EIP-3085 on connect and network switch:
+
+```
+wallet_switchEthereumChain { chainId: "0x8a" }
+wallet_addEthereumChain { chainId: "0x8a", chainName: "DeFi Oracle", … }
+```
+
+Injected wallets (MetaMask, Trust, SafePal, Gate, …) sign Send via `BrowserProvider`.
+Stables are **tradable / transferable / swappable** in `ECOSYSTEM.json` and the wallet catalog;
+ERC-20 sends require a discovered or registered contract address.
+
 ## Integration
 
 - Nova Bank `onex-wallet.service` — deposit sync

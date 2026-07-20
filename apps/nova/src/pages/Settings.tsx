@@ -49,7 +49,7 @@ export function Settings() {
   const { push } = useToast()
   const { lockWallet, wipeWallet, switchChain, activeChainId, refreshBalances, activeAccount } =
     useWallet()
-  const { connected, session, shortAddress } = useWeb3()
+  const { connected, session, shortAddress, switchWalletChain } = useWeb3()
   const { currency, hideBalances, updateCurrency, updateHideBalances } = useDisplaySettings()
 
   const [enabled, setEnabled] = useState(() => getEnabledChainIds())
@@ -57,10 +57,19 @@ export function Settings() {
   const [confirmWipe, setConfirmWipe] = useState(false)
   const [imported, setImported] = useState(() => loadUserTokens().length)
 
-  function handleToggleChain(id: number) {
+  async function handleToggleChain(id: number) {
     const next = toggleChain(id)
     setEnabled(next)
-    if (next.includes(id)) switchChain(id)
+    if (!next.includes(id)) return
+    if (connected) {
+      try {
+        await switchWalletChain(id)
+      } catch {
+        switchChain(id)
+      }
+    } else {
+      switchChain(id)
+    }
   }
 
   function handleAutolock(m: AutolockMinutes) {
@@ -159,20 +168,38 @@ export function Settings() {
           </p>
           {mesh.map((chain) => (
             <Row key={chain.id} label={chain.name}>
-              <input
-                type="checkbox"
-                checked={enabled.includes(chain.id)}
-                onChange={() => handleToggleChain(chain.id)}
-              />
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className={`text-xs ${activeChainId === chain.id ? 'text-nova-accent' : 'text-nova-muted'}`}
+                  onClick={() => void (connected ? switchWalletChain(chain.id) : switchChain(chain.id))}
+                >
+                  {activeChainId === chain.id ? 'Active' : 'Use'}
+                </button>
+                <input
+                  type="checkbox"
+                  checked={enabled.includes(chain.id)}
+                  onChange={() => void handleToggleChain(chain.id)}
+                />
+              </div>
             </Row>
           ))}
           {optional.map((chain) => (
             <Row key={chain.id} label={`${chain.name} (opt)`}>
-              <input
-                type="checkbox"
-                checked={enabled.includes(chain.id)}
-                onChange={() => handleToggleChain(chain.id)}
-              />
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className={`text-xs ${activeChainId === chain.id ? 'text-nova-accent' : 'text-nova-muted'}`}
+                  onClick={() => void (connected ? switchWalletChain(chain.id) : switchChain(chain.id))}
+                >
+                  {activeChainId === chain.id ? 'Active' : 'Use'}
+                </button>
+                <input
+                  type="checkbox"
+                  checked={enabled.includes(chain.id)}
+                  onChange={() => void handleToggleChain(chain.id)}
+                />
+              </div>
             </Row>
           ))}
           <Row label="Active chain ID">{activeChainId}</Row>

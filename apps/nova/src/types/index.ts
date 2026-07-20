@@ -21,6 +21,10 @@ export interface ChainToken {
   standard: 'native' | 'erc20'
   usd?: number
   coingeckoId?: string
+  /** Production ECOSYSTEM / mesh flags */
+  tradable?: boolean
+  transferable?: boolean
+  swappable?: boolean
 }
 
 export interface ChainDefinition {

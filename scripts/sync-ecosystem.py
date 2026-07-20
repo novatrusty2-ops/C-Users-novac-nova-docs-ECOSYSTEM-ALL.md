@@ -236,8 +236,8 @@ def ensure_dbis_token_coverage(tokens: list[dict]) -> list[dict]:
             }
             by_symbol[sym] = token
         token["networks"] = dedupe([*token.get("networks", []), "dbis-138"])
-        if sym == "ETH":
-            token["chains"] = dedupe([*token.get("chains", []), "dbis-138"])
+        # Keep stables + ETH tradable/transferable on custody chain 138
+        token["chains"] = dedupe([*token.get("chains", []), "dbis-138"])
         token["tradable"] = True
         token["swappable"] = True
         token["transferable"] = True

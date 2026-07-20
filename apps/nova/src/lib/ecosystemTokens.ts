@@ -177,6 +177,7 @@ export function tokensForMeshCatalog(): EcosystemTokenDef[] {
 }
 
 export function toChainToken(def: EcosystemTokenDef): ChainToken {
+  const onMesh = def.chainIds.some((id) => id === 22016 || id === 33001 || id === 138)
   return {
     symbol: def.symbol,
     name: def.name,
@@ -185,5 +186,8 @@ export function toChainToken(def: EcosystemTokenDef): ChainToken {
     standard: def.address ? 'erc20' : def.standard === 'native' ? 'native' : 'erc20',
     usd: def.usd,
     coingeckoId: def.coingeckoId,
+    tradable: onMesh,
+    transferable: onMesh,
+    swappable: onMesh,
   }
 }
