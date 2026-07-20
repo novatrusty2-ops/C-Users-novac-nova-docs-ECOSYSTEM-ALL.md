@@ -185,11 +185,13 @@ def apply_malta_emi(eco: dict, status: dict) -> None:
                 "sandbox": "https://sandbox.openpayd.com",
                 "setup": "docs/OPENPAYD-NOVA-BANK-MALTA-SETUP.md",
                 "handoff": "docs/OPENPAYD-MALTA-EMI-HANDOFF.md",
+                "nestjsPatch": "patches/nova-bank-api/openpayd-emi",
             },
             "envTemplate": ".env.example",
             "implementationRepo": (
-                "Nova Bank NestJS API (Railway) — not this ecosystem/wallet repo"
+                "Nova Bank NestJS API (Railway) — drop-in patch in this repo"
             ),
+            "nestjsPatch": "patches/nova-bank-api/openpayd-emi",
             "secretsInThisRepo": False,
         },
     )
