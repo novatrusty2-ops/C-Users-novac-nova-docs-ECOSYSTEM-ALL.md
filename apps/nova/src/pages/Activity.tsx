@@ -89,7 +89,7 @@ export function Activity() {
             {items.map((item) => {
               const chain = getChain(item.chainId)
               const txUrl = explorerTxUrl(item.chainId, item.hash)
-              const isOut = item.kind === 'send' || item.kind === 'swap'
+              const isOut = item.kind === 'send' || item.kind === 'swap' || item.kind === 'withdraw'
               return (
                 <li key={item.id} className="flex items-center gap-3 py-3.5">
                   <span
@@ -99,7 +99,7 @@ export function Activity() {
                         : 'bg-nova-surface-raised text-nova-accent'
                     }`}
                   >
-                    {item.kind === 'swap' ? '⇄' : isOut ? '↑' : '↓'}
+                    {item.kind === 'swap' ? '⇄' : item.kind === 'withdraw' ? '↗' : isOut ? '↑' : '↓'}
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] font-semibold capitalize text-nova-ink">

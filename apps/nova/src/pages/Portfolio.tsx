@@ -6,6 +6,7 @@ import { IconEye } from '@/components/layout/icons'
 import { TopBar } from '@/components/layout/TopBar'
 import { TokenRow } from '@/components/tokens/TokenRow'
 import { QuickActions } from '@/components/wallet/QuickActions'
+import { PortfolioChart } from '@/components/wallet/PortfolioChart'
 import { useWallet } from '@/context/WalletContext'
 import { useToast } from '@/context/ToastContext'
 import { useTokenBalances } from '@/hooks/useTokenBalances'
@@ -93,9 +94,26 @@ export function Portfolio() {
               {activeAccount.address}
             </p>
           ) : null}
+          <div className="mt-4">
+            <PortfolioChart totalUsd={totalUsd} hideBalances={hideBalances} />
+          </div>
         </section>
 
         <QuickActions />
+        <div className="flex gap-2">
+          <Link
+            to={ROUTES.withdraw}
+            className="flex-1 rounded-xl bg-nova-surface px-3 py-2.5 text-center text-xs font-semibold text-nova-accent"
+          >
+            External withdraw
+          </Link>
+          <Link
+            to={ROUTES.swap}
+            className="flex-1 rounded-xl bg-nova-surface px-3 py-2.5 text-center text-xs font-semibold text-nova-ink"
+          >
+            Trade stables
+          </Link>
+        </div>
 
         {/* Markets strip — Nova Bank dashboard cue */}
         <a
@@ -127,7 +145,7 @@ export function Portfolio() {
               data-active={tab === 'mesh'}
               onClick={() => setTab('mesh')}
             >
-              NovaONE · NRW
+              Mesh · 138
             </button>
           </div>
 

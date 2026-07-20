@@ -82,7 +82,7 @@ export interface ActivityItem {
   symbol: string
   timestamp: number
   status: 'pending' | 'confirmed' | 'failed'
-  kind: 'send' | 'receive' | 'swap'
+  kind: 'send' | 'receive' | 'swap' | 'withdraw'
 }
 
 export type AutolockMinutes = 1 | 5 | 15 | 30 | 0

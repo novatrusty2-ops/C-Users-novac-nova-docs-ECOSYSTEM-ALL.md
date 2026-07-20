@@ -71,6 +71,13 @@ node scripts/verify-ecosystem.mjs
 `productionUrls.dbisExplorer` / `dbisExplorerApi`, and **ensures** every required
 symbol keeps `dbis-138` in `tradableTokens[].networks` with ref USD prices preserved.
 
+## External withdraw + charts
+
+- Nova Wallet **Withdraw** (`/withdraw`) sends tradable/transferable stables (USDC/USDT/…)
+  and ETH to external EVM addresses on DeFi Oracle (138), NovaONE, NRW, Ethereum, or BSC.
+- Production signing uses injected Web3 or unlocked keystore; Activity records `kind: withdraw`.
+- Token + portfolio charts: `apps/nova/src/lib/charts.ts` (mesh mid + liquidity volume).
+
 ## Web3 connect (production)
 
 Nova Wallet + Signet call EIP-3326 / EIP-3085 on connect and network switch:
