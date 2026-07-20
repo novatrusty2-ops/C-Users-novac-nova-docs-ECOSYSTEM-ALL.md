@@ -20,7 +20,8 @@
     "verify:ecosystem": "node scripts/verify-ecosystem.mjs",
     "verify:openpayd": "python3 scripts/verify-openpayd-malta.py",
     "verify:openpayd:live": "python3 scripts/verify-openpayd-malta.py --live",
-    "test:openpayd": "npm test --prefix patches/nova-bank-api/openpayd-emi"
+    "test:openpayd": "npm test --prefix patches/nova-bank-api/openpayd-emi",
+    "install:openpayd": "bash scripts/install-openpayd-emi.sh"
   },
   "engines": {
     "node": ">=20"

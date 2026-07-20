@@ -99,13 +99,21 @@ The NestJS Nova Bank application is **not** checked out here. A drop-in module f
 | Install README | [`patches/nova-bank-api/openpayd-emi/README.md`](../patches/nova-bank-api/openpayd-emi/README.md) |
 
 ```bash
-# Into nova monorepo NestJS API
+# Automatic copy + app.module wiring (requires local NestJS API checkout)
+NOVA_API_ROOT=/path/to/nova/apps/api bash scripts/install-openpayd-emi.sh
+```
+
+Manual equivalent:
+
+```bash
 mkdir -p apps/api/src/openpayd
 cp -R patches/nova-bank-api/openpayd-emi/src/* /path/to/nova/apps/api/src/openpayd/
 # then OpenPaydModule.register() in app.module.ts — see patch README
 ```
 
-Use the credentials + wiring checklist below on Railway after copying the patch.
+**Cannot be fully automatic from this repo alone:** Railway deploy + OpenPayd portal secrets require the NestJS API repository path/URL and credentials that are not in git.
+
+Use the credentials + wiring checklist below on Railway after the install script runs.
 
 ### 3.1 Official OpenPayd API surface
 
