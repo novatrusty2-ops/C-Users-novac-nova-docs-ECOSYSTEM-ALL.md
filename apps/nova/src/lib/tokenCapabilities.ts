@@ -4,6 +4,13 @@ import { isStablecoin } from './prices'
 /** Mesh chain ids with production tradable / transferable custody coverage */
 export const MESH_TRADE_CHAIN_IDS = new Set([22016, 33001, 138, 9001, 11013, 651940])
 
+/** Chains where stables stay swappable / transferable (mesh + public withdraw rails) */
+export const STABLE_TRADE_CHAIN_IDS = new Set([
+  ...MESH_TRADE_CHAIN_IDS,
+  1, // Ethereum
+  56, // BNB Smart Chain
+])
+
 /** Stable symbols expected tradable + transferable on mesh / DBIS 138 */
 export const MESH_STABLE_SYMBOLS = new Set([
   'USDC',
@@ -35,13 +42,17 @@ export function defaultTokenFlags(
   }
 
   const onMesh = MESH_TRADE_CHAIN_IDS.has(chainId)
+  const stableRail = STABLE_TRADE_CHAIN_IDS.has(chainId)
   const stable = isMeshStable(token.symbol)
   const isNative = token.standard === 'native'
 
   return {
-    tradable: token.tradable ?? onMesh,
-    transferable: token.transferable ?? (onMesh && (isNative || !!token.address || stable)),
-    swappable: token.swappable ?? (onMesh && (stable || isNative || onMesh)),
+    // Stables always tradable/swappable on mesh + ETH/BSC rails
+    tradable: token.tradable ?? (onMesh || (stable && stableRail)),
+    transferable:
+      token.transferable ??
+      ((onMesh || (stable && stableRail)) && (isNative || !!token.address || stable)),
+    swappable: token.swappable ?? (onMesh || (stable && stableRail) || isNative),
   }
 }
 

@@ -188,6 +188,11 @@ async function fetchChainBalances(
       volume24hUsd: liq?.volume24hUsd ?? null,
       pair: liq?.pair ?? null,
       priceSource: liq?.priceSource ?? null,
+      liquidityMode: liq?.mode ?? null,
+      sentimentLabel: liq?.sentiment.label ?? null,
+      sentimentScore: liq?.sentiment.score ?? null,
+      swappable: liq?.swappable ?? null,
+      transferable: liq?.transferable ?? null,
     })
   }
   return rows

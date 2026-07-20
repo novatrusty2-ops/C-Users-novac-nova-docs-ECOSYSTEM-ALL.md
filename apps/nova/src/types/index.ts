@@ -62,7 +62,14 @@ export interface TokenBalanceRow {
   volume24hUsd?: number | null
   /** Trading pair label e.g. NOVA/USDC */
   pair?: string | null
-  priceSource?: 'peg' | 'coingecko' | 'oracle' | 'mesh' | null
+  priceSource?: 'peg' | 'coingecko' | 'oracle' | 'mesh' | 'sentiment' | null
+  /** mesh curated book vs sentiment synthetic depth */
+  liquidityMode?: 'mesh' | 'sentiment' | null
+  /** Market sentiment label from depth/volume */
+  sentimentLabel?: 'strong' | 'steady' | 'thin' | 'weak' | null
+  sentimentScore?: number | null
+  swappable?: boolean | null
+  transferable?: boolean | null
 }
 
 export type DisplayCurrency = 'USD' | 'EUR' | 'GBP'

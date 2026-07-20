@@ -87,6 +87,9 @@ export function Portfolio() {
             <span>
               {listRows.length} assets
               {!hideBalances && totalUsd > 0 ? ' · spot' : ''}
+              {focusRows.some((r) => r.liquidityMode === 'sentiment')
+                ? ' · sentiment depth'
+                : ''}
             </span>
           </div>
           {activeAccount ? (
