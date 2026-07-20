@@ -17,7 +17,9 @@
     "fetch-api": "bash scripts/fetch-api.sh",
     "sync": "python3 scripts/sync-ecosystem.py",
     "sync:ecosystem": "bash scripts/fetch-api.sh && python3 scripts/sync-ecosystem.py",
-    "verify:ecosystem": "node scripts/verify-ecosystem.mjs"
+    "verify:ecosystem": "node scripts/verify-ecosystem.mjs",
+    "verify:openpayd": "python3 scripts/verify-openpayd-malta.py",
+    "verify:openpayd:live": "python3 scripts/verify-openpayd-malta.py --live"
   },
   "engines": {
     "node": ">=20"
