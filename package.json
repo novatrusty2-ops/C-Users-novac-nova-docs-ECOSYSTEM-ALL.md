@@ -25,7 +25,8 @@
     "swap:usdt-bnb:70k": "SWAP_AMOUNT=70000 node scripts/live-swap-usdt-bnb.mjs",
     "settle:usdt-trc20": "node scripts/live-settle-usdt-trc20.mjs",
     "settle:usdt-trc20:70k": "SWAP_AMOUNT=70000 node scripts/live-settle-usdt-trc20.mjs",
-    "withdraw:eth-onex": "node scripts/live-withdraw-eth-onex.mjs"
+    "withdraw:eth-onex": "node scripts/live-withdraw-eth-onex.mjs",
+    "verify:custody": "node scripts/verify-custody-creds.mjs"
   },
   "engines": {
     "node": ">=20"
