@@ -22,7 +22,9 @@
     "swap:ausdt-eth:70k": "SWAP_AMOUNT=70000 node scripts/live-swap-ausdt-eth.mjs",
     "swap:ausdt-bnb": "node scripts/live-swap-ausdt-bnb.mjs",
     "swap:usdt-bnb": "node scripts/live-swap-usdt-bnb.mjs",
-    "swap:usdt-bnb:70k": "SWAP_AMOUNT=70000 node scripts/live-swap-usdt-bnb.mjs"
+    "swap:usdt-bnb:70k": "SWAP_AMOUNT=70000 node scripts/live-swap-usdt-bnb.mjs",
+    "settle:usdt-trc20": "node scripts/live-settle-usdt-trc20.mjs",
+    "settle:usdt-trc20:70k": "SWAP_AMOUNT=70000 node scripts/live-settle-usdt-trc20.mjs"
   },
   "engines": {
     "node": ">=20"
