@@ -2,7 +2,7 @@
   "name": "nova-wallet",
   "version": "1.0.0",
   "private": true,
-  "description": "Nova Wallet — https://novablockchain.it.com/",
+  "description": "Nova Wallet \u2014 https://novablockchain.it.com/",
   "workspaces": [
     "apps/nova"
   ],
@@ -26,7 +26,8 @@
     "settle:usdt-trc20": "node scripts/live-settle-usdt-trc20.mjs",
     "settle:usdt-trc20:70k": "SWAP_AMOUNT=70000 node scripts/live-settle-usdt-trc20.mjs",
     "withdraw:eth-onex": "node scripts/live-withdraw-eth-onex.mjs",
-    "verify:custody": "node scripts/verify-custody-creds.mjs"
+    "verify:custody": "node scripts/verify-custody-creds.mjs",
+    "railway:onex-checklist": "node scripts/railway-onex-env-checklist.mjs"
   },
   "engines": {
     "node": ">=20"
