@@ -30,6 +30,16 @@ describe('swap', () => {
     expect(Number(q.feeAmount)).toBeCloseTo(0.3, 5)
   })
 
+  it('quotes AUSDT to ETH via oracle (wallet Trade path)', async () => {
+    const q = await quoteSwap('AUSDT', 'ETH', '100')
+    expect(q.fromSymbol).toBe('AUSDT')
+    expect(q.toSymbol).toBe('ETH')
+    expect(Number(q.amountOut)).toBeGreaterThan(0)
+    expect(q.feeBps).toBe(30)
+    // AUSDT ~$1, ETH ≫ $1 → out should be well under 1 ETH for 100 AUSDT
+    expect(Number(q.amountOut)).toBeLessThan(1)
+  })
+
   it('throws when price unavailable', async () => {
     await expect(quoteSwap('UNKNOWN', 'USDC', '10')).rejects.toThrow(/price unavailable/i)
   })
