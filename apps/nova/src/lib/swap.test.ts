@@ -50,6 +50,15 @@ describe('swap', () => {
     expect(Number(q.amountOut)).toBeLessThan(1)
   })
 
+  it('quotes USDT to BNB via oracle (wallet Trade path)', async () => {
+    const q = await quoteSwap('USDT', 'BNB', '100')
+    expect(q.fromSymbol).toBe('USDT')
+    expect(q.toSymbol).toBe('BNB')
+    expect(Number(q.amountOut)).toBeGreaterThan(0)
+    expect(q.feeBps).toBe(30)
+    expect(Number(q.amountOut)).toBeLessThan(1)
+  })
+
   it('throws when price unavailable', async () => {
     await expect(quoteSwap('UNKNOWN', 'USDC', '10')).rejects.toThrow(/price unavailable/i)
   })
