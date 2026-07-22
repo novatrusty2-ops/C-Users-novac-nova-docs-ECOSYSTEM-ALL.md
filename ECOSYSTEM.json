@@ -167,6 +167,13 @@
     },
     "advertisedHostNote": "Live status/manifest still advertise novabank.uk submit/callback/send URLs; sandboxUiUrl is Railway",
     "guidePath": "docs/novapay-sandbox-live-links.md",
+    "onboardingGuidePath": "docs/novapay-onboarding.md",
+    "onboardingPackPath": "novapay/nova-onboarding-pack.json",
+    "formPayloadPath": "novapay/form-payload.json",
+    "draftsPath": "novapay/drafts",
+    "awaitingProviderPath": "novapay/AWAITING-PROVIDER.md",
+    "inviteStatus": "awaiting_provider",
+    "callbackUrlConvention": "https://nova-bank-api-production-7311.up.railway.app/api/v1/webhooks/novapay",
     "statusAsOf": "2026-07-22",
     "probeNotes": "status enabled; receive accepted NOVA-PAY-SANDBOX-…; send loopback completed; events=3"
   },

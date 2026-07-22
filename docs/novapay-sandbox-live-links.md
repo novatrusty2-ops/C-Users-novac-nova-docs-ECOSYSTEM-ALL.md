@@ -79,3 +79,15 @@ Exercises Railway sandbox: `status` → `manifest` → `receive` → `send` → 
 
 - `POST /receive` accepts the manifest payout sample (beneficiary fields allowed).
 - `POST /send` is loopback outbound — send `{ amount, currency, reference, transactionType }` only (no beneficiary fields).
+
+## Step 2 — client onboarding pack
+
+External NovaPay provider invite is **not issued yet**. Pre-filled pack + drafts:
+
+- Guide: [`docs/novapay-onboarding.md`](novapay-onboarding.md)
+- Pack: [`novapay/nova-onboarding-pack.json`](../novapay/nova-onboarding-pack.json)
+- Status: [`novapay/AWAITING-PROVIDER.md`](../novapay/AWAITING-PROVIDER.md)
+
+```bash
+npm run check:novapay-onboarding
+```
