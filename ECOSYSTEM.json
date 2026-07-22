@@ -181,6 +181,16 @@
     "awaitingProviderPath": "novapay/AWAITING-PROVIDER.md",
     "inviteStatus": "awaiting_provider",
     "callbackUrlConvention": "https://nova-bank-api-production-7311.up.railway.app/api/v1/webhooks/novapay",
+    "settlement": {
+      "accountHolder": "TOTAL DESIGN S.R.L.",
+      "iban": "LT163250079884101461",
+      "bic": "REVOLT21",
+      "intermediaryBic": "CHASGB2L",
+      "currency": "EUR",
+      "bank": "Revolut Bank UAB",
+      "role": "NovaPay sandbox / ops beneficiary + onboarding settlement reference",
+      "configuredAt": "2026-07-22"
+    },
     "statusAsOf": "2026-07-22",
     "probeNotes": "status enabled; receive accepted NOVA-PAY-SANDBOX-…; send loopback completed; events=3"
   },

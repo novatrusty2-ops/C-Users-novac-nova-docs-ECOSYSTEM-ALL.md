@@ -57,6 +57,17 @@ npm run check:novapay-onboarding
 - `nrwTestnetOnly`: true  
 - Banking provider (integration surface): sandbox (`realMoney`: false)
 
+## Settlement account (configured)
+
+See [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md).
+
+| Field | Value |
+|-------|--------|
+| Account holder | TOTAL DESIGN S.R.L. |
+| IBAN | LT163250079884101461 |
+| BIC | REVOLT21 |
+| Intermediary BIC | CHASGB2L |
+
 ## Still required from your side (not in public API)
 
 1. External NovaPay provider invite  
@@ -64,7 +75,7 @@ npm run check:novapay-onboarding
 3. Incorporation date as on the certificate  
 4. Authorized representative identity + passport scan  
 5. Company registration PDFs  
-6. Bank account ownership proof (settlement IBAN)  
+6. Bank account ownership proof PDF for the IBAN above  
 7. Sign the draft SOF / compliance cover (or replace with counsel-approved PDFs)  
 
 ## How to finish after invite

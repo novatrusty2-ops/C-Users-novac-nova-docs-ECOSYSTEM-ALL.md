@@ -28,9 +28,10 @@ export default function App() {
   const [receiveAmount, setReceiveAmount] = useState('10000.00')
   const [receiveCurrency, setReceiveCurrency] = useState('EUR')
   const [receiveRef, setReceiveRef] = useState(`NOVA-NOVAPAY-PORTAL-${stamp()}`)
-  const [beneficiaryName, setBeneficiaryName] = useState('Sandbox Beneficiary')
-  const [beneficiaryIban, setBeneficiaryIban] = useState('LT823250062405612558')
+  const [beneficiaryName, setBeneficiaryName] = useState('TOTAL DESIGN S.R.L.')
+  const [beneficiaryIban, setBeneficiaryIban] = useState('LT163250079884101461')
   const [beneficiarySwift, setBeneficiarySwift] = useState('REVOLT21')
+  const [intermediaryBic] = useState('CHASGB2L')
 
   const [sendAmount, setSendAmount] = useState('1000.00')
   const [sendCurrency, setSendCurrency] = useState('EUR')
@@ -45,12 +46,7 @@ export default function App() {
       setStatus(st.data)
       if (mf.ok) {
         setManifest(mf.data)
-        const sample = mf.data.payloadSample || {}
-        if (typeof sample.amount === 'string') setReceiveAmount(sample.amount)
-        if (typeof sample.currency === 'string') setReceiveCurrency(sample.currency)
-        if (typeof sample.beneficiaryName === 'string') setBeneficiaryName(sample.beneficiaryName)
-        if (typeof sample.beneficiaryIban === 'string') setBeneficiaryIban(sample.beneficiaryIban)
-        if (typeof sample.beneficiarySwift === 'string') setBeneficiarySwift(sample.beneficiarySwift)
+        // Keep TOTAL DESIGN S.R.L. settlement defaults; do not overwrite from API sample IBAN.
       }
       if (ev.ok) setEvents(normalizeEvents(ev.data).slice(0, 25))
     } catch (err) {
@@ -197,6 +193,10 @@ export default function App() {
             <label>
               Beneficiary SWIFT
               <input value={beneficiarySwift} onChange={(e) => setBeneficiarySwift(e.target.value)} required />
+            </label>
+            <label>
+              Intermediary BIC
+              <input value={intermediaryBic} readOnly />
             </label>
             <div className="actions">
               <button type="submit" disabled={busy !== null}>

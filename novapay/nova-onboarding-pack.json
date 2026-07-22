@@ -63,9 +63,12 @@
     "sanctionsExposureNotes": "Nova Bank Online runs KYC/AML/CFT program (public docs slug kyc). Sanctions screening is part of the platform compliance posture; no intentional sanctions exposure.",
     "bankRegion": "EUROPE",
     "accountJurisdiction": "Malta",
-    "bankName": "OpenPayd (EMI partner on Nova API) / Other \u2014 confirm settlement account with compliance",
-    "settlementIban": null,
-    "settlementBic": null
+    "bankName": "Revolut Bank UAB (REVOLT21) \u2014 TOTAL DESIGN S.R.L.",
+    "settlementAccountHolder": "TOTAL DESIGN S.R.L.",
+    "settlementIban": "LT163250079884101461",
+    "settlementBic": "REVOLT21",
+    "intermediaryBic": "CHASGB2L",
+    "intermediaryBicNote": "Bic banca intermedia (Chase UK) for Revolut EUR rails"
   },
   "documentsExpected": [
     {
@@ -108,7 +111,7 @@
     "Company registration number and registered address (Nova Bank Malta Ltd)",
     "Authorized representative legal identity + passport scan",
     "Company registration documents PDF",
-    "Bank account ownership proof for the settlement account",
+    "Bank account ownership proof PDF for TOTAL DESIGN S.R.L. IBAN LT163250079884101461",
     "Signed source-of-funds declaration"
   ],
   "productionUrls": {
