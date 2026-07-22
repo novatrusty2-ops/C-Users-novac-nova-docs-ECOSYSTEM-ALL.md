@@ -8,16 +8,14 @@ Partner sandbox on Railway `nova-bank-api` (`nova-bank-api-production-7311`). De
 
 Live `status` returns `enabled=true`, `configured=true`, and sets `sandboxUiUrl` to the Railway URL above.
 
-## Settlement account (TOTAL DESIGN S.R.L.)
+## Settlement accounts
 
-| Field | Value |
-|-------|--------|
-| Holder | TOTAL DESIGN S.R.L. |
-| IBAN | LT163250079884101461 |
-| BIC | REVOLT21 |
-| Intermediary BIC | CHASGB2L |
+| Currency | Holder | IBAN | BIC | Notes |
+|----------|--------|------|-----|--------|
+| EUR | TOTAL DESIGN S.R.L. | LT163250079884101461 | REVOLT21 | Intermediary CHASGB2L |
+| USD | GLOBAL LUXURY SRLS | BE18905804591765 | TRWIBEB1XXX | Wise · Rue du Trône 100, Brussels |
 
-Details: [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md). Portal receive form defaults to this account.
+Details: [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md). Portal has an account picker for both.
 
 ## Portal (own dashboard)
 

@@ -11,6 +11,7 @@ import {
   postSend,
   sandboxBase,
 } from './api'
+import { SETTLEMENT_ACCOUNTS, accountById } from './accounts'
 
 function stamp() {
   return Date.now().toString(36)
@@ -25,17 +26,31 @@ export default function App() {
   const [message, setMessage] = useState<string>('')
   const [error, setError] = useState<string>('')
 
+  const [accountId, setAccountId] = useState(SETTLEMENT_ACCOUNTS[0].id)
+  const account = accountById(accountId)
+
   const [receiveAmount, setReceiveAmount] = useState('10000.00')
-  const [receiveCurrency, setReceiveCurrency] = useState('EUR')
+  const [receiveCurrency, setReceiveCurrency] = useState<string>(account.currency)
   const [receiveRef, setReceiveRef] = useState(`NOVA-NOVAPAY-PORTAL-${stamp()}`)
-  const [beneficiaryName, setBeneficiaryName] = useState('TOTAL DESIGN S.R.L.')
-  const [beneficiaryIban, setBeneficiaryIban] = useState('LT163250079884101461')
-  const [beneficiarySwift, setBeneficiarySwift] = useState('REVOLT21')
-  const [intermediaryBic] = useState('CHASGB2L')
+  const [beneficiaryName, setBeneficiaryName] = useState(account.accountHolder)
+  const [beneficiaryIban, setBeneficiaryIban] = useState(account.iban)
+  const [beneficiarySwift, setBeneficiarySwift] = useState(account.bic)
+  const [intermediaryBic, setIntermediaryBic] = useState(account.intermediaryBic || '')
 
   const [sendAmount, setSendAmount] = useState('1000.00')
-  const [sendCurrency, setSendCurrency] = useState('EUR')
+  const [sendCurrency, setSendCurrency] = useState<string>(account.currency)
   const [sendRef, setSendRef] = useState(`NOVA-TO-NOVAPAY-${stamp()}`)
+
+  function applyAccount(id: string) {
+    const next = accountById(id)
+    setAccountId(id)
+    setBeneficiaryName(next.accountHolder)
+    setBeneficiaryIban(next.iban)
+    setBeneficiarySwift(next.bic)
+    setIntermediaryBic(next.intermediaryBic || '')
+    setReceiveCurrency(next.currency)
+    setSendCurrency(next.currency)
+  }
 
   const refresh = useCallback(async () => {
     setError('')
@@ -171,6 +186,21 @@ export default function App() {
           <h2>Receive payout</h2>
           <form className="form-grid" onSubmit={onReceive}>
             <label>
+              Settlement account
+              <select value={accountId} onChange={(e) => applyAccount(e.target.value)}>
+                {SETTLEMENT_ACCOUNTS.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {account.address ? (
+              <p className="msg" style={{ marginTop: 0 }}>
+                {account.bank} · {account.address}
+              </p>
+            ) : null}
+            <label>
               Amount
               <input value={receiveAmount} onChange={(e) => setReceiveAmount(e.target.value)} required />
             </label>
@@ -196,7 +226,7 @@ export default function App() {
             </label>
             <label>
               Intermediary BIC
-              <input value={intermediaryBic} readOnly />
+              <input value={intermediaryBic} readOnly placeholder="—" />
             </label>
             <div className="actions">
               <button type="submit" disabled={busy !== null}>

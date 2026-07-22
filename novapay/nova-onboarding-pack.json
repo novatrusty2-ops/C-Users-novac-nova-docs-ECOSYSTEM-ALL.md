@@ -63,12 +63,20 @@
     "sanctionsExposureNotes": "Nova Bank Online runs KYC/AML/CFT program (public docs slug kyc). Sanctions screening is part of the platform compliance posture; no intentional sanctions exposure.",
     "bankRegion": "EUROPE",
     "accountJurisdiction": "Malta",
-    "bankName": "Revolut Bank UAB (REVOLT21) \u2014 TOTAL DESIGN S.R.L.",
+    "bankName": "Revolut Bank UAB (EUR) + Wise (USD)",
     "settlementAccountHolder": "TOTAL DESIGN S.R.L.",
     "settlementIban": "LT163250079884101461",
     "settlementBic": "REVOLT21",
     "intermediaryBic": "CHASGB2L",
-    "intermediaryBicNote": "Bic banca intermedia (Chase UK) for Revolut EUR rails"
+    "intermediaryBicNote": "Bic banca intermedia (Chase UK) for Revolut EUR rails",
+    "usdSettlement": {
+      "accountHolder": "GLOBAL LUXURY SRLS",
+      "iban": "BE18905804591765",
+      "bic": "TRWIBEB1XXX",
+      "bank": "Wise",
+      "currency": "USD",
+      "address": "Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium"
+    }
   },
   "documentsExpected": [
     {

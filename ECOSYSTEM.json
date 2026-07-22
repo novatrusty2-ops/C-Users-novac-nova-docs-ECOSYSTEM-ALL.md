@@ -188,9 +188,29 @@
       "intermediaryBic": "CHASGB2L",
       "currency": "EUR",
       "bank": "Revolut Bank UAB",
-      "role": "NovaPay sandbox / ops beneficiary + onboarding settlement reference",
+      "role": "Primary EUR NovaPay sandbox / onboarding settlement reference",
       "configuredAt": "2026-07-22"
     },
+    "settlementAccounts": [
+      {
+        "id": "revolut-eur-total-design",
+        "accountHolder": "TOTAL DESIGN S.R.L.",
+        "iban": "LT163250079884101461",
+        "bic": "REVOLT21",
+        "intermediaryBic": "CHASGB2L",
+        "currency": "EUR",
+        "bank": "Revolut Bank UAB"
+      },
+      {
+        "id": "wise-usd-global-luxury",
+        "accountHolder": "GLOBAL LUXURY SRLS",
+        "iban": "BE18905804591765",
+        "bic": "TRWIBEB1XXX",
+        "currency": "USD",
+        "bank": "Wise",
+        "address": "Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium"
+      }
+    ],
     "statusAsOf": "2026-07-22",
     "probeNotes": "status enabled; receive accepted NOVA-PAY-SANDBOX-…; send loopback completed; events=3"
   },

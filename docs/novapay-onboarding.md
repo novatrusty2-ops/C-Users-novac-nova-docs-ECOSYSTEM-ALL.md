@@ -57,9 +57,11 @@ npm run check:novapay-onboarding
 - `nrwTestnetOnly`: true  
 - Banking provider (integration surface): sandbox (`realMoney`: false)
 
-## Settlement account (configured)
+## Settlement accounts (configured)
 
 See [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md).
+
+### EUR — Revolut
 
 | Field | Value |
 |-------|--------|
@@ -67,6 +69,16 @@ See [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md).
 | IBAN | LT163250079884101461 |
 | BIC | REVOLT21 |
 | Intermediary BIC | CHASGB2L |
+
+### USD — Wise
+
+| Field | Value |
+|-------|--------|
+| Account holder | GLOBAL LUXURY SRLS |
+| IBAN | BE18905804591765 |
+| BIC | TRWIBEB1XXX |
+| Bank | Wise |
+| Address | Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium |
 
 ## Still required from your side (not in public API)
 
