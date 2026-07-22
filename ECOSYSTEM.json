@@ -64,6 +64,19 @@
       "chainId": 651940,
       "integratedIn": "apps/nova"
     },
+    "novaPay": {
+      "name": "NovaPay Sandbox",
+      "role": "fiat payout partner sandbox on Nova Bank API \u2014 receive/send/callback/events",
+      "mode": "sandbox",
+      "authMethod": "none",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status",
+      "api": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox",
+      "host": "https://nova-bank-api-production-7311.up.railway.app",
+      "guidePath": "docs/novapay-sandbox-live-links.md",
+      "statusAsOf": "2026-07-22",
+      "enabled": true,
+      "configured": true
+    },
     "novaOneExplorer": {
       "name": "Nova Chain Explorer",
       "url": "https://novaone.anakatech.llc/",
@@ -130,7 +143,31 @@
     ],
     "dbisExplorerApi": "https://explorer.defi-oracle.io/api",
     "anakaBridge": "https://bridge.anakachain.com",
-    "alltraRpc": "https://mainnet-rpc.alltra.global"
+    "alltraRpc": "https://mainnet-rpc.alltra.global",
+    "novaPaySandbox": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox"
+  },
+  "novaPay": {
+    "role": "Fiat payout partner sandbox on Nova Bank API (Railway)",
+    "partner": "novapay",
+    "mode": "sandbox",
+    "authMethod": "none",
+    "enabled": true,
+    "configured": true,
+    "railwayBase": "https://nova-bank-api-production-7311.up.railway.app",
+    "statusUrl": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status",
+    "sandboxBase": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox",
+    "paths": {
+      "status": "/status",
+      "manifest": "/manifest",
+      "receive": "/receive",
+      "send": "/send",
+      "callback": "/callback",
+      "events": "/events"
+    },
+    "advertisedHostNote": "Live status/manifest still advertise novabank.uk submit/callback/send URLs; sandboxUiUrl is Railway",
+    "guidePath": "docs/novapay-sandbox-live-links.md",
+    "statusAsOf": "2026-07-22",
+    "probeNotes": "status enabled; receive accepted NOVA-PAY-SANDBOX-…; send loopback completed; events=3"
   },
   "walletProductSplit": {
     "product": "novaWallet",

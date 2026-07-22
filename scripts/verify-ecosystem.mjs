@@ -76,6 +76,13 @@ const required = [
     name: "OpenAPI",
     url: "https://nova-bank-api-production-7311.up.railway.app/api/v1/openapi.json",
   },
+  {
+    name: "NovaPay sandbox status",
+    url:
+      eco.productionUrls.novaPaySandbox
+        ? `${eco.productionUrls.novaPaySandbox.replace(/\/$/, "")}/status`
+        : "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status",
+  },
 ];
 
 const optional = [
