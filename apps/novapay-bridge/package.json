@@ -1,0 +1,15 @@
+{
+  "name": "novapay-bridge",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "NovaPay ↔ Nova Bank bridge — NestJS-shaped routes proxying live sandbox",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node --watch src/server.mjs",
+    "test": "node --test test/bridge.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

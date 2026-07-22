@@ -5,12 +5,16 @@
   "description": "Nova Wallet — https://novablockchain.it.com/",
   "workspaces": [
     "apps/nova",
-    "apps/novapay-portal"
+    "apps/novapay-portal",
+    "apps/novapay-bridge"
   ],
   "scripts": {
     "dev": "npm run dev -w nova-wallet",
     "dev:nova": "npm run dev -w nova-wallet",
     "dev:novapay-portal": "npm run dev -w novapay-portal",
+    "start:novapay-bridge": "npm run start -w novapay-bridge",
+    "dev:novapay-bridge": "npm run dev -w novapay-bridge",
+    "test:novapay-bridge": "npm run test -w novapay-bridge",
     "build": "npm run build -w nova-wallet",
     "build:nova": "npm run build -w nova-wallet",
     "build:novapay-portal": "npm run build -w novapay-portal",
