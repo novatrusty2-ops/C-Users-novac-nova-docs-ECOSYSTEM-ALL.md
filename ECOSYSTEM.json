@@ -36,6 +36,7 @@
       ],
       "integrations": [
         "pouchPay",
+        "novaPay",
         "novaBank",
         "novaSwap"
       ],

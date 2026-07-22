@@ -24,6 +24,10 @@ Chain 138 docs: [`docs/dbis-138.md`](docs/dbis-138.md) (Blockscout / Etherscan-c
 
 NovaPay sandbox (Railway): [`docs/novapay-sandbox-live-links.md`](docs/novapay-sandbox-live-links.md).
 
+```bash
+npm run test:novapay         # status → manifest → receive → send → events
+```
+
 App source: [`apps/nova`](apps/nova)
 
 Deploy: [`.github/workflows/deploy-nova.yml`](.github/workflows/deploy-nova.yml) → GitHub Pages (`novablockchain.it.com`).

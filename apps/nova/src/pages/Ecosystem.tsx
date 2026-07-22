@@ -170,6 +170,12 @@ export function Ecosystem() {
           <a className="block text-nova-highlight" href={ECOSYSTEM_LINKS.novaSwap}>
             Nova Swap
           </a>
+          <a className="block text-nova-highlight break-all" href={ECOSYSTEM_LINKS.novaPaySandbox}>
+            NovaPay sandbox status
+          </a>
+          <a className="block text-nova-highlight break-all" href={ECOSYSTEM_LINKS.partnersStatus}>
+            partners/status
+          </a>
           <Link to={ROUTES.settings} className="block text-nova-accent pt-2">
             Network toggles → Settings
           </Link>

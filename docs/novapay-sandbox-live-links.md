@@ -66,3 +66,16 @@ From `GET …/sandbox/manifest`:
 | `events` | 3 rows |
 
 This is a **sandbox** rail (`realMoney` remains false on the banking surface). Not production fiat settlement.
+
+## Connect + test (this repo)
+
+Nova Wallet surfaces NovaPay under Settings → Nova Bank and Ecosystem → Live APIs / Partners.
+
+```bash
+npm run test:novapay
+```
+
+Exercises Railway sandbox: `status` → `manifest` → `receive` → `send` → `events` (no auth, no live funds).
+
+- `POST /receive` accepts the manifest payout sample (beneficiary fields allowed).
+- `POST /send` is loopback outbound — send `{ amount, currency, reference, transactionType }` only (no beneficiary fields).

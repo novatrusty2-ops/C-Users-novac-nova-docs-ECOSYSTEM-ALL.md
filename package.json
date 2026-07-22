@@ -17,7 +17,8 @@
     "fetch-api": "bash scripts/fetch-api.sh",
     "sync": "python3 scripts/sync-ecosystem.py",
     "sync:ecosystem": "bash scripts/fetch-api.sh && python3 scripts/sync-ecosystem.py",
-    "verify:ecosystem": "node scripts/verify-ecosystem.mjs"
+    "verify:ecosystem": "node scripts/verify-ecosystem.mjs",
+    "test:novapay": "node scripts/novapay-sandbox-test.mjs"
   },
   "engines": {
     "node": ">=20"
