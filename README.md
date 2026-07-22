@@ -23,6 +23,7 @@ npm run verify:ecosystem
 Chain 138 docs: [`docs/dbis-138.md`](docs/dbis-138.md) (Blockscout / Etherscan-compatible API — not etherscan.io).
 
 NovaPay sandbox (Railway): [`docs/novapay-sandbox-live-links.md`](docs/novapay-sandbox-live-links.md).  
+NovaPay ↔ Nova Bank wiring: [`docs/NOVAPAY-NOVA-BANK-WIRING.md`](docs/NOVAPAY-NOVA-BANK-WIRING.md).  
 NovaPay onboarding (Step 2 pack): [`docs/novapay-onboarding.md`](docs/novapay-onboarding.md).  
 NovaPay portal (Railway): [`docs/novapay-portal-railway.md`](docs/novapay-portal-railway.md) · app [`apps/novapay-portal`](apps/novapay-portal).
 
@@ -32,6 +33,8 @@ npm run test:novapay-accounts         # smoke all 3 business settlement accounts
 npm run check:novapay-onboarding      # invite probe (awaiting_provider until URL set)
 npm run dev:novapay-portal            # http://localhost:5180
 npm run build:novapay-portal
+# NestJS patch (needs local API checkout):
+# NOVA_API_ROOT=/path/to/api bash scripts/install-novapay-partner.sh
 ```
 
 App source: [`apps/nova`](apps/nova)

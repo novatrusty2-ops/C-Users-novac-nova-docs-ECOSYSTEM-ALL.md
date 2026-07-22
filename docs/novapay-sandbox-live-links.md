@@ -88,6 +88,14 @@ From `GET …/sandbox/manifest`:
 
 This is a **sandbox** rail (`realMoney` remains false on the banking surface). Not production fiat settlement.
 
+## Nova Bank wiring
+
+Full wire map + NestJS patch: [`docs/NOVAPAY-NOVA-BANK-WIRING.md`](NOVAPAY-NOVA-BANK-WIRING.md).
+
+```bash
+NOVA_API_ROOT=/path/to/nova/apps/api bash scripts/install-novapay-partner.sh
+```
+
 ## Connect + test (this repo)
 
 Nova Wallet surfaces NovaPay under Settings → Nova Bank and Ecosystem → Live APIs / Partners.

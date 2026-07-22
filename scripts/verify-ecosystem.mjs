@@ -88,6 +88,15 @@ const required = [
       configured: true,
     },
   },
+  {
+    name: "Partners status (NovaPay wired)",
+    url: "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/status",
+    expectJsonPath: {
+      "novapay.enabled": true,
+      "novapay.configured": true,
+      "novapay.partner": "novapay",
+    },
+  },
 ];
 
 const optional = [
@@ -141,7 +150,7 @@ async function check(entry) {
   let rpcOk = false;
   let jsonOk = true;
   let json;
-  if (entry.expectRpc || entry.expectJson) {
+  if (entry.expectRpc || entry.expectJson || entry.expectJsonPath) {
     try {
       json = await res.clone().json();
     } catch {
@@ -155,6 +164,14 @@ async function check(entry) {
     jsonOk =
       !!json &&
       Object.entries(entry.expectJson).every(([key, value]) => json[key] === value);
+  }
+  if (entry.expectJsonPath) {
+    jsonOk =
+      !!json &&
+      Object.entries(entry.expectJsonPath).every(([path, value]) => {
+        const got = path.split(".").reduce((acc, key) => acc?.[key], json);
+        return got === value;
+      });
   }
   const ok = entry.expectRpc
     ? rpcOk

@@ -77,6 +77,8 @@
       "portalGuidePath": "docs/novapay-portal-railway.md",
       "portalAppPath": "apps/novapay-portal",
       "portalUrl": null,
+      "wiredToNovaBank": true,
+      "wiringGuidePath": "docs/NOVAPAY-NOVA-BANK-WIRING.md",
       "statusAsOf": "2026-07-22",
       "enabled": true,
       "configured": true
@@ -180,7 +182,16 @@
     "draftsPath": "novapay/drafts",
     "awaitingProviderPath": "novapay/AWAITING-PROVIDER.md",
     "inviteStatus": "awaiting_provider",
+    "wiredToNovaBank": true,
+    "wiringGuidePath": "docs/NOVAPAY-NOVA-BANK-WIRING.md",
+    "nestjsPatchPath": "patches/nova-bank-api/novapay-partner",
+    "installScriptPath": "scripts/install-novapay-partner.sh",
     "callbackUrlConvention": "https://nova-bank-api-production-7311.up.railway.app/api/v1/webhooks/novapay",
+    "settlementAccountIds": [
+      "revolut-eur-total-design",
+      "wise-eur-global-luxury",
+      "wise-usd-global-luxury"
+    ],
     "settlement": {
       "accountHolder": "TOTAL DESIGN S.R.L.",
       "iban": "LT163250079884101461",
