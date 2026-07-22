@@ -61,7 +61,7 @@ export default function App() {
       setStatus(st.data)
       if (mf.ok) {
         setManifest(mf.data)
-        // Keep TOTAL DESIGN S.R.L. settlement defaults; do not overwrite from API sample IBAN.
+        // Keep configured settlement accounts; do not overwrite from API sample IBAN.
       }
       if (ev.ok) setEvents(normalizeEvents(ev.data).slice(0, 25))
     } catch (err) {

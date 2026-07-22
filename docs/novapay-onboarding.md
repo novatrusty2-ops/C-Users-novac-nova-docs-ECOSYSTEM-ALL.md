@@ -70,7 +70,7 @@ See [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md).
 | BIC | REVOLT21 |
 | Intermediary BIC | CHASGB2L |
 
-### USD — Wise
+### EUR — Wise (business)
 
 | Field | Value |
 |-------|--------|

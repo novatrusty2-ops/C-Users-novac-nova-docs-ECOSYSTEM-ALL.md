@@ -12,8 +12,8 @@ Live `status` returns `enabled=true`, `configured=true`, and sets `sandboxUiUrl`
 
 | Currency | Holder | IBAN | BIC | Notes |
 |----------|--------|------|-----|--------|
-| EUR | TOTAL DESIGN S.R.L. | LT163250079884101461 | REVOLT21 | Intermediary CHASGB2L |
-| USD | GLOBAL LUXURY SRLS | BE18905804591765 | TRWIBEB1XXX | Wise · Rue du Trône 100, Brussels |
+| EUR | TOTAL DESIGN S.R.L. | LT163250079884101461 | REVOLT21 | Revolut · intermediary CHASGB2L |
+| EUR | GLOBAL LUXURY SRLS | BE18905804591765 | TRWIBEB1XXX | Wise business · Rue du Trône 100, Brussels |
 
 Details: [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md). Portal has an account picker for both.
 
