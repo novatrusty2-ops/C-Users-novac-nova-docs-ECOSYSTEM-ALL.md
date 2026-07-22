@@ -1,0 +1,27 @@
+{
+  "name": "novapay-portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "NovaPay sandbox ops portal — Railway dashboard for Nova Bank partner sandbox",
+  "scripts": {
+    "dev": "vite --port 5180",
+    "build": "tsc --noEmit -p tsconfig.app.json && vite build",
+    "preview": "vite preview --port 4180 --host",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json --pretty false"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.1.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

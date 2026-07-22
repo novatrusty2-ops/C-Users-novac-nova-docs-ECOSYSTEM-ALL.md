@@ -1,0 +1,13 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+
+# Step 2 — wire bridge → live Nova Bank NovaPay sandbox
+[variables]
+NOVAPAY_SANDBOX_BASE = "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox"

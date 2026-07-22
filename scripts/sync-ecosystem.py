@@ -361,6 +361,14 @@ def ensure_chain(chains: list[dict], entry: dict) -> None:
 
 def main() -> None:
     eco = load_json(ECO_PATH)
+    preserved = {
+        key: deepcopy(eco[key])
+        for key in ("novaPay", "tyganPay", "anakaConnect", "walletIntegrity", "healthChecks")
+        if key in eco
+    }
+    preserved_nova_pay_product = deepcopy(eco.get("products", {}).get("novaPay")) if (
+        eco.get("products", {}).get("novaPay")
+    ) else None
     wallet_api = load_json(API_DIR / "wallet-networks.json")
     tokens_api = load_json(API_DIR / "ecosystem-tokens.json")
     onex = load_json(API_DIR / "onex-ecosystem.json")
@@ -413,6 +421,7 @@ def main() -> None:
         "dbisExplorerApi": f"{dbis_explorer.rstrip('/')}/api",
         "anakaBridge": "https://bridge.anakachain.com",
         "alltraRpc": ALLTRA_RPC_PRIMARY,
+        "novaPaySandbox": f"{NOVA_BANK_API}/partners/novapay/sandbox",
     }
 
     eco["defiOracle"] = {
@@ -742,6 +751,11 @@ def main() -> None:
         },
     ]
 
+    for key, value in preserved.items():
+        eco[key] = value
+    if preserved_nova_pay_product is not None:
+        eco.setdefault("products", {})["novaPay"] = preserved_nova_pay_product
+
     ECO_PATH.write_text(json.dumps(eco, indent=2) + "\n")
     dbis_token_count = sum(
         1 for t in eco["tradableTokens"] if "dbis-138" in t.get("networks", [])
@@ -754,6 +768,8 @@ def main() -> None:
     print(f"  dbisRpc primary: {dbis_rpc}")
     print(f"  dbisExplorer primary: {dbis_explorer}")
     print(f"  urlHealth.summary: {eco['urlHealth']['summary']}")
+    for key in ("novaPay", "tyganPay", "anakaConnect", "walletIntegrity", "healthChecks"):
+        print(f"  preserved {key}: {key in eco}")
 
 
 if __name__ == "__main__":

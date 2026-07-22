@@ -1,0 +1,149 @@
+{
+  "generatedAt": "2026-07-22T15:50:00.000Z",
+  "source": {
+    "novaBankApi": "https://nova-bank-api-production-7311.up.railway.app",
+    "globalStatusPath": "/api/v1/global/status",
+    "partnersStatusPath": "/api/v1/partners/status",
+    "ecosystemOrganization": "Anakatech LLC",
+    "novaPayInviteToken": null,
+    "novaPayInviteUrls": [],
+    "inviteStatus": {
+      "httpStatus": null,
+      "error": "awaiting_provider",
+      "reason": "No NOVAPAY_ONBOARDING_URL or NOVAPAY_ONBOARDING_TOKEN configured. External NovaPay onboarding portal has not been issued.",
+      "ok": false,
+      "actionRequired": "Stand up or contract NovaPay as a provider, then set NOVAPAY_ONBOARDING_URL (or TOKEN+BASE) and re-run this script."
+    }
+  },
+  "clientProfile": {
+    "clientName": "Nova Bank",
+    "companyLegalName": "Nova Bank Malta Ltd",
+    "platformOperator": "Anakatech LLC",
+    "productName": "Nova Bank Online",
+    "jurisdiction": "Malta",
+    "companyType": "Limited company (fintech / VFA-related entity per live API features.malta)",
+    "companyEmail": "privacy@anakatech.llc",
+    "clientReviewEmail": "novatrusty2@gmail.com",
+    "recordsCopyEmail": "privacy@anakatech.llc",
+    "complianceEmail": "privacy@anakatech.llc",
+    "technicalEmail": "novatrusty2@gmail.com",
+    "preferredLanguage": "English",
+    "registrationNumber": null,
+    "companyAddress": null,
+    "companyPostalCode": null,
+    "companyIncorporationDate": null
+  },
+  "regulatorySignalsFromNovaApi": {
+    "entityName": "Nova Bank Malta Ltd",
+    "vfaLicensed": true,
+    "liveRailsEnabled": true,
+    "institutionApiLive": true,
+    "emiPartner": "openpayd",
+    "cryptoLiveEnabled": false,
+    "bankingProvider": "sandbox",
+    "fineractUrl": "https://fineract.hybxfinance.com",
+    "realMoney": false,
+    "liveActive": true,
+    "novapayPartner": {
+      "enabled": true,
+      "configured": true,
+      "mode": "sandbox",
+      "authMethod": "none"
+    }
+  },
+  "proposedIntegration": {
+    "senderPlatform": "Nova Bank Online",
+    "proposedEndpoint": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
+    "callbackUrl": "https://nova-bank-api-production-7311.up.railway.app/api/v1/webhooks/novapay",
+    "sandboxStatusUrl": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status",
+    "transactionTypes": "payout,s2s_api",
+    "currency": "EUR",
+    "expectedTransactionProfile": "Institutional payout-rail onboarding for Nova Bank Online (Anakatech LLC operator) with Malta entity Nova Bank Malta Ltd; OpenPayd named EMI partner on Nova side; NovaPay partner sandbox already live on Railway.",
+    "sourceOfFundsDescription": "Operating capital and client settlement flows of Nova Bank Online / Anakatech LLC fintech platform; fiat rails via licensed EMI partner (OpenPayd) when live and institutional Fineract (Hybx Finance); no retail cash deposits at Nova branches.",
+    "sanctionsExposureNotes": "Nova Bank Online runs KYC/AML/CFT program (public docs slug kyc). Sanctions screening is part of the platform compliance posture; no intentional sanctions exposure.",
+    "bankRegion": "EUROPE",
+    "accountJurisdiction": "Malta",
+    "bankName": "Revolut Bank UAB (EUR) + Wise Belgium (EUR) + Wise US Inc (USD)",
+    "settlementAccountHolder": "TOTAL DESIGN S.R.L.",
+    "settlementIban": "LT163250079884101461",
+    "settlementBic": "REVOLT21",
+    "intermediaryBic": "CHASGB2L",
+    "intermediaryBicNote": "Bic banca intermedia (Chase UK) for Revolut EUR rails",
+    "wiseEurSettlement": {
+      "accountHolder": "GLOBAL LUXURY SRLS",
+      "iban": "BE18905804591765",
+      "bic": "TRWIBEB1XXX",
+      "bank": "Wise",
+      "currency": "EUR",
+      "address": "Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium"
+    },
+    "wiseUsdSettlement": {
+      "accountHolder": "GLOBAL LUXURY SRLS",
+      "routingNumber": "084009519",
+      "accountNumber": "515842398651352",
+      "bic": "TRWIUS35XXX",
+      "bank": "Wise US Inc",
+      "currency": "USD",
+      "address": "108 W 13th St, Wilmington, DE, 19801, United States"
+    }
+  },
+  "documentsExpected": [
+    {
+      "code": "AUTHORIZED_REPRESENTATIVE_PASSPORT",
+      "required": true,
+      "status": "MISSING"
+    },
+    {
+      "code": "COMPANY_REGISTRATION_DOCUMENTS",
+      "required": true,
+      "status": "MISSING"
+    },
+    {
+      "code": "SOURCE_OF_FUNDS_DECLARATION",
+      "required": false,
+      "status": "DRAFT_READY"
+    },
+    {
+      "code": "BANK_ACCOUNT_OWNERSHIP_PROOF",
+      "required": false,
+      "status": "MISSING"
+    },
+    {
+      "code": "COMPLIANCE_PACK",
+      "required": false,
+      "status": "DRAFT_READY"
+    },
+    {
+      "code": "OPTIONAL_SUPPORTING_DOCUMENTS",
+      "required": false,
+      "status": "PENDING"
+    }
+  ],
+  "mandatoryUploadsTypicallyRequired": [
+    "AUTHORIZED_REPRESENTATIVE_PASSPORT",
+    "COMPANY_REGISTRATION_DOCUMENTS"
+  ],
+  "missingBeforeSubmission": [
+    "External NovaPay provider invite / onboarding URL",
+    "Company registration number and registered address (Nova Bank Malta Ltd)",
+    "Authorized representative legal identity + passport scan",
+    "Company registration documents PDF",
+    "Bank account ownership proof PDFs for TOTAL DESIGN Revolut EUR, GLOBAL LUXURY Wise EUR (BE18905804591765), and GLOBAL LUXURY Wise USD (routing 084009519)",
+    "Signed source-of-funds declaration"
+  ],
+  "productionUrls": {
+    "novaBank": "https://nova-bank-api-production-7311.up.railway.app",
+    "novaBankApi": "https://nova-bank-api-production-7311.up.railway.app/api/v1",
+    "openapi": "https://nova-bank-api-production-7311.up.railway.app/api/v1/openapi.json",
+    "docs": "https://nova-bank-api-production-7311.up.railway.app/api/v1/docs",
+    "novaPaySandboxStatus": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status",
+    "partnersStatus": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/status",
+    "novaSwap": "https://nova-bank-api-production-7311.up.railway.app/swap",
+    "fineract": "https://fineract.hybxfinance.com",
+    "privacyContact": "privacy@anakatech.llc"
+  },
+  "formPayloadPath": "novapay/form-payload.json",
+  "draftsPath": "novapay/drafts",
+  "awaitingProviderPath": "novapay/AWAITING-PROVIDER.md",
+  "onboardingGuidePath": "docs/novapay-onboarding.md"
+}

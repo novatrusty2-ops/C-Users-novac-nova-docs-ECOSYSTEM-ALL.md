@@ -36,6 +36,7 @@
       ],
       "integrations": [
         "pouchPay",
+        "novaPay",
         "novaBank",
         "novaSwap"
       ],
@@ -63,6 +64,27 @@
       "url": "https://alltra.global/",
       "chainId": 651940,
       "integratedIn": "apps/nova"
+    },
+    "novaPay": {
+      "name": "NovaPay Sandbox",
+      "role": "fiat payout partner sandbox on Nova Bank API \u2014 receive/send/callback/events",
+      "mode": "sandbox",
+      "authMethod": "none",
+      "url": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status",
+      "api": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox",
+      "host": "https://nova-bank-api-production-7311.up.railway.app",
+      "guidePath": "docs/novapay-sandbox-live-links.md",
+      "portalGuidePath": "docs/novapay-portal-railway.md",
+      "portalAppPath": "apps/novapay-portal",
+      "portalUrl": null,
+      "bridgeAppPath": "apps/novapay-bridge",
+      "bridgeUrl": null,
+      "bridgeGuidePath": "docs/novapay-bridge-railway.md",
+      "wiredToNovaBank": true,
+      "wiringGuidePath": "docs/NOVAPAY-NOVA-BANK-WIRING.md",
+      "statusAsOf": "2026-07-22",
+      "enabled": true,
+      "configured": true
     },
     "novaOneExplorer": {
       "name": "Nova Chain Explorer",
@@ -130,7 +152,97 @@
     ],
     "dbisExplorerApi": "https://explorer.defi-oracle.io/api",
     "anakaBridge": "https://bridge.anakachain.com",
-    "alltraRpc": "https://mainnet-rpc.alltra.global"
+    "alltraRpc": "https://mainnet-rpc.alltra.global",
+    "novaPaySandbox": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox"
+  },
+  "novaPay": {
+    "role": "Fiat payout partner sandbox on Nova Bank API (Railway)",
+    "partner": "novapay",
+    "mode": "sandbox",
+    "authMethod": "none",
+    "enabled": true,
+    "configured": true,
+    "railwayBase": "https://nova-bank-api-production-7311.up.railway.app",
+    "statusUrl": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status",
+    "sandboxBase": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox",
+    "paths": {
+      "status": "/status",
+      "manifest": "/manifest",
+      "receive": "/receive",
+      "send": "/send",
+      "callback": "/callback",
+      "events": "/events"
+    },
+    "advertisedHostNote": "Live status/manifest still advertise novabank.uk submit/callback/send URLs; sandboxUiUrl is Railway",
+    "guidePath": "docs/novapay-sandbox-live-links.md",
+    "portalGuidePath": "docs/novapay-portal-railway.md",
+    "portalAppPath": "apps/novapay-portal",
+    "portalUrl": null,
+    "portalUrlNote": "Set after Railway service generate-domain (see docs/novapay-portal-railway.md). Until then use sandbox status JSON as sandboxUiUrl.",
+    "bridgeAppPath": "apps/novapay-bridge",
+    "bridgeUrl": null,
+    "bridgeUrlNote": "Set after Railway deploy of apps/novapay-bridge (exposes /api/v1/novapay/* + /api/v1/webhooks/novapay).",
+    "bridgeGuidePath": "docs/novapay-bridge-railway.md",
+    "onboardingGuidePath": "docs/novapay-onboarding.md",
+    "onboardingPackPath": "novapay/nova-onboarding-pack.json",
+    "formPayloadPath": "novapay/form-payload.json",
+    "draftsPath": "novapay/drafts",
+    "awaitingProviderPath": "novapay/AWAITING-PROVIDER.md",
+    "inviteStatus": "awaiting_provider",
+    "wiredToNovaBank": true,
+    "wiringGuidePath": "docs/NOVAPAY-NOVA-BANK-WIRING.md",
+    "nestjsPatchPath": "patches/nova-bank-api/novapay-partner",
+    "installScriptPath": "scripts/install-novapay-partner.sh",
+    "callbackUrlConvention": "https://nova-bank-api-production-7311.up.railway.app/api/v1/webhooks/novapay",
+    "settlementAccountIds": [
+      "revolut-eur-total-design",
+      "wise-eur-global-luxury",
+      "wise-usd-global-luxury"
+    ],
+    "settlement": {
+      "accountHolder": "TOTAL DESIGN S.R.L.",
+      "iban": "LT163250079884101461",
+      "bic": "REVOLT21",
+      "intermediaryBic": "CHASGB2L",
+      "currency": "EUR",
+      "bank": "Revolut Bank UAB",
+      "role": "Primary EUR NovaPay sandbox / onboarding settlement reference",
+      "configuredAt": "2026-07-22"
+    },
+    "settlementAccounts": [
+      {
+        "id": "revolut-eur-total-design",
+        "accountHolder": "TOTAL DESIGN S.R.L.",
+        "iban": "LT163250079884101461",
+        "bic": "REVOLT21",
+        "intermediaryBic": "CHASGB2L",
+        "currency": "EUR",
+        "bank": "Revolut Bank UAB"
+      },
+      {
+        "id": "wise-eur-global-luxury",
+        "accountHolder": "GLOBAL LUXURY SRLS",
+        "iban": "BE18905804591765",
+        "bic": "TRWIBEB1XXX",
+        "currency": "EUR",
+        "bank": "Wise",
+        "address": "Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium",
+        "role": "EUR Wise business account for NovaPay sandbox / onboarding"
+      },
+      {
+        "id": "wise-usd-global-luxury",
+        "accountHolder": "GLOBAL LUXURY SRLS",
+        "routingNumber": "084009519",
+        "accountNumber": "515842398651352",
+        "bic": "TRWIUS35XXX",
+        "currency": "USD",
+        "bank": "Wise US Inc",
+        "address": "108 W 13th St, Wilmington, DE, 19801, United States",
+        "role": "USD Wise business account for NovaPay sandbox / onboarding"
+      }
+    ],
+    "statusAsOf": "2026-07-22",
+    "probeNotes": "status enabled; receive accepted NOVA-PAY-SANDBOX-…; send loopback completed; events=3"
   },
   "walletProductSplit": {
     "product": "novaWallet",

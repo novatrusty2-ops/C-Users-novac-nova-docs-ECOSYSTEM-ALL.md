@@ -76,6 +76,27 @@ const required = [
     name: "OpenAPI",
     url: "https://nova-bank-api-production-7311.up.railway.app/api/v1/openapi.json",
   },
+  {
+    name: "NovaPay sandbox status",
+    url:
+      eco.productionUrls.novaPaySandbox
+        ? `${eco.productionUrls.novaPaySandbox.replace(/\/$/, "")}/status`
+        : "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status",
+    expectJson: {
+      partner: "novapay",
+      enabled: true,
+      configured: true,
+    },
+  },
+  {
+    name: "Partners status (NovaPay wired)",
+    url: "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/status",
+    expectJsonPath: {
+      "novapay.enabled": true,
+      "novapay.configured": true,
+      "novapay.partner": "novapay",
+    },
+  },
 ];
 
 const optional = [
@@ -127,16 +148,35 @@ async function check(entry) {
     signal: AbortSignal.timeout(12000),
   });
   let rpcOk = false;
-  if (entry.expectRpc) {
+  let jsonOk = true;
+  let json;
+  if (entry.expectRpc || entry.expectJson || entry.expectJsonPath) {
     try {
-      const json = await res.clone().json();
-      rpcOk = Boolean(json && "result" in json && !json.error);
+      json = await res.clone().json();
     } catch {
-      rpcOk = false;
+      json = null;
     }
   }
-  const ok = entry.expectRpc ? rpcOk : res.ok || res.status === 405;
-  return { ok, status: res.status, rpcOk };
+  if (entry.expectRpc) {
+    rpcOk = Boolean(json && "result" in json && !json.error);
+  }
+  if (entry.expectJson) {
+    jsonOk =
+      !!json &&
+      Object.entries(entry.expectJson).every(([key, value]) => json[key] === value);
+  }
+  if (entry.expectJsonPath) {
+    jsonOk =
+      !!json &&
+      Object.entries(entry.expectJsonPath).every(([path, value]) => {
+        const got = path.split(".").reduce((acc, key) => acc?.[key], json);
+        return got === value;
+      });
+  }
+  const ok = entry.expectRpc
+    ? rpcOk
+    : (res.ok || res.status === 405) && jsonOk;
+  return { ok, status: res.status, rpcOk, jsonOk };
 }
 
 let failed = 0;
@@ -145,9 +185,15 @@ let warned = 0;
 console.log("== Required ==");
 for (const entry of required) {
   try {
-    const { ok, status, rpcOk } = await check(entry);
+    const { ok, status, rpcOk, jsonOk } = await check(entry);
     if (ok) {
-      console.log(`OK   ${entry.name} (${status}${entry.expectRpc ? `, rpc=${rpcOk}` : ""})`);
+      const extra = [
+        entry.expectRpc ? `rpc=${rpcOk}` : null,
+        entry.expectJson ? `json=${jsonOk}` : null,
+      ]
+        .filter(Boolean)
+        .join(", ");
+      console.log(`OK   ${entry.name} (${status}${extra ? `, ${extra}` : ""})`);
     } else {
       console.warn(`FAIL ${entry.name} (${status}) ${entry.url}`);
       failed++;

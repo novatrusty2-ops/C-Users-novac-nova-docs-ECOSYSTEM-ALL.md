@@ -1,0 +1,12 @@
+{
+  "name": "@nova/novapay-partner-patch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Drop-in NestJS NovaPay partner module for Nova Bank API (Railway sandbox wiring)",
+  "scripts": {
+    "test": "node --test test/novapay-client.test.mjs test/novapay-webhook.test.mjs"
+  },
+  "peerDependencies": {
+    "@nestjs/common": ">=10"
+  }
+}

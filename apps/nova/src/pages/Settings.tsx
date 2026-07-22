@@ -124,6 +124,8 @@ export function Settings() {
           <Row label="Ecosystem hub" to={ROUTES.ecosystem} />
           <Row label="Nova Bank dashboard" href={ECOSYSTEM_LINKS.novaBank} />
           <Row label="Nova Swap" href={ECOSYSTEM_LINKS.novaSwap} />
+          <Row label="NovaPay sandbox" href={ECOSYSTEM_LINKS.novaPaySandbox} />
+          <Row label="Partners status" href={ECOSYSTEM_LINKS.partnersStatus} />
           <button type="button" className="w-full text-left" onClick={handleImportTokens}>
             <Row label={`Import mesh tokens (${imported})`} />
           </button>

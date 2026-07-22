@@ -24,6 +24,18 @@ export const PARTNERS: PartnerWallet[] = [
     notes:
       'PouchPay-Alltra is the ALLTRA ecosystem wallet. Enable Alltra Global World (651940) and DeFi Oracle (138) in Nova Networks, then use the same EVM address for PouchPay / custody deposits when supported.',
   },
+  {
+    id: 'novapay',
+    name: 'NovaPay Sandbox',
+    role: 'Nova Bank fiat payout partner sandbox (EUR)',
+    url: 'https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status',
+    secondaryUrl:
+      'https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/manifest',
+    accent: '#14B8A6',
+    sharedChains: [22016, 33001, 138, 9001],
+    notes:
+      'NovaPay is wired to Nova Bank Online on Railway (sandbox receive/send/callback/events — no live funds). Wiring guide: docs/NOVAPAY-NOVA-BANK-WIRING.md. Portal: apps/novapay-portal. Verify: npm run test:novapay && npm run test:novapay-accounts. Onboarding pack awaits external provider invite.',
+  },
 ]
 
 export const ECOSYSTEM_LINKS = {
@@ -34,6 +46,10 @@ export const ECOSYSTEM_LINKS = {
   walletNetworksApi: 'https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet/networks',
   ecosystemTokensApi:
     'https://nova-bank-api-production-7311.up.railway.app/api/v1/chains/ecosystem/tokens',
+  partnersStatus:
+    'https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/status',
+  novaPaySandbox:
+    'https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status',
   defiOracleWallet: 'https://wallet.defi-oracle.io/wallet/',
 } as const
 
