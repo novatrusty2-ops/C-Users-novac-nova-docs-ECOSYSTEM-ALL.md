@@ -8,6 +8,17 @@ Partner sandbox on Railway `nova-bank-api` (`nova-bank-api-production-7311`). De
 
 Live `status` returns `enabled=true`, `configured=true`, and sets `sandboxUiUrl` to the Railway URL above.
 
+## Portal (own dashboard)
+
+Sandbox ops UI lives in [`apps/novapay-portal`](../apps/novapay-portal). Deploy steps: [`docs/novapay-portal-railway.md`](novapay-portal-railway.md).
+
+```bash
+npm run dev:novapay-portal     # local http://localhost:5180
+npm run build:novapay-portal
+```
+
+After Railway **Generate domain**, put the HTTPS URL in `ECOSYSTEM.json` → `novaPay.portalUrl` (currently `null` until first deploy).
+
 ## Sandbox endpoints (Railway)
 
 Base: `https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox`

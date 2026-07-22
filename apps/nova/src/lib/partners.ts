@@ -34,7 +34,7 @@ export const PARTNERS: PartnerWallet[] = [
     accent: '#14B8A6',
     sharedChains: [22016, 33001, 138, 9001],
     notes:
-      'NovaPay sandbox is wired to Nova Bank Online on Railway (receive/send/callback/events — no live funds). Run npm run test:novapay. Client onboarding pack: docs/novapay-onboarding.md (awaiting external provider invite).',
+      'NovaPay sandbox is wired to Nova Bank Online on Railway (receive/send/callback/events — no live funds). Portal app: apps/novapay-portal (deploy docs/novapay-portal-railway.md). Run npm run test:novapay. Onboarding: docs/novapay-onboarding.md (awaiting provider invite).',
   },
 ]
 

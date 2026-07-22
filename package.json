@@ -4,16 +4,20 @@
   "private": true,
   "description": "Nova Wallet — https://novablockchain.it.com/",
   "workspaces": [
-    "apps/nova"
+    "apps/nova",
+    "apps/novapay-portal"
   ],
   "scripts": {
     "dev": "npm run dev -w nova-wallet",
     "dev:nova": "npm run dev -w nova-wallet",
+    "dev:novapay-portal": "npm run dev -w novapay-portal",
     "build": "npm run build -w nova-wallet",
     "build:nova": "npm run build -w nova-wallet",
+    "build:novapay-portal": "npm run build -w novapay-portal",
     "test": "npm run test -w nova-wallet",
     "test:nova": "npm run test -w nova-wallet",
     "typecheck": "npm run typecheck -w nova-wallet",
+    "typecheck:novapay-portal": "npm run typecheck -w novapay-portal",
     "fetch-api": "bash scripts/fetch-api.sh",
     "sync": "python3 scripts/sync-ecosystem.py",
     "sync:ecosystem": "bash scripts/fetch-api.sh && python3 scripts/sync-ecosystem.py",

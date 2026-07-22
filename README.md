@@ -23,11 +23,14 @@ npm run verify:ecosystem
 Chain 138 docs: [`docs/dbis-138.md`](docs/dbis-138.md) (Blockscout / Etherscan-compatible API — not etherscan.io).
 
 NovaPay sandbox (Railway): [`docs/novapay-sandbox-live-links.md`](docs/novapay-sandbox-live-links.md).  
-NovaPay onboarding (Step 2 pack): [`docs/novapay-onboarding.md`](docs/novapay-onboarding.md).
+NovaPay onboarding (Step 2 pack): [`docs/novapay-onboarding.md`](docs/novapay-onboarding.md).  
+NovaPay portal (Railway): [`docs/novapay-portal-railway.md`](docs/novapay-portal-railway.md) · app [`apps/novapay-portal`](apps/novapay-portal).
 
 ```bash
 npm run test:novapay                  # status → manifest → receive → send → events
 npm run check:novapay-onboarding      # invite probe (awaiting_provider until URL set)
+npm run dev:novapay-portal            # http://localhost:5180
+npm run build:novapay-portal
 ```
 
 App source: [`apps/nova`](apps/nova)
