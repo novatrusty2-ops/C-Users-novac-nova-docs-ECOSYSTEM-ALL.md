@@ -30,7 +30,9 @@ NovaPay bridge (NestJS-shaped proxy): [`apps/novapay-bridge`](apps/novapay-bridg
 
 ```bash
 npm run test:novapay                  # status → manifest → receive → send → events
+npm run test:novapay:to               # Nova Bank → NovaPay sandbox e2e (+ 3 accounts)
 npm run test:novapay-accounts         # smoke all 3 business settlement accounts
+npm run test:novapay:all              # connect + e2e + accounts + bridge
 npm run check:novapay-onboarding      # invite probe (awaiting_provider until URL set)
 npm run test:novapay-bridge           # /api/v1/novapay/* bridge vs live sandbox
 npm run start:novapay-bridge          # http://127.0.0.1:4080

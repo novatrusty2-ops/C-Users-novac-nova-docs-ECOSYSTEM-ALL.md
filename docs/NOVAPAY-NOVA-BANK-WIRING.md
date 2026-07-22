@@ -30,8 +30,9 @@ Default: same-host sandbox (not an external `api.novapay.com`). TyganPay-style e
 | Partners | https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/status |
 
 ```bash
-npm run test:novapay
-npm run test:novapay-accounts
+npm run test:novapay       # connect probe
+npm run test:novapay:to    # Nova Bank → NovaPay sandbox e2e
+npm run test:novapay:all   # connect + e2e + accounts + bridge
 ```
 
 ## Three business accounts
