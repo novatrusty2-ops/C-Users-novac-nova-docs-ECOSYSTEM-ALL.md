@@ -32,9 +32,15 @@ curl -s http://127.0.0.1:4080/api/v1/novapay/status | jq .
 
 1. New service → this repo → root directory `apps/novapay-bridge`
 2. Variables:
-   - `NOVAPAY_SANDBOX_BASE` = `https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox`
-   - `PUBLIC_BASE_URL` = `https://<your-bridge-domain>`
+   - `NOVAPAY_SANDBOX_BASE` (baked into `railway.toml` / Dockerfile)
+   - optional `PUBLIC_BASE_URL` (else uses `RAILWAY_PUBLIC_DOMAIN` after Generate Domain)
    - optional `NOVAPAY_API_KEY`, `NOVAPAY_WEBHOOK_SECRET`
-3. Generate domain → set `PUBLIC_BASE_URL` → paste URL into `ECOSYSTEM.json` → `novaPay.bridgeUrl`
+3. **Generate Domain** → stamp catalog:
+
+```bash
+npm run set:novapay-bridge-url -- https://<your-bridge-domain>
+```
+
+See [`docs/novapay-bridge-railway.md`](../../docs/novapay-bridge-railway.md).
 
 This does **not** patch the NestJS `nova-bank-api` process. For in-process Nest routes, use `scripts/install-novapay-partner.sh` with `NOVA_API_ROOT`.

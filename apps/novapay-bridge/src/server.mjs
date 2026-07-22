@@ -23,7 +23,23 @@ const SANDBOX_BASE = (
 ).replace(/\/$/, "");
 const API_KEY = process.env.NOVAPAY_API_KEY || "";
 const WEBHOOK_SECRET = process.env.NOVAPAY_WEBHOOK_SECRET || "";
-const PUBLIC_BASE = (process.env.PUBLIC_BASE_URL || "").replace(/\/$/, "");
+
+/** Step 3: prefer explicit PUBLIC_BASE_URL; else Railway public domain after Generate Domain. */
+function resolvePublicBase() {
+  const explicit = (process.env.PUBLIC_BASE_URL || "").trim().replace(/\/$/, "");
+  if (explicit) return explicit;
+  const railwayDomain = (process.env.RAILWAY_PUBLIC_DOMAIN || "").trim().replace(/\/$/, "");
+  if (railwayDomain) {
+    return railwayDomain.startsWith("http")
+      ? railwayDomain
+      : `https://${railwayDomain}`;
+  }
+  const railwayStatic = (process.env.RAILWAY_STATIC_URL || "").trim().replace(/\/$/, "");
+  if (railwayStatic) return railwayStatic;
+  return "";
+}
+
+const PUBLIC_BASE = resolvePublicBase();
 
 const events = [];
 const MAX_EVENTS = 200;

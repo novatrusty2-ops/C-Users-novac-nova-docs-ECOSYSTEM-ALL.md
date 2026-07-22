@@ -34,6 +34,7 @@ npm run test:novapay-accounts         # smoke all 3 business settlement accounts
 npm run check:novapay-onboarding      # invite probe (awaiting_provider until URL set)
 npm run test:novapay-bridge           # /api/v1/novapay/* bridge vs live sandbox
 npm run start:novapay-bridge          # http://127.0.0.1:4080
+npm run set:novapay-bridge-url -- https://<bridge-domain>   # step 3 catalog stamp
 npm run dev:novapay-portal            # http://localhost:5180
 npm run build:novapay-portal
 # NestJS patch (needs local API checkout):

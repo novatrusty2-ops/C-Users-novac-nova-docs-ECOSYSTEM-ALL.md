@@ -15,6 +15,7 @@
     "start:novapay-bridge": "npm run start -w novapay-bridge",
     "dev:novapay-bridge": "npm run dev -w novapay-bridge",
     "test:novapay-bridge": "npm run test -w novapay-bridge",
+    "set:novapay-bridge-url": "node scripts/set-novapay-bridge-url.mjs",
     "build": "npm run build -w nova-wallet",
     "build:nova": "npm run build -w nova-wallet",
     "build:novapay-portal": "npm run build -w novapay-portal",

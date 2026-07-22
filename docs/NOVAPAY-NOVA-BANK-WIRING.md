@@ -49,9 +49,13 @@ npm run test:novapay-bridge   # local integration vs live sandbox
 npm run start:novapay-bridge  # http://127.0.0.1:4080
 ```
 
-Railway: new service → root directory `apps/novapay-bridge` → set `NOVAPAY_SANDBOX_BASE` + `PUBLIC_BASE_URL` → generate domain → set `ECOSYSTEM.json` → `novaPay.bridgeUrl`.
+Railway: new service → root `apps/novapay-bridge` → **Generate Domain** →
 
-See [`docs/novapay-bridge-railway.md`](novapay-bridge-railway.md) and [`apps/novapay-bridge/README.md`](../apps/novapay-bridge/README.md).
+```bash
+npm run set:novapay-bridge-url -- https://<bridge-domain>
+```
+
+`PUBLIC_BASE_URL` auto-fills from `RAILWAY_PUBLIC_DOMAIN` when set. See [`docs/novapay-bridge-railway.md`](novapay-bridge-railway.md).
 
 ## NestJS patch install (optional)
 
