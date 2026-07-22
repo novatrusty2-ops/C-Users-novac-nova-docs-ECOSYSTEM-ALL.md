@@ -28,6 +28,7 @@ NovaPay portal (Railway): [`docs/novapay-portal-railway.md`](docs/novapay-portal
 
 ```bash
 npm run test:novapay                  # status → manifest → receive → send → events
+npm run test:novapay-accounts         # smoke all 3 business settlement accounts
 npm run check:novapay-onboarding      # invite probe (awaiting_provider until URL set)
 npm run dev:novapay-portal            # http://localhost:5180
 npm run build:novapay-portal

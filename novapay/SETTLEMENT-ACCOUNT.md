@@ -42,8 +42,15 @@ Configured for NovaPay sandbox portal defaults and onboarding pack fields.
 - Form payload: [`novapay/form-payload.json`](form-payload.json)
 - Ecosystem: `ECOSYSTEM.json` → `novaPay.settlement` + `novaPay.settlementAccounts`
 
+## Smoke test (all 3)
+
+```bash
+npm run test:novapay-accounts
+```
+
 ## Notes
 
 - Sandbox `POST /receive` uses `beneficiaryIban` + `beneficiarySwift`; for USD ACH the account number is sent as `beneficiaryIban` and routing is kept for ops.
 - `POST /send` must **not** include beneficiary fields.
 - Keep bank ownership proof PDFs for all accounts (`BANK_ACCOUNT_OWNERSHIP_PROOF`).
+- These are **sandbox / ops references** — not live OpenPayd EMI rails until Railway secrets + real-money flags are enabled.

@@ -23,6 +23,7 @@
     "sync:ecosystem": "bash scripts/fetch-api.sh && python3 scripts/sync-ecosystem.py",
     "verify:ecosystem": "node scripts/verify-ecosystem.mjs",
     "test:novapay": "node scripts/novapay-sandbox-test.mjs",
+    "test:novapay-accounts": "node scripts/novapay-accounts-smoke.mjs",
     "check:novapay-onboarding": "python3 scripts/check-novapay-onboarding.py"
   },
   "engines": {
