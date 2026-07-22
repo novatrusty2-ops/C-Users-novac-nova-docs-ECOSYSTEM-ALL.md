@@ -101,13 +101,16 @@ NOVA_API_ROOT=/path/to/nova/apps/api bash scripts/install-novapay-partner.sh
 Nova Wallet surfaces NovaPay under Settings → Nova Bank and Ecosystem → Live APIs / Partners.
 
 ```bash
-npm run test:novapay
+npm run test:novapay       # status → manifest → receive → send → events
+npm run test:novapay:to    # Nova Bank → NovaPay e2e (send + 3 settlement receives)
+npm run test:novapay:all   # connect + e2e + accounts + bridge
 ```
 
-Exercises Railway sandbox: `status` → `manifest` → `receive` → `send` → `events` (no auth, no live funds).
+Exercises Railway sandbox (no auth, no live funds).
 
 - `POST /receive` accepts the manifest payout sample (beneficiary fields allowed).
 - `POST /send` is loopback outbound — send `{ amount, currency, reference, transactionType }` only (no beneficiary fields).
+- Optional bridge path: `NOVAPAY_BRIDGE_URL=http://127.0.0.1:4080 npm run test:novapay:to`
 
 ## Step 2 — client onboarding pack
 
