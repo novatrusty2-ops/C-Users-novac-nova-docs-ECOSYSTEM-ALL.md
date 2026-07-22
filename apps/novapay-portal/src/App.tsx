@@ -11,7 +11,7 @@ import {
   postSend,
   sandboxBase,
 } from './api'
-import { SETTLEMENT_ACCOUNTS, accountById } from './accounts'
+import { SETTLEMENT_ACCOUNTS, accountById, beneficiaryAccountRef } from './accounts'
 
 function stamp() {
   return Date.now().toString(36)
@@ -33,9 +33,11 @@ export default function App() {
   const [receiveCurrency, setReceiveCurrency] = useState<string>(account.currency)
   const [receiveRef, setReceiveRef] = useState(`NOVA-NOVAPAY-PORTAL-${stamp()}`)
   const [beneficiaryName, setBeneficiaryName] = useState(account.accountHolder)
-  const [beneficiaryIban, setBeneficiaryIban] = useState(account.iban)
+  const [beneficiaryIban, setBeneficiaryIban] = useState(beneficiaryAccountRef(account))
   const [beneficiarySwift, setBeneficiarySwift] = useState(account.bic)
   const [intermediaryBic, setIntermediaryBic] = useState(account.intermediaryBic || '')
+  const [routingNumber, setRoutingNumber] = useState(account.routingNumber || '')
+  const [accountNumber, setAccountNumber] = useState(account.accountNumber || '')
 
   const [sendAmount, setSendAmount] = useState('1000.00')
   const [sendCurrency, setSendCurrency] = useState<string>(account.currency)
@@ -45,9 +47,11 @@ export default function App() {
     const next = accountById(id)
     setAccountId(id)
     setBeneficiaryName(next.accountHolder)
-    setBeneficiaryIban(next.iban)
+    setBeneficiaryIban(beneficiaryAccountRef(next))
     setBeneficiarySwift(next.bic)
     setIntermediaryBic(next.intermediaryBic || '')
+    setRoutingNumber(next.routingNumber || '')
+    setAccountNumber(next.accountNumber || '')
     setReceiveCurrency(next.currency)
     setSendCurrency(next.currency)
   }
@@ -216,18 +220,40 @@ export default function App() {
               Beneficiary name
               <input value={beneficiaryName} onChange={(e) => setBeneficiaryName(e.target.value)} required />
             </label>
+            {account.routingNumber || account.accountNumber ? (
+              <>
+                <label>
+                  Routing number
+                  <input value={routingNumber} onChange={(e) => setRoutingNumber(e.target.value)} required />
+                </label>
+                <label>
+                  Account number
+                  <input
+                    value={accountNumber}
+                    onChange={(e) => {
+                      setAccountNumber(e.target.value)
+                      setBeneficiaryIban(e.target.value)
+                    }}
+                    required
+                  />
+                </label>
+              </>
+            ) : (
+              <label>
+                Beneficiary IBAN
+                <input value={beneficiaryIban} onChange={(e) => setBeneficiaryIban(e.target.value)} required />
+              </label>
+            )}
             <label>
-              Beneficiary IBAN
-              <input value={beneficiaryIban} onChange={(e) => setBeneficiaryIban(e.target.value)} required />
-            </label>
-            <label>
-              Beneficiary SWIFT
+              Beneficiary SWIFT / BIC
               <input value={beneficiarySwift} onChange={(e) => setBeneficiarySwift(e.target.value)} required />
             </label>
-            <label>
-              Intermediary BIC
-              <input value={intermediaryBic} readOnly placeholder="—" />
-            </label>
+            {intermediaryBic ? (
+              <label>
+                Intermediary BIC
+                <input value={intermediaryBic} readOnly />
+              </label>
+            ) : null}
             <div className="actions">
               <button type="submit" disabled={busy !== null}>
                 {busy === 'receive' ? 'Sending…' : 'POST /receive'}

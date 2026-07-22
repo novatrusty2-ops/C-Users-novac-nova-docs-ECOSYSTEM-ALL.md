@@ -63,7 +63,7 @@
     "sanctionsExposureNotes": "Nova Bank Online runs KYC/AML/CFT program (public docs slug kyc). Sanctions screening is part of the platform compliance posture; no intentional sanctions exposure.",
     "bankRegion": "EUROPE",
     "accountJurisdiction": "Malta",
-    "bankName": "Revolut Bank UAB (EUR) + Wise Belgium (EUR)",
+    "bankName": "Revolut Bank UAB (EUR) + Wise Belgium (EUR) + Wise US Inc (USD)",
     "settlementAccountHolder": "TOTAL DESIGN S.R.L.",
     "settlementIban": "LT163250079884101461",
     "settlementBic": "REVOLT21",
@@ -76,6 +76,15 @@
       "bank": "Wise",
       "currency": "EUR",
       "address": "Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium"
+    },
+    "wiseUsdSettlement": {
+      "accountHolder": "GLOBAL LUXURY SRLS",
+      "routingNumber": "084009519",
+      "accountNumber": "515842398651352",
+      "bic": "TRWIUS35XXX",
+      "bank": "Wise US Inc",
+      "currency": "USD",
+      "address": "108 W 13th St, Wilmington, DE, 19801, United States"
     }
   },
   "documentsExpected": [
@@ -119,7 +128,7 @@
     "Company registration number and registered address (Nova Bank Malta Ltd)",
     "Authorized representative legal identity + passport scan",
     "Company registration documents PDF",
-    "Bank account ownership proof PDF for TOTAL DESIGN S.R.L. (LT163250079884101461) and GLOBAL LUXURY SRLS Wise EUR (BE18905804591765)",
+    "Bank account ownership proof PDFs for TOTAL DESIGN Revolut EUR, GLOBAL LUXURY Wise EUR (BE18905804591765), and GLOBAL LUXURY Wise USD (routing 084009519)",
     "Signed source-of-funds declaration"
   ],
   "productionUrls": {

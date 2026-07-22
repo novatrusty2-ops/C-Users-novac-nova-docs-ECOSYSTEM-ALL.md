@@ -10,12 +10,13 @@ Live `status` returns `enabled=true`, `configured=true`, and sets `sandboxUiUrl`
 
 ## Settlement accounts
 
-| Currency | Holder | IBAN | BIC | Notes |
-|----------|--------|------|-----|--------|
-| EUR | TOTAL DESIGN S.R.L. | LT163250079884101461 | REVOLT21 | Revolut · intermediary CHASGB2L |
-| EUR | GLOBAL LUXURY SRLS | BE18905804591765 | TRWIBEB1XXX | Wise business · Rue du Trône 100, Brussels |
+| Currency | Holder | Account | BIC | Notes |
+|----------|--------|---------|-----|--------|
+| EUR | TOTAL DESIGN S.R.L. | IBAN LT163250079884101461 | REVOLT21 | Revolut · intermediary CHASGB2L |
+| EUR | GLOBAL LUXURY SRLS | IBAN BE18905804591765 | TRWIBEB1XXX | Wise · Brussels |
+| USD | GLOBAL LUXURY SRLS | Routing 084009519 · Acct 515842398651352 | TRWIUS35XXX | Wise US Inc · Wilmington DE |
 
-Details: [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md). Portal has an account picker for both.
+Details: [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md). Portal account picker covers all three.
 
 ## Portal (own dashboard)
 

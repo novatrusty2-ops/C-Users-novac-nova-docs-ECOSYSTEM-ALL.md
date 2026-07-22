@@ -80,6 +80,17 @@ See [`novapay/SETTLEMENT-ACCOUNT.md`](../novapay/SETTLEMENT-ACCOUNT.md).
 | Bank | Wise |
 | Address | Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium |
 
+### USD — Wise (business)
+
+| Field | Value |
+|-------|--------|
+| Account holder | GLOBAL LUXURY SRLS |
+| Routing number | 084009519 |
+| Account number | 515842398651352 |
+| BIC | TRWIUS35XXX |
+| Bank | Wise US Inc |
+| Address | 108 W 13th St, Wilmington, DE, 19801, United States |
+
 ## Still required from your side (not in public API)
 
 1. External NovaPay provider invite  

@@ -23,16 +23,27 @@ Configured for NovaPay sandbox portal defaults and onboarding pack fields.
 | Address | Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium |
 | Currency | **EUR** |
 
+## 3) USD — Wise (business)
+
+| Field | Value |
+|-------|--------|
+| Account holder | **GLOBAL LUXURY SRLS** |
+| Routing number | `084009519` |
+| Account number | `515842398651352` |
+| BIC / SWIFT | `TRWIUS35XXX` |
+| Bank | Wise US Inc |
+| Address | 108 W 13th St, Wilmington, DE, 19801, United States |
+| Currency | **USD** |
+
 ## Where wired
 
 - Portal account picker: [`apps/novapay-portal/src/accounts.ts`](../apps/novapay-portal/src/accounts.ts)
 - Onboarding pack: [`novapay/nova-onboarding-pack.json`](nova-onboarding-pack.json)
 - Form payload: [`novapay/form-payload.json`](form-payload.json)
-- Ecosystem: `ECOSYSTEM.json` → `novaPay.settlement` (primary EUR Revolut) + `novaPay.settlementAccounts`
+- Ecosystem: `ECOSYSTEM.json` → `novaPay.settlement` + `novaPay.settlementAccounts`
 
 ## Notes
 
-- Sandbox `POST /receive` accepts beneficiary IBAN/SWIFT; intermediary BIC is for ops/wire instructions.
+- Sandbox `POST /receive` uses `beneficiaryIban` + `beneficiarySwift`; for USD ACH the account number is sent as `beneficiaryIban` and routing is kept for ops.
 - `POST /send` must **not** include beneficiary fields.
-- Both profiles are **EUR** business accounts for NovaPay sandbox / onboarding.
-- Keep bank ownership proof PDFs for both IBANs (`BANK_ACCOUNT_OWNERSHIP_PROOF`).
+- Keep bank ownership proof PDFs for all accounts (`BANK_ACCOUNT_OWNERSHIP_PROOF`).
