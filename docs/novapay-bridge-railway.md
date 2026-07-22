@@ -16,10 +16,17 @@ Live sandbox is already on Nova Bank API (`/api/v1/partners/novapay/sandbox/*`).
 
 | Variable | Value |
 |----------|--------|
-| `NOVAPAY_SANDBOX_BASE` | `https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox` |
+| `NOVAPAY_SANDBOX_BASE` | **Already baked in** `railway.toml` + Dockerfile. Confirm in Railway → Variables: `https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox` |
 | `PUBLIC_BASE_URL` | `https://<generated-domain>` (set after domain) |
 | `NOVAPAY_API_KEY` | optional bearer |
 | `NOVAPAY_WEBHOOK_SECRET` | optional HMAC |
+
+**Step 2 copy-paste (Railway → Variables → New):**
+
+```text
+NOVAPAY_SANDBOX_BASE
+https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox
+```
 
 4. Generate domain → set `PUBLIC_BASE_URL`
 5. Smoke:
