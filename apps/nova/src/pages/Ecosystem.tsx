@@ -107,7 +107,7 @@ export function Ecosystem() {
 
 
         <section className="card-surface space-y-4">
-          <h2 className="font-display text-sm font-semibold text-nova-ink">Partner wallets</h2>
+          <h2 className="font-display text-sm font-semibold text-nova-ink">Partners</h2>
           {PARTNERS.map((p) => (
             <div key={p.id} className="rounded-xl border border-nova-border/60 p-3 space-y-2">
               <div className="flex items-center gap-2">

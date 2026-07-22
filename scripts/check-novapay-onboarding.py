@@ -70,13 +70,16 @@ def write_invite_status(status: dict) -> None:
     if not PACK_PATH.exists():
         return
     pack = json.loads(PACK_PATH.read_text())
+    before = json.dumps(pack, indent=2) + "\n"
     pack.setdefault("source", {})["inviteStatus"] = status
     if status.get("inviteUrl"):
         pack["source"]["novaPayInviteUrls"] = [status["inviteUrl"]]
     if status.get("token"):
         pack["source"]["novaPayInviteToken"] = status["token"]
-    PACK_PATH.write_text(json.dumps(pack, indent=2) + "\n")
-    print(f"Updated {PACK_PATH}", file=sys.stderr)
+    after = json.dumps(pack, indent=2) + "\n"
+    if after != before:
+        PACK_PATH.write_text(after)
+        print(f"Updated {PACK_PATH}", file=sys.stderr)
 
 
 def main() -> int:
