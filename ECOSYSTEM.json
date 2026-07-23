@@ -3,6 +3,72 @@
   "generatedAt": "2026-07-20T16:43:57.314Z",
   "generatedFrom": "nova",
   "organization": "Anakatech LLC",
+  "github": {
+    "primaryAccount": "zaragoza444",
+    "profileUrl": "https://github.com/zaragoza444",
+    "email": "zardashtways44@gmail.com",
+    "docsCatalog": "novatrusty2-ops/C-Users-novac-nova-docs-ECOSYSTEM-ALL.md",
+    "repos": [
+      {
+        "id": "nova-trust",
+        "url": "https://github.com/zaragoza444/nova-trust",
+        "role": "Nova banking + blockchain ecosystem monorepo (apps, services, contracts, deploy)",
+        "defaultBranch": "main",
+        "pushFromPc": true
+      },
+      {
+        "id": "nova-plus-wallet",
+        "url": "https://github.com/zaragoza444/nova-plus-wallet",
+        "role": "Nova Plus Wallet web — novabank.uk/plus/",
+        "defaultBranch": "main",
+        "homepage": "https://novabank.uk/plus/",
+        "pushFromPc": true
+      },
+      {
+        "id": "nova-wallet",
+        "url": "https://github.com/zaragoza444/nova-wallet",
+        "role": "Nova Plus Wallet Signet fork (web + mobile)",
+        "defaultBranch": "master",
+        "pushFromPc": true
+      },
+      {
+        "id": "onex",
+        "url": "https://github.com/zaragoza444/onex",
+        "role": "OneX blockchain — PoW node, wallet bridge, DeFi, ledger",
+        "defaultBranch": "main",
+        "pushFromPc": true
+      },
+      {
+        "id": "alltra-plus-blockchain",
+        "url": "https://github.com/zaragoza444/alltra-plus-blockchain",
+        "role": "Alltra Plus EVM chain 651941 — DEX, bridge, wallets",
+        "defaultBranch": "master",
+        "homepage": "https://novabank.uk/plus/",
+        "pushFromPc": true
+      },
+      {
+        "id": "https-github.com-zaragoza444-onex",
+        "url": "https://github.com/zaragoza444/https-github.com-zaragoza444-onex",
+        "role": "OneX mirror/alias repo",
+        "defaultBranch": "main",
+        "pushFromPc": false
+      },
+      {
+        "id": "onix",
+        "url": "https://github.com/zaragoza444/onix",
+        "role": "Onix production platform",
+        "defaultBranch": "main",
+        "pushFromPc": false
+      },
+      {
+        "id": "shiva-blockchain",
+        "url": "https://github.com/zaragoza444/shiva-blockchain",
+        "role": "Shiva / Onex-related blockchain",
+        "defaultBranch": "main",
+        "pushFromPc": false
+      }
+    ]
+  },
   "products": {
     "novaBankOnline": {
       "name": "Nova Bank Online",
@@ -249,21 +315,6 @@
     "path": "apps/nova",
     "url": "https://novablockchain.it.com/",
     "deploy": ".github/workflows/deploy-nova.yml"
-  },
-  "onexLocal": {
-    "bridgeBase": "http://127.0.0.1:9338",
-    "nodeBase": "http://127.0.0.1:8545",
-    "bridge": {
-      "walletUi": "http://127.0.0.1:9338/wallet/",
-      "health": "http://127.0.0.1:9338/health",
-      "rpc": "http://127.0.0.1:9338/rpc"
-    },
-    "node": {
-      "explorer": "http://127.0.0.1:8545/explorer/",
-      "rpc": "http://127.0.0.1:8545/rpc",
-      "status": "http://127.0.0.1:8545/api/v1/status",
-      "health": "http://127.0.0.1:8545/health"
-    }
   },
   "novaOne": {
     "chainId": 22016,
@@ -2759,7 +2810,119 @@
     "bridgeRelayerPath": "/opt/nova-bridge-adapter",
     "novaOneWrappedTokenBridge": "0x227a6f3EEF2df576bc127dF0326D1F4B6f0ce9Cb",
     "ethereumSourceBridge": null,
-    "bridgeDeployer": "0x66d64Fd15552968f42db54532b095b3B4aA60d3c"
+    "bridgeDeployer": "0x66d64Fd15552968f42db54532b095b3B4aA60d3c",
+    "notes": [
+      "Public NovaONE RPC edge today: Cloudflare → nginx → socat → node1",
+      "Bridge relayer runs on bare VPS (OVH-class IP 51.75.64.28) at /opt/nova-bridge-adapter",
+      "Most app APIs and NRW chain stay on Railway (*.up.railway.app) — do not move to VPS by default",
+      "LAN validators (192.168.1.50) are local; CDN/edge only fronts the public RPC path"
+    ]
+  },
+  "infraAlternatives": {
+    "assumes": "OHV = OVH",
+    "recommendedDefault": {
+      "cloudflareRpcEdge": "Bunny.net (CDN + proxy) or nginx/Caddy on the VPS with provider firewall",
+      "ovhVpsRelayer": "Hetzner Cloud CX22/CX32 (EU)",
+      "vpsHabit": "Prefer one Hetzner box for relayer + nginx edge when traffic is modest; keep Railway for app APIs"
+    },
+    "currentRoles": {
+      "cloudflare": "Reverse-proxy / CDN edge for public NovaONE RPC (Cloudflare → nginx → socat → node1)",
+      "vpsOrOvh": "Bridge relayer host 51.75.64.28 at /opt/nova-bridge-adapter",
+      "railway": "Managed hosting for most APIs/chains — leave as-is"
+    },
+    "cloudflareAlternatives": [
+      {
+        "name": "Bunny.net",
+        "fit": "CDN + simple WAF; good Cloudflare-lite swap for RPC edge"
+      },
+      {
+        "name": "Fastly / AWS CloudFront",
+        "fit": "Heavier enterprise edge"
+      },
+      {
+        "name": "No CDN",
+        "fit": "Terminate TLS on Caddy/nginx on Hetzner; use Hetzner Cloud Firewall + rate limits for public RPC"
+      },
+      {
+        "name": "DNS-only alternatives",
+        "fit": "If Cloudflare was only used for DNS: Bunny DNS, Route53, or registrar DNS (Namecheap, Porkbun)"
+      }
+    ],
+    "rpcEdgeNote": "Public RPC has no auth — edge WAF matters less than rate limiting and IP allowlists on nginx",
+    "ovhVpsAlternatives": [
+      {
+        "name": "Hetzner Cloud",
+        "fit": "Recommended — EU, cheap, reliable for relayer + nginx",
+        "recommended": true
+      },
+      {
+        "name": "Scaleway",
+        "fit": "France/EU alternative to OVH"
+      },
+      {
+        "name": "Contabo",
+        "fit": "Budget VPS"
+      },
+      {
+        "name": "DigitalOcean / Vultr / Linode",
+        "fit": "Simpler UX, higher cost"
+      },
+      {
+        "name": "Oracle Cloud free tier",
+        "fit": "Free ARM; more setup friction"
+      }
+    ],
+    "doNotReplace": [
+      "Railway apps (*.up.railway.app) — managed layer; do not move to a VPS unless full self-host is required",
+      "LAN validators (192.168.1.50) — local only; edge/CDN fronts the public path"
+    ],
+    "targetPath": {
+      "edge": "Bunny.net or direct nginx/Caddy on Hetzner",
+      "relayer": "Hetzner Cloud CX22+",
+      "apis": "Railway (unchanged)"
+    },
+    "cutoverChecklist": [
+      "Provision Hetzner CX22+; copy /opt/nova-bridge-adapter; open only needed ports via Cloud Firewall",
+      "Point novaone-rpc.anakatech.llc / path proxy to the new origin; keep https://anakatech.llc/novaone-rpc/ live during cutover",
+      "Lower DNS TTLs before cutover",
+      "Drop Cloudflare proxy (orange cloud) or swap edge to Bunny.net",
+      "Verify JSON-RPC eth_blockNumber (and related) through the public path URL",
+      "Update deployed.bridgeRelayerVps in ECOSYSTEM.json to the new IP",
+      "Decommission or firewall the old OVH-class host after traffic has drained"
+    ],
+    "deployFromPc": {
+      "note": "Run these on your PC. This cloud agent has no SSH/API credentials for live hosts.",
+      "option1Docs": "Catalog + infraAlternatives in ECOSYSTEM.json (this branch / PR)",
+      "option2CutoverCurrentStack": "deploy/cutover-from-pc.sh",
+      "option3HetznerMigrate": "deploy/hetzner-migrate.sh (requires NEW_HOST + SSH to old and new)",
+      "option4LocalPc": "deploy/local-from-pc.sh (optional SYNC_RELAYER=1)",
+      "option5PushZaragoza444": "deploy/push-zaragoza444-from-pc.ps1 (push Nova repos to github.com/zaragoza444)",
+      "commands": [
+        "./deploy/cutover-from-pc.sh",
+        "NEW_HOST=<hetzner-ipv4> ./deploy/hetzner-migrate.sh",
+        "SYNC_RELAYER=1 ./deploy/local-from-pc.sh",
+        "powershell -ExecutionPolicy Bypass -File deploy/push-zaragoza444-from-pc.ps1"
+      ]
+    }
+  },
+  "deploy": {
+    "scripts": {
+      "cutoverFromPc": "deploy/cutover-from-pc.sh",
+      "hetznerMigrate": "deploy/hetzner-migrate.sh",
+      "localFromPc": "deploy/local-from-pc.sh",
+      "pushZaragoza444FromPc": "deploy/push-zaragoza444-from-pc.ps1"
+    },
+    "githubAccount": "zaragoza444",
+    "primaryMonorepo": "https://github.com/zaragoza444/nova-trust",
+    "currentRelayer": {
+      "host": "51.75.64.28",
+      "path": "/opt/nova-bridge-adapter"
+    },
+    "publicRpc": {
+      "pathUrl": "https://anakatech.llc/novaone-rpc/",
+      "subdomainUrl": "https://novaone-rpc.anakatech.llc"
+    },
+    "lanRpc": "http://192.168.1.50:8551"
   },
   "api": {
     "globalStatus": "/api/v1/global/status",
