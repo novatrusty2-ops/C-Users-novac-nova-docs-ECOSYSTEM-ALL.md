@@ -119,7 +119,8 @@ export function Swap() {
       <TopBar title="Trade" />
       <div className="page-container space-y-4">
         <p className="text-xs text-nova-muted">
-          Stables swappable · liquidity + sentiment on NovaONE / NRW / DeFi Oracle (138)
+          Production Nova Swap quotes (HTTP 200) · liquidity + sentiment on NovaONE / NRW / DeFi
+          Oracle (138)
           {activeAccount ? '' : ' · connect wallet to trade'}
         </p>
 
@@ -200,6 +201,14 @@ export function Swap() {
               <span className="text-nova-muted">Fee</span>
               <span className="font-mono text-nova-ink">
                 {quote.feeAmount} {quote.fromSymbol} ({quote.feeBps / 100}%)
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-nova-muted">Provider</span>
+              <span className="font-mono text-nova-ink">
+                {quote.provider}
+                {quote.httpStatus != null ? ` · HTTP ${quote.httpStatus}` : ''}
+                {quote.marketId ? ` · ${quote.marketId}` : ''}
               </span>
             </div>
             <div className="flex justify-between text-sm gap-3">

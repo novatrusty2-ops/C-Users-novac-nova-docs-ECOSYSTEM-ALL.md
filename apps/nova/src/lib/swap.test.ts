@@ -7,7 +7,7 @@ describe('swap', () => {
   })
 
   it('quotes 1:1 stable swap minus fee', async () => {
-    const q = await quoteSwap('USDC', 'USDT', '1000')
+    const q = await quoteSwap('USDC', 'USDT', '1000', { preferInternal: true })
     expect(q.rate).toBe(1)
     expect(q.feeBps).toBe(30)
     expect(Number(q.feeAmount)).toBeCloseTo(3, 5)
@@ -25,12 +25,14 @@ describe('swap', () => {
   })
 
   it('quotes cross-asset swap using oracle prices', async () => {
-    const q = await quoteSwap('NOVA', 'NRW', '100')
+    const q = await quoteSwap('NOVA', 'NRW', '100', { preferInternal: true })
     expect(Number(q.amountOut)).toBeGreaterThan(0)
     expect(Number(q.feeAmount)).toBeCloseTo(0.3, 5)
   })
 
   it('throws when price unavailable', async () => {
-    await expect(quoteSwap('UNKNOWN', 'USDC', '10')).rejects.toThrow(/price unavailable/i)
+    await expect(
+      quoteSwap('UNKNOWN', 'USDC', '10', { preferInternal: true }),
+    ).rejects.toThrow(/price unavailable/i)
   })
 })
