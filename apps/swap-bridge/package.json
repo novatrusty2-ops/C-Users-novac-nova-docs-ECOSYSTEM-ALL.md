@@ -1,0 +1,15 @@
+{
+  "name": "swap-bridge",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Nova Swap production bridge — HTTP 200 quotes + seeded books for all markets",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node --watch src/server.mjs",
+    "test": "node --test test/bridge.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

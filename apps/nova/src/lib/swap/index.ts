@@ -1,4 +1,5 @@
 import { isStablecoin, resolveUsdPrice } from '@/lib/prices'
+import { quoteNovaBankSwap } from '@/lib/swap/novaBank'
 
 export interface SwapQuote {
   fromSymbol: string
@@ -7,15 +8,26 @@ export interface SwapQuote {
   amountOut: string
   feeBps: number
   feeAmount: string
-  provider: 'internal'
+  provider: 'internal' | 'nova-bank'
   rate: number
+  marketId?: string
+  httpStatus?: number
 }
+
+export {
+  quoteNovaBankSwap,
+  fetchSwapMarkets,
+  findMarketId,
+  NOVA_BANK_SWAP_API,
+} from '@/lib/swap/novaBank'
 
 const SWAP_FEE_BPS = 30
 
 export interface QuoteSwapOptions {
   coingeckoFromId?: string
   coingeckoToId?: string
+  /** Skip Nova Bank production quote (tests / offline). */
+  preferInternal?: boolean
 }
 
 export async function quoteSwap(
@@ -29,6 +41,35 @@ export async function quoteSwap(
   const amountNum = Number(amount)
   if (!Number.isFinite(amountNum) || amountNum <= 0) throw new Error('Invalid amount')
   if (fromSym === toSym) throw new Error('Same token')
+
+  // Prefer Nova Bank production / swap-bridge (HTTP 200) when a market exists.
+  const skipLive =
+    options.preferInternal === true ||
+    import.meta.env.VITE_SWAP_INTERNAL_ONLY === '1' ||
+    import.meta.env.MODE === 'test'
+  if (!skipLive) {
+    try {
+      const live = await quoteNovaBankSwap(fromSym, toSym, amount, {
+        allow201: import.meta.env.VITE_SWAP_ALLOW_201 === '1',
+      })
+      const rate =
+        Number(live.amountOut) / Math.max(Number(live.amountIn), 1e-12)
+      return {
+        fromSymbol: fromSym,
+        toSymbol: toSym,
+        amountIn: live.amountIn,
+        amountOut: live.amountOut,
+        feeBps: SWAP_FEE_BPS,
+        feeAmount: live.fee ?? '0',
+        provider: 'nova-bank',
+        rate,
+        marketId: live.marketId,
+        httpStatus: live.httpStatus,
+      }
+    } catch {
+      /* fall through to internal oracle quote */
+    }
+  }
 
   if (isStablecoin(fromSym) && isStablecoin(toSym)) {
     const fee = (amountNum * SWAP_FEE_BPS) / 10_000

@@ -41,6 +41,7 @@ export const PARTNERS: PartnerWallet[] = [
 export const ECOSYSTEM_LINKS = {
   novaBank: 'https://nova-bank-api-production-7311.up.railway.app',
   novaSwap: 'https://nova-bank-api-production-7311.up.railway.app/swap',
+  novaSwapApi: 'https://nova-bank-api-production-7311.up.railway.app/api/v1',
   novaOneExplorer: 'https://novaone.anakatech.llc/',
   nrwCentralBank: 'https://nrw-central-bank-api-production.up.railway.app',
   walletNetworksApi: 'https://nova-bank-api-production-7311.up.railway.app/api/v1/wallet/networks',

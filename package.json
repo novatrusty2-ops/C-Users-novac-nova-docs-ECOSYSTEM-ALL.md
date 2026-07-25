@@ -6,7 +6,8 @@
   "workspaces": [
     "apps/nova",
     "apps/novapay-portal",
-    "apps/novapay-bridge"
+    "apps/novapay-bridge",
+    "apps/swap-bridge"
   ],
   "scripts": {
     "dev": "npm run dev -w nova-wallet",
@@ -31,7 +32,12 @@
     "test:novapay:to": "node scripts/novapay-to-sandbox-e2e.mjs",
     "test:novapay-accounts": "node scripts/novapay-accounts-smoke.mjs",
     "test:novapay:all": "npm run test:novapay && npm run test:novapay:to && npm run test:novapay-accounts && npm run test:novapay-bridge",
-    "check:novapay-onboarding": "python3 scripts/check-novapay-onboarding.py"
+    "check:novapay-onboarding": "python3 scripts/check-novapay-onboarding.py",
+    "start:swap-bridge": "npm run start -w swap-bridge",
+    "dev:swap-bridge": "npm run dev -w swap-bridge",
+    "test:swap-bridge": "npm run test -w swap-bridge",
+    "verify:swap-prod": "node scripts/verify-swap-prod.mjs",
+    "install:swap-prod-ready": "bash scripts/install-swap-prod-ready.sh"
   },
   "engines": {
     "node": ">=20"

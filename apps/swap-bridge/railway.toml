@@ -1,0 +1,13 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+
+[variables]
+NOVA_BANK_API_BASE = "https://nova-bank-api-production-7311.up.railway.app/api/v1"
+SWAP_REQUIRE_HTTP_200 = "1"
