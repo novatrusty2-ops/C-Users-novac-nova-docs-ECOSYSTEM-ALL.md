@@ -31,7 +31,9 @@
     "test:novapay:to": "node scripts/novapay-to-sandbox-e2e.mjs",
     "test:novapay-accounts": "node scripts/novapay-accounts-smoke.mjs",
     "test:novapay:all": "npm run test:novapay && npm run test:novapay:to && npm run test:novapay-accounts && npm run test:novapay-bridge",
-    "check:novapay-onboarding": "python3 scripts/check-novapay-onboarding.py"
+    "check:novapay-onboarding": "python3 scripts/check-novapay-onboarding.py",
+    "swap:clones-eth": "node scripts/live-swap-clones-to-eth.mjs",
+    "withdraw:eth-onex": "node scripts/live-withdraw-eth-onex.mjs"
   },
   "engines": {
     "node": ">=20"
