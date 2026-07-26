@@ -127,7 +127,15 @@ export class PouchpayCalldataService {
       )
     }
 
-    const amountIn = parseAmountIn(amountRaw, fromToken.decimals)
+    let amountIn: bigint
+    try {
+      amountIn = parseAmountIn(amountRaw, fromToken.decimals)
+    } catch (err) {
+      throw new HttpException(
+        err instanceof Error ? err.message : String(err),
+        HttpStatus.BAD_REQUEST,
+      )
+    }
     const amountsResult = await this.ethCall(ROUTER, encodeGetAmountsOut(amountIn, path))
     const amounts = decodeAmountsOut(amountsResult)
     const amountOut = amounts[amounts.length - 1]
@@ -322,32 +330,37 @@ export class PouchpayCalldataService {
   /** Prefer bridge when configured; otherwise build locally (no bridge required). */
   async quoteWithOptionalBridge(body: QuoteInput): Promise<QuoteResult> {
     const bridge = (process.env.POUCHPAY_BRIDGE_URL || '').replace(/\/$/, '')
+    const normalized = this.normalizeInput(body)
     if (!bridge) {
-      return this.buildQuote(body)
+      return this.buildQuote(normalized)
     }
-    const res = await fetch(`${bridge}/v0/quote`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(body),
-    })
-    const data = (await res.json().catch(() => ({}))) as QuoteResult
-    if (!res.ok) {
-      throw new HttpException(
-        (data?.message as string) || `pouchpay-bridge HTTP ${res.status}`,
-        res.status >= 400 && res.status < 600 ? res.status : HttpStatus.BAD_GATEWAY,
-      )
+
+    try {
+      const res = await fetch(`${bridge}/v0/quote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(normalized),
+      })
+      const data = (await res.json().catch(() => ({}))) as QuoteResult
+      if (
+        res.ok &&
+        data?.callData &&
+        Array.isArray(data?.path) &&
+        (data.path as unknown[]).length >= 2
+      ) {
+        return {
+          ...data,
+          source: data.source || 'pouchpay-bridge',
+          status: 'green',
+          color: 'green',
+          httpStatus: 200,
+          ok: true,
+        }
+      }
+    } catch {
+      // Bridge unreachable / invalid response — fall through to embedded builder
     }
-    if (!data?.callData || !Array.isArray(data?.path) || (data.path as unknown[]).length < 2) {
-      // Bridge returned incomplete quote — fall back to embedded builder
-      return this.buildQuote(body)
-    }
-    return {
-      ...data,
-      source: data.source || 'pouchpay-bridge',
-      status: 'green',
-      color: 'green',
-      httpStatus: 200,
-      ok: true,
-    }
+
+    return this.buildQuote(normalized)
   }
 }

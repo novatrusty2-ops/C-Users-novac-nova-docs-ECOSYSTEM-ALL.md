@@ -88,7 +88,10 @@ export function buildSwapPath(fromToken: TokenInfo, toToken: TokenInfo) {
 export function parseAmountIn(amount: string | number, decimals: number): bigint {
   const s = String(amount).trim()
   if (!s || Number(s) <= 0) throw new Error('Invalid amount')
-  if (/^\d+$/.test(s) && BigInt(s) >= 10n ** 15n) return BigInt(s)
+  // Match apps/pouchpay-bridge: bare integers look like wei when large enough.
+  if (/^\d+$/.test(s) && BigInt(s) >= 10n ** BigInt(Math.max(decimals - 2, 0))) {
+    if (BigInt(s) >= 10n ** 15n) return BigInt(s)
+  }
   const [whole, frac = ''] = s.split('.')
   const fracPadded = (frac + '0'.repeat(decimals)).slice(0, decimals)
   return BigInt(whole || '0') * 10n ** BigInt(decimals) + BigInt(fracPadded || '0')
