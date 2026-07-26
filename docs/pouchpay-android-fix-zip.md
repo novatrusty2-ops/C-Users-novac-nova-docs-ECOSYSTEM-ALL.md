@@ -1,0 +1,7 @@
+# PouchPay Android fix zip
+
+Download: [`dist/pouchpay-android-31.195-calldata-fixed.zip`](../dist/pouchpay-android-31.195-calldata-fixed.zip)
+
+- Build: **31.195** / versionCode **31195**
+- Fixed quote/routes with router `callData`
+- Bridge: https://pouchpay-bridge-production-f56f.up.railway.app
