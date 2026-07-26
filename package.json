@@ -1,6 +1,6 @@
 {
   "name": "nova-wallet",
-  "version": "31.195",
+  "version": "1.9.5",
   "private": true,
   "description": "Nova Wallet — https://novablockchain.it.com/",
   "workspaces": [
@@ -20,6 +20,7 @@
     "dev:pouchpay-bridge": "npm run dev -w pouchpay-bridge",
     "test:pouchpay-bridge": "npm run test -w pouchpay-bridge",
     "verify:pouchpay-routes": "node scripts/verify-pouchpay-routes.mjs",
+    "verify:pouchpay-calldata-patch": "node scripts/verify-pouchpay-calldata-patch.mjs",
     "install:pouchpay-calldata": "bash scripts/install-pouchpay-calldata.sh",
     "set:novapay-bridge-url": "node scripts/set-novapay-bridge-url.mjs",
     "build": "npm run build -w nova-wallet",

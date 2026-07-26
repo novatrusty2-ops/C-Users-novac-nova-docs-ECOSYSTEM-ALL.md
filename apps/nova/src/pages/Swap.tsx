@@ -138,7 +138,7 @@ export function Swap() {
       setPouchQuote(null)
       if (err instanceof MissingCallDataError) {
         setError(
-          'Global Swap missing callData — set VITE_POUCHPAY_API_BASE to pouchpay-bridge (live 31.195)',
+          'Global Swap missing callData — set VITE_POUCHPAY_API_BASE to pouchpay-bridge (1.9.5 / 31)',
         )
       } else {
         setError(err instanceof Error ? err.message : 'Quote failed')

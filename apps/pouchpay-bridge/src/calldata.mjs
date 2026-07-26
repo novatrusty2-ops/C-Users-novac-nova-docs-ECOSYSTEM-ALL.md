@@ -171,6 +171,9 @@ export async function buildPouchpayRoute(input) {
     transferable: true,
     fromToken: tokenMeta(fromToken),
     toToken: tokenMeta(toToken),
+    appVersion: "1.9.5",
+    versionCode: 31,
+    liveBuild: "1.9.5",
   };
 }
 
