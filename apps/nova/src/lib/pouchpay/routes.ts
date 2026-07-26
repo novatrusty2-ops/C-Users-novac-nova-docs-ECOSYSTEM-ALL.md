@@ -83,8 +83,19 @@ export async function quotePouchpayRoute(
     recipient?: string
     slippageBps?: number
     requireCallData?: boolean
+    /** Prefer local UniswapV2 callData builder (default true — fixes upstream gap). */
+    preferOnChainBuilder?: boolean
   } = {},
 ): Promise<PouchpayRouteQuote> {
+  const preferOnChain = options.preferOnChainBuilder !== false
+  if (preferOnChain) {
+    const { buildAlltraCallDataQuote } = await import('./calldata')
+    return buildAlltraCallDataQuote(fromSymbol, toSymbol, amount, {
+      recipient: options.recipient,
+      slippageBps: options.slippageBps,
+    })
+  }
+
   const base = options.base ?? POUCHPAY_API_BASE
   const requireCallData = options.requireCallData !== false
   const body: Record<string, unknown> = {

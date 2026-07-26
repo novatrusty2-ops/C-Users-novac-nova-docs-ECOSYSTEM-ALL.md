@@ -116,4 +116,57 @@
   .token-list > li {
     border-color: var(--okx-hairline);
   }
+
+  /* Readable token picker — fixes near-black native select/option sheets */
+  .token-picker-trigger {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold outline-none;
+    background: #e8eef5;
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+  }
+
+  .token-picker-trigger:hover {
+    background: #dbe7f3;
+  }
+
+  .token-picker-sheet {
+    background: #f8fafc;
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+  }
+
+  .token-picker-search {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.14);
+  }
+
+  .token-picker-search::placeholder {
+    color: #64748b;
+  }
+
+  .token-picker-row {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  .token-picker-row:hover {
+    background: #e8f7f4;
+    border-color: rgba(20, 184, 166, 0.45);
+  }
+
+  .token-picker-row.is-active {
+    background: #14b8a6;
+    color: #042f2e;
+    border-color: #14b8a6;
+  }
+
+  /* Fallback if any native select remains on Trade */
+  select.token-native-select,
+  select.token-native-select option {
+    color-scheme: light;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
 }

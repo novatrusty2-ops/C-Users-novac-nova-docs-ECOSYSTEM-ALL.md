@@ -14,6 +14,7 @@ import type { AutolockMinutes, DisplayCurrency } from '@/types'
 import { ROUTES } from '@/lib/routes'
 import { BRAND } from '@/lib/brand'
 import { ECOSYSTEM_LINKS, PARTNERS } from '@/lib/partners'
+import { LIVE_BUILD } from '@/lib/version'
 import { importEcosystemTokensFromMesh, loadUserTokens } from '@/lib/usertokens'
 import { useToast } from '@/context/ToastContext'
 
@@ -236,8 +237,7 @@ export function Settings() {
         </section>
 
         <p className="pb-4 text-center text-[11px] text-nova-muted">
-          {BRAND.bundleId}
-
+          {BRAND.bundleId} · live {LIVE_BUILD}
         </p>
       </div>
 

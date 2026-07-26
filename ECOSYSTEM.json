@@ -69,7 +69,10 @@
       "bridgeAppPath": "apps/pouchpay-bridge",
       "callDataGuidePath": "docs/pouchpay-route-calldata.md",
       "router": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
-      "note": "Upstream quote/routes omit callData (virtualLpOnly); use pouchpay-bridge until fixed"
+      "liveBuild": "31.195",
+      "appVersion": "31.195",
+      "versionCode": 31195,
+      "note": "live 31.195 — Nova Trade builds callData on-chain; light token picker; upstream api.pouchpay.io still virtualLpOnly"
     },
     "novaPay": {
       "name": "NovaPay Sandbox",

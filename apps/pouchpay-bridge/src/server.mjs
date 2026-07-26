@@ -86,6 +86,9 @@ async function handle(req, res) {
       service: "pouchpay-bridge",
       chainId: CHAIN_ID,
       router: ROUTER,
+      appVersion: "31.195",
+      versionCode: 31195,
+      liveBuild: "31.195",
       publicBase: PUBLIC_BASE || null,
       contract: {
         quoteIncludesCallData: true,
@@ -108,6 +111,9 @@ async function handle(req, res) {
       pricingMode: "on-chain-router",
       swapEnabled: true,
       productionReady: true,
+      appVersion: "31.195",
+      versionCode: 31195,
+      liveBuild: "31.195",
       tokens: Object.values(TOKENS).map((t) => ({
         ...t,
         tradable: true,

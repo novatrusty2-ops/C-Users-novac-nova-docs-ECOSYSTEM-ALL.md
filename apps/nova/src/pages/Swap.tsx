@@ -4,6 +4,7 @@ import { TopBar } from '@/components/layout/TopBar'
 import { Button } from '@/components/common/Button'
 import { Spinner } from '@/components/common/Spinner'
 import { IconSwap } from '@/components/layout/icons'
+import { TokenPicker } from '@/components/swap/TokenPicker'
 import { useWallet } from '@/context/WalletContext'
 import { useWeb3 } from '@/context/Web3Context'
 import { quoteSwap, type SwapQuote } from '@/lib/swap'
@@ -14,15 +15,26 @@ import { formatCompactUsd, quoteLiquidity } from '@/lib/liquidity'
 import { pairSentiment, sentimentTone } from '@/lib/sentiment'
 import { ROUTES } from '@/lib/routes'
 import { appendActivity, createActivityId } from '@/lib/activity'
+import {
+  ALLTRA_CHAIN_ID,
+  MissingCallDataError,
+  quotePouchpayRoute,
+  type PouchpayRouteQuote,
+} from '@/lib/pouchpay/routes'
+import { LIVE_BUILD } from '@/lib/version'
+
+type PickerSide = 'from' | 'to' | null
 
 export function Swap() {
   const { activeChainId, activeAccount } = useWallet()
   const { connected, ensureActiveChain } = useWeb3()
   const symbols = swapableSymbols(activeChainId)
+  const isAlltra = activeChainId === ALLTRA_CHAIN_ID
   const [from, setFrom] = useState(symbols[0] ?? 'USDC')
   const [to, setTo] = useState(symbols[1] ?? 'USDT')
   const [amount, setAmount] = useState('')
   const [quote, setQuote] = useState<SwapQuote | null>(null)
+  const [pouchQuote, setPouchQuote] = useState<PouchpayRouteQuote | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [liqNote, setLiqNote] = useState('')
@@ -30,12 +42,14 @@ export function Swap() {
   const [sentimentClass, setSentimentClass] = useState('text-nova-muted')
   const [workable, setWorkable] = useState(true)
   const [queued, setQueued] = useState(false)
+  const [picker, setPicker] = useState<PickerSide>(null)
 
   useEffect(() => {
     const s = swapableSymbols(activeChainId)
     setFrom(s[0] ?? 'USDC')
     setTo(s[1] ?? 'USDT')
     setQuote(null)
+    setPouchQuote(null)
     setQueued(false)
   }, [activeChainId])
 
@@ -45,6 +59,7 @@ export function Swap() {
     setFrom(to)
     setTo(from)
     setQuote(null)
+    setPouchQuote(null)
     setQueued(false)
   }
 
@@ -60,6 +75,36 @@ export function Swap() {
           /* quote still works off-chain */
         }
       }
+
+      if (isAlltra) {
+        const recipient = activeAccount?.address
+        const pq = await quotePouchpayRoute(from, to, amount, {
+          recipient,
+          requireCallData: true,
+        })
+        setPouchQuote(pq)
+        setQuote({
+          fromSymbol: pq.fromSymbol,
+          toSymbol: pq.toSymbol,
+          amountIn: pq.amountIn,
+          amountOut: pq.amountOut,
+          feeBps: 30,
+          feeAmount: '0',
+          provider: 'internal',
+          rate: Number(pq.amountOut) / Math.max(Number(pq.amountIn), 1e-12),
+        })
+        setWorkable(Boolean(pq.callData && pq.path.length >= 2))
+        setSentimentClass('text-nova-success')
+        setSentimentLine(
+          pq.onChainLiquidity
+            ? `Global Swap · callData ready · ${pq.method ?? 'router'}`
+            : 'Global Swap · quote ok',
+        )
+        setLiqNote(`path ${pq.path.map((a) => a.slice(0, 6)).join(' → ')} · live ${LIVE_BUILD}`)
+        return
+      }
+
+      setPouchQuote(null)
       const [q, fromLiq, toLiq] = await Promise.all([
         quoteSwap(from, to, amount),
         quoteLiquidity(activeChainId, from),
@@ -90,7 +135,14 @@ export function Swap() {
       }
     } catch (err) {
       setQuote(null)
-      setError(err instanceof Error ? err.message : 'Quote failed')
+      setPouchQuote(null)
+      if (err instanceof MissingCallDataError) {
+        setError(
+          'Global Swap missing callData — set VITE_POUCHPAY_API_BASE to pouchpay-bridge (live 31.195)',
+        )
+      } else {
+        setError(err instanceof Error ? err.message : 'Quote failed')
+      }
     } finally {
       setLoading(false)
     }
@@ -102,7 +154,9 @@ export function Swap() {
     appendActivity(activeAccount.address, {
       id: createActivityId(),
       chainId: activeChainId,
-      hash: `sentiment:${activeChainId}:${quote.fromSymbol}-${quote.toSymbol}:${Date.now()}`,
+      hash: pouchQuote
+        ? `pouchpay:${pouchQuote.callData.slice(0, 18)}:${Date.now()}`
+        : `sentiment:${activeChainId}:${quote.fromSymbol}-${quote.toSymbol}:${Date.now()}`,
       from: activeAccount.address,
       to: activeAccount.address,
       value: quote.amountOut,
@@ -118,27 +172,30 @@ export function Swap() {
     <>
       <TopBar title="Trade" />
       <div className="page-container space-y-4">
-        <p className="text-xs text-nova-muted">
-          Stables swappable · liquidity + sentiment on NovaONE / NRW / DeFi Oracle (138)
-          {activeAccount ? '' : ' · connect wallet to trade'}
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-xs text-nova-muted">
+            {isAlltra
+              ? 'ALLTRA Global Swap · inter-token routes with on-chain callData'
+              : 'Stables swappable · liquidity + sentiment on NovaONE / NRW / DeFi Oracle (138)'}
+            {activeAccount ? '' : ' · connect wallet to trade'}
+          </p>
+          <span className="shrink-0 rounded-full border border-nova-border px-2 py-0.5 text-[10px] font-semibold text-nova-accent">
+            live {LIVE_BUILD}
+          </span>
+        </div>
 
         <div className="relative space-y-2">
           <div className="rounded-xl bg-nova-surface p-4">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-xs text-nova-muted">From</span>
-              <select
-                className="rounded-full bg-nova-surface-raised px-3 py-1 text-sm font-semibold text-nova-ink outline-none"
-                value={from}
-                onChange={(e) => setFrom(e.target.value)}
+              <button
+                type="button"
+                className="token-picker-trigger"
+                onClick={() => setPicker('from')}
               >
-                {symbols.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                    {isMeshStable(s) ? ' · stable' : ''}
-                  </option>
-                ))}
-              </select>
+                {from}
+                <span aria-hidden>▾</span>
+              </button>
             </div>
             <input
               className="w-full bg-transparent font-display text-3xl font-semibold text-nova-ink outline-none placeholder:text-nova-muted/40"
@@ -161,18 +218,10 @@ export function Swap() {
           <div className="rounded-xl bg-nova-surface p-4">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-xs text-nova-muted">To</span>
-              <select
-                className="rounded-full bg-nova-surface-raised px-3 py-1 text-sm font-semibold text-nova-ink outline-none"
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-              >
-                {symbols.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                    {isMeshStable(s) ? ' · stable' : ''}
-                  </option>
-                ))}
-              </select>
+              <button type="button" className="token-picker-trigger" onClick={() => setPicker('to')}>
+                {to}
+                <span aria-hidden>▾</span>
+              </button>
             </div>
             <p className="font-display text-3xl font-semibold text-nova-muted/70">
               {quote ? quote.amountOut : '0.00'}
@@ -181,7 +230,7 @@ export function Swap() {
         </div>
 
         <Button className="w-full" disabled={!amount || loading} onClick={() => void fetchQuote()}>
-          {loading ? <Spinner /> : 'Get quote + liquidity'}
+          {loading ? <Spinner /> : isAlltra ? 'Get Global Swap quote' : 'Get quote + liquidity'}
         </Button>
 
         {error ? <p className="text-sm text-nova-danger">{error}</p> : null}
@@ -196,14 +245,16 @@ export function Swap() {
                 {quote.toSymbol}
               </span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-nova-muted">Fee</span>
-              <span className="font-mono text-nova-ink">
-                {quote.feeAmount} {quote.fromSymbol} ({quote.feeBps / 100}%)
-              </span>
-            </div>
+            {!isAlltra ? (
+              <div className="flex justify-between text-sm">
+                <span className="text-nova-muted">Fee</span>
+                <span className="font-mono text-nova-ink">
+                  {quote.feeAmount} {quote.fromSymbol} ({quote.feeBps / 100}%)
+                </span>
+              </div>
+            ) : null}
             <div className="flex justify-between text-sm gap-3">
-              <span className="text-nova-muted shrink-0">Liquidity</span>
+              <span className="text-nova-muted shrink-0">{isAlltra ? 'Route' : 'Liquidity'}</span>
               <span className="font-mono text-right text-nova-ink text-xs">{liqNote}</span>
             </div>
             <div className="flex justify-between text-sm gap-3">
@@ -212,21 +263,30 @@ export function Swap() {
                 {sentimentLine}
               </span>
             </div>
+            {pouchQuote ? (
+              <div className="rounded-lg border border-nova-border bg-nova-bg px-3 py-2 text-[11px] font-mono text-nova-muted break-all">
+                callData {pouchQuote.callData.slice(0, 42)}…
+              </div>
+            ) : null}
             <div className="flex justify-between text-sm">
               <span className="text-nova-muted">Status</span>
               <span className="text-nova-ink">
-                {stablePair
+                {isAlltra
                   ? workable
-                    ? 'Stable · swappable · transferable'
-                    : 'Stable · thin — use Withdraw'
-                  : workable
-                    ? 'Mesh · swappable'
-                    : 'Thin liquidity'}
+                    ? 'Global Swap · callData ready'
+                    : 'Global Swap · missing callData'
+                  : stablePair
+                    ? workable
+                      ? 'Stable · swappable · transferable'
+                      : 'Stable · thin — use Withdraw'
+                    : workable
+                      ? 'Mesh · swappable'
+                      : 'Thin liquidity'}
               </span>
             </div>
 
             <a
-              href={ECOSYSTEM_LINKS.novaSwap}
+              href={isAlltra ? ECOSYSTEM_LINKS.novaSwap : ECOSYSTEM_LINKS.novaSwap}
               target="_blank"
               rel="noreferrer"
               className={`flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold ${
@@ -235,12 +295,20 @@ export function Swap() {
                   : 'bg-nova-surface-raised text-nova-muted pointer-events-none'
               }`}
             >
-              {workable ? 'Execute on Nova Swap →' : 'Swap paused · thin sentiment'}
+              {workable
+                ? isAlltra
+                  ? 'Open ALLTRA Global Swap →'
+                  : 'Execute on Nova Swap →'
+                : 'Swap paused · thin sentiment'}
             </a>
 
-            {stablePair && workable && activeAccount ? (
+            {(stablePair || isAlltra) && workable && activeAccount ? (
               <Button className="w-full" variant="ghost" onClick={queueStableSwap}>
-                {queued ? 'Queued in History ✓' : 'Queue stable swap intent'}
+                {queued
+                  ? 'Queued in History ✓'
+                  : isAlltra
+                    ? 'Queue Global Swap intent'
+                    : 'Queue stable swap intent'}
               </Button>
             ) : null}
 
@@ -253,6 +321,31 @@ export function Swap() {
           </div>
         ) : null}
       </div>
+
+      <TokenPicker
+        open={picker === 'from'}
+        title="Select from token"
+        symbols={symbols}
+        value={from}
+        onClose={() => setPicker(null)}
+        onSelect={(s) => {
+          setFrom(s)
+          setQuote(null)
+          setPouchQuote(null)
+        }}
+      />
+      <TokenPicker
+        open={picker === 'to'}
+        title="Select to token"
+        symbols={symbols}
+        value={to}
+        onClose={() => setPicker(null)}
+        onSelect={(s) => {
+          setTo(s)
+          setQuote(null)
+          setPouchQuote(null)
+        }}
+      />
     </>
   )
 }
