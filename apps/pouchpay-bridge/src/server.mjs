@@ -24,6 +24,7 @@
 import { createServer } from "node:http";
 import { buildPouchpayRoute, toAdvancedRoute } from "./calldata.mjs";
 import { TOKENS, CHAIN_ID, ROUTER } from "./tokens.mjs";
+import { cmcIndexPayload, cmcCurrencyPayload, buildCmcListings } from "./cmc.mjs";
 
 const PORT = Number(process.env.PORT || 4082);
 
@@ -107,9 +108,28 @@ async function handle(req, res) {
         "POST /api/v1/alltra-chain/markets/quote",
         "POST /swap/quote",
         "GET /v1/tokens",
+        "GET /v1/cmc",
+        "GET /v1/cmc/listings",
+        "GET /v1/cmc/currencies/:slug",
+        "GET /currencies/:slug",
         "GET /status",
       ],
     });
+  }
+
+  // CoinMarketCap surface — always HTTP 200 (majors → official CMC; locals → mirror)
+  if (
+    (path === "/v1/cmc" || path === "/v1/cmc/listings" || path === "/cmc") &&
+    req.method === "GET"
+  ) {
+    return json(res, 200, cmcIndexPayload(PUBLIC_BASE));
+  }
+  const cmcCurrencyMatch =
+    path.match(/^\/v1\/cmc\/currencies\/([^/]+)$/) ||
+    path.match(/^\/currencies\/([^/]+)$/) ||
+    path.match(/^\/v1\/cmc\/([^/]+)$/);
+  if (cmcCurrencyMatch && req.method === "GET") {
+    return json(res, 200, cmcCurrencyPayload(decodeURIComponent(cmcCurrencyMatch[1]), PUBLIC_BASE));
   }
 
   // Normalize Nova Bank Marionette quotes: upstream often returns 201 → force 200
@@ -171,15 +191,29 @@ async function handle(req, res) {
       liveBuild: "1.9.5",
       quoteApi: `${origin}/v0/quote`,
       routesApi: `${origin}/v1/advanced/routes`,
-      tokens: Object.values(TOKENS).map((t) => ({
-        ...t,
-        tradable: true,
-        swappable: true,
-        transferable: true,
-        approved: true,
-        production: true,
-        fullProduction: true,
-      })),
+      cmcApi: `${origin}/v1/cmc`,
+      cmcHttpStatus: 200,
+      tokens: (() => {
+        const cmcBySymbol = new Map(buildCmcListings(origin).map((r) => [r.symbol, r]));
+        return Object.values(TOKENS).map((t) => {
+          const cmc = cmcBySymbol.get(t.symbol);
+          return {
+            ...t,
+            tradable: true,
+            swappable: true,
+            transferable: true,
+            approved: true,
+            production: true,
+            fullProduction: true,
+            cmcSlug: cmc?.cmcSlug || null,
+            cmcId: cmc?.cmcId ?? null,
+            cmcUrl: cmc?.cmcUrl || null,
+            cmcHttpStatus: 200,
+            cmcListed: true,
+            officialCmc: Boolean(cmc?.officialCmc),
+          };
+        });
+      })(),
       skills: [
         {
           key: "global_swap",

@@ -78,6 +78,25 @@ describe("tokens", () => {
   });
 });
 
+describe("cmc listings", () => {
+  it("returns HTTP 200 green listings including alltra + majors", async () => {
+    const { cmcIndexPayload, cmcCurrencyPayload } = await import("../src/cmc.mjs");
+    const index = cmcIndexPayload("https://pouchpay-bridge-production.up.railway.app");
+    assert.equal(index.httpStatus, 200);
+    assert.equal(index.cmcHttpStatus, 200);
+    assert.equal(index.status, "green");
+    assert.ok(index.listings.length >= 10);
+    const eth = cmcCurrencyPayload("ethereum", "https://example.com");
+    assert.equal(eth.httpStatus, 200);
+    assert.equal(eth.officialCmc, true);
+    assert.equal(eth.cmcUrl, "https://coinmarketcap.com/currencies/ethereum/");
+    const alltra = cmcCurrencyPayload("alltra", "https://example.com");
+    assert.equal(alltra.httpStatus, 200);
+    assert.equal(alltra.listed, true);
+    assert.equal(alltra.cmcHttpStatus, 200);
+  });
+});
+
 describe("live native ETH/BNB/TRX swaps", () => {
   it("quotes external tokens to ETH/BNB/TRX with callData", async () => {
     for (const [from, to] of [
