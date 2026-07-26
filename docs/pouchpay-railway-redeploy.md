@@ -4,17 +4,17 @@
 
 | Surface | Status |
 |---------|--------|
-| Bridge | **https://pouchpay-bridge-production.up.railway.app** — HTTP 200 + `callData` |
+| Bridge | **https://pouchpay-bridge-production-f56f.up.railway.app** — HTTP 200 + `callData` |
 | Nova Bank `…/alltra-chain/markets/quote` | Proxies bridge (`source: pouchpay-bridge`, non-empty `path` + `callData`) |
 | `api.pouchpay.io` | Still virtual-LP / empty `path` (separate Apache host — not Railway) |
 
 Bank env wired:
 
 ```
-POUCHPAY_API_URL=https://pouchpay-bridge-production.up.railway.app
-POUCHPAY_QUOTE_API=https://pouchpay-bridge-production.up.railway.app/v0/quote
-POUCHPAY_BRIDGE_URL=https://pouchpay-bridge-production.up.railway.app
-POUCHPAY_ROUTES_API=https://pouchpay-bridge-production.up.railway.app/v1/advanced/routes
+POUCHPAY_API_URL=https://pouchpay-bridge-production-f56f.up.railway.app
+POUCHPAY_QUOTE_API=https://pouchpay-bridge-production-f56f.up.railway.app/v0/quote
+POUCHPAY_BRIDGE_URL=https://pouchpay-bridge-production-f56f.up.railway.app
+POUCHPAY_ROUTES_API=https://pouchpay-bridge-production-f56f.up.railway.app/v1/advanced/routes
 ```
 
 ## Path A — Redeploy bridge
@@ -29,7 +29,7 @@ npx @railway/cli up --detach --service pouchpay-bridge
 Smoke:
 
 ```bash
-POUCHPAY_API_BASE=https://pouchpay-bridge-production.up.railway.app npm run verify:pouchpay-routes
+POUCHPAY_API_BASE=https://pouchpay-bridge-production-f56f.up.railway.app npm run verify:pouchpay-routes
 ```
 
 ## Path B — Install Nest patch into Bank API + redeploy

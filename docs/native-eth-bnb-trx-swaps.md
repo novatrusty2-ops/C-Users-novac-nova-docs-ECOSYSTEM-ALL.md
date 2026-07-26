@@ -12,7 +12,7 @@ Liquidity is via the UniswapV2 router `0xEd04ee8307C0656207af5afe3926Ae238005294
 
 ## Surfaces
 
-- **External bridge (production):** https://pouchpay-bridge-production.up.railway.app  
+- **External bridge (production):** https://pouchpay-bridge-production-f56f.up.railway.app  
   - `GET /v1/tokens` — full production registry + `nativeAliases`  
   - `POST /v0/quote` — `fromSymbol`/`toSymbol` accept `ETH`/`BNB`/`TRX`  
 - **Nova Trade:** `ALLTRA_SWAP_SYMBOLS` includes full set + natives  
@@ -21,11 +21,11 @@ Liquidity is via the UniswapV2 router `0xEd04ee8307C0656207af5afe3926Ae238005294
 ## Verify
 
 ```bash
-POUCHPAY_API_BASE=https://pouchpay-bridge-production.up.railway.app \
+POUCHPAY_API_BASE=https://pouchpay-bridge-production-f56f.up.railway.app \
   node scripts/verify-native-eth-bnb-trx-swaps.mjs
 
 # faster smoke
-SAMPLE_ONLY=1 POUCHPAY_API_BASE=https://pouchpay-bridge-production.up.railway.app \
+SAMPLE_ONLY=1 POUCHPAY_API_BASE=https://pouchpay-bridge-production-f56f.up.railway.app \
   node scripts/verify-native-eth-bnb-trx-swaps.mjs
 ```
 

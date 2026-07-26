@@ -44,6 +44,6 @@ See **[pouchpay-railway-redeploy.md](./pouchpay-railway-redeploy.md)** for Nest 
 | Bridge (no Nest checkout) | `RAILWAY_TOKEN=… bash scripts/deploy-pouchpay-railway.sh` |
 | `api.pouchpay.io` | Install Nest module on wallet host **or** point `quoteApi` at deployed bridge |
 
-**Live bridge:** https://pouchpay-bridge-production.up.railway.app  
+**Live bridge:** https://pouchpay-bridge-production-f56f.up.railway.app  
 Bank markets quote now returns `source: "pouchpay-bridge"` with `path` + `callData`.  
 `api.pouchpay.io` is still on a separate host with empty `path[]` — point mobile `quoteApi` at the bridge (or update that host).

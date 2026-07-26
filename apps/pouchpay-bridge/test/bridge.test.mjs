@@ -81,7 +81,7 @@ describe("tokens", () => {
 describe("cmc listings", () => {
   it("returns HTTP 200 green listings including alltra + majors", async () => {
     const { cmcIndexPayload, cmcCurrencyPayload } = await import("../src/cmc.mjs");
-    const index = cmcIndexPayload("https://pouchpay-bridge-production.up.railway.app");
+    const index = cmcIndexPayload("https://pouchpay-bridge-production-f56f.up.railway.app");
     assert.equal(index.httpStatus, 200);
     assert.equal(index.cmcHttpStatus, 200);
     assert.equal(index.status, "green");
