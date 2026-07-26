@@ -1,6 +1,6 @@
 {
   "name": "nova-wallet",
-  "version": "1.9.5",
+  "version": "31.195",
   "private": true,
   "type": "module",
   "description": "Nova Wallet — trading-first mobile signer for NovaONE + NRW World (llc.anakatech.novawallet).",

@@ -11,7 +11,7 @@ import {
   ROUTER,
   DEFAULT_RPC,
   resolveToken,
-  buildSwapPath,
+  buildSwapPathCandidates,
   parseAmountIn,
   formatUnits,
   tokenMeta,
@@ -115,18 +115,6 @@ export class PouchpayCalldataService {
       throw new HttpException('recipient must be a 0x address', HttpStatus.BAD_REQUEST)
     }
 
-    let path: string[]
-    let fromIsNative: boolean
-    let toIsNative: boolean
-    try {
-      ;({ path, fromIsNative, toIsNative } = buildSwapPath(fromToken, toToken))
-    } catch (err) {
-      throw new HttpException(
-        err instanceof Error ? err.message : String(err),
-        HttpStatus.BAD_REQUEST,
-      )
-    }
-
     let amountIn: bigint
     try {
       amountIn = parseAmountIn(amountRaw, fromToken.decimals)
@@ -136,11 +124,49 @@ export class PouchpayCalldataService {
         HttpStatus.BAD_REQUEST,
       )
     }
-    const amountsResult = await this.ethCall(ROUTER, encodeGetAmountsOut(amountIn, path))
-    const amounts = decodeAmountsOut(amountsResult)
-    const amountOut = amounts[amounts.length - 1]
-    if (!amountOut || amountOut <= 0n) {
-      throw new HttpException('No on-chain liquidity for path', HttpStatus.NOT_FOUND)
+
+    let path: string[] | undefined
+    let fromIsNative = false
+    let toIsNative = false
+    let amountOut: bigint | undefined
+    let lastErr: unknown
+    let candidates
+    try {
+      candidates = buildSwapPathCandidates(fromToken, toToken)
+    } catch (err) {
+      throw new HttpException(
+        err instanceof Error ? err.message : String(err),
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+    for (const candidate of candidates) {
+      try {
+        const amountsResult = await this.ethCall(
+          ROUTER,
+          encodeGetAmountsOut(amountIn, candidate.path),
+        )
+        const amounts = decodeAmountsOut(amountsResult)
+        const out = amounts[amounts.length - 1]
+        if (out && out > 0n) {
+          path = candidate.path
+          fromIsNative = candidate.fromIsNative
+          toIsNative = candidate.toIsNative
+          amountOut = out
+          break
+        }
+      } catch (err) {
+        lastErr = err
+      }
+    }
+    if (!path || amountOut == null) {
+      throw new HttpException(
+        lastErr instanceof Error
+          ? lastErr.message
+          : lastErr
+            ? String(lastErr)
+            : 'No on-chain liquidity for path',
+        HttpStatus.NOT_FOUND,
+      )
     }
 
     const amountOutMin = (amountOut * BigInt(10_000 - slippageBps)) / 10_000n
@@ -243,9 +269,9 @@ export class PouchpayCalldataService {
       transferable: true,
       fromToken: tokenMeta(fromToken),
       toToken: tokenMeta(toToken),
-      appVersion: '1.9.5',
-      versionCode: 31,
-      liveBuild: '1.9.5',
+      appVersion: '31.195',
+      versionCode: 31195,
+      liveBuild: '31.195',
     }
   }
 
@@ -322,8 +348,8 @@ export class PouchpayCalldataService {
       status: 'green',
       color: 'green',
       httpStatus: 200,
-      appVersion: '1.9.5',
-      versionCode: 31,
+      appVersion: '31.195',
+      versionCode: 31195,
     }
   }
 

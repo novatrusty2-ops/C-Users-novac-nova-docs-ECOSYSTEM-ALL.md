@@ -46,8 +46,8 @@ for (const needle of [
   "toAdvancedRoute",
   "encodeSwapExactETHForTokens",
   "on-chain-getAmountsOut",
-  "appVersion: '1.9.5'",
-  "versionCode: 31",
+  "appVersion: '31.195'",
+  "versionCode: 31195",
 ]) {
   if (!service.includes(needle)) {
     console.error(`FAIL service missing ${needle}`);

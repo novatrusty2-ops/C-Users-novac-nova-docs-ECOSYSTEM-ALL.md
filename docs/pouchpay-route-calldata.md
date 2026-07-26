@@ -16,7 +16,7 @@ Without call data the mobile wallet cannot build a signable Alltra (651940) swap
 
 On-chain swap encoding was removed in favor of virtual LP + `executeVia: "nova"`. The Uniswap V2 router at `0xEd04ee8307C0656207af5afe3926Ae2380052940` still has live liquidity (`getAmountsOut` for WALL→AUSDT succeeds).
 
-## Fix in this repo (PouchPay **1.9.5** / versionCode **31**)
+## Fix in this repo (PouchPay **31.195** / versionCode **31195**)
 
 1. **`apps/nova` Trade tab** — light high-contrast token picker + client-side UniswapV2 `callData` builder for Alltra (651940). Works without upstream callData.
 2. **`apps/pouchpay-bridge`** — Railway-ready service that returns `path` + `callData` + `transactionRequest` + HTTP 200.

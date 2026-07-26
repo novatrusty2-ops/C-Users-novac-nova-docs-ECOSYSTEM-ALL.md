@@ -40,4 +40,4 @@ jobs:
           RAILWAY_SERVICE: ${{ vars.RAILWAY_POUCHPAY_SERVICE }}
         run: |
           SERVICE="${RAILWAY_SERVICE:-pouchpay-bridge}"
-          npx --yes @railway/cli@5.28.1 up --detach --path . --service "$SERVICE"
+          npx --yes @railway/cli@5.28.1 up --detach --yes --path-as-root . --service "$SERVICE"

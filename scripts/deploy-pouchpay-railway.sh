@@ -23,7 +23,8 @@ fi
 cd "$APP"
 echo "Deploying pouchpay-bridge from $APP"
 
-ARGS=(up --detach --path .)
+# CLI 5.28+: PATH is a positional arg (not --path). Prefer path-as-root for monorepos.
+ARGS=(up --detach --yes --path-as-root .)
 if [[ -n "${RAILWAY_SERVICE:-}" ]]; then
   ARGS+=(--service "$RAILWAY_SERVICE")
 fi
