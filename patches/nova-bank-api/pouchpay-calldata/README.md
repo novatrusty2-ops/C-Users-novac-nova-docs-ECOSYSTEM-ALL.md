@@ -41,4 +41,4 @@ POUCHPAY_BRIDGE_URL=https://<your-pouchpay-bridge>.up.railway.app
 
 ## Version stamp
 
-Responses include `appVersion: "1.9.5"`, `versionCode: 31` (PouchPay mobile parity).
+Responses include `appVersion: "31.195"`, `versionCode: 31195` (PouchPay mobile parity).

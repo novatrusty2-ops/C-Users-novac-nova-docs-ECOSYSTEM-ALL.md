@@ -50,4 +50,4 @@ For Nova Bank / `api.pouchpay.io` without a separate bridge service, install the
 bash scripts/install-pouchpay-calldata.sh /path/to/nova-bank-api
 ```
 
-Version stamp: `appVersion` **1.9.5**, `versionCode` **31**.
+Version stamp: `appVersion` **31.195**, `versionCode` **31**.

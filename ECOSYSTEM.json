@@ -69,9 +69,9 @@
       "bridgeAppPath": "apps/pouchpay-bridge",
       "callDataGuidePath": "docs/pouchpay-route-calldata.md",
       "router": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
-      "liveBuild": "1.9.5",
-      "appVersion": "1.9.5",
-      "versionCode": 31,
+      "liveBuild": "31.195",
+      "appVersion": "31.195",
+      "versionCode": 31195,
       "note": "Railway pouchpay-bridge live — quotes return path + callData + HTTP 200; Bank POUCHPAY_QUOTE_API pointed here",
       "bridgeUrl": "https://pouchpay-bridge-production.up.railway.app",
       "healthUrl": "https://pouchpay-bridge-production.up.railway.app/health"

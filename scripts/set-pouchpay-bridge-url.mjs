@@ -41,9 +41,9 @@ pouch.bridgeUrl = bridgeUrl;
 pouch.quoteApi = `${bridgeUrl}/v0/quote`;
 pouch.routesApi = `${bridgeUrl}/v1/advanced/routes`;
 pouch.healthUrl = `${bridgeUrl}/health`;
-pouch.liveBuild = pouch.liveBuild || "1.9.5";
-pouch.appVersion = pouch.appVersion || "1.9.5";
-pouch.versionCode = pouch.versionCode || 31;
+pouch.liveBuild = pouch.liveBuild || "31.195";
+pouch.appVersion = pouch.appVersion || "31.195";
+pouch.versionCode = pouch.versionCode || 31195;
 pouch.note =
   "Railway pouchpay-bridge live — quotes return path + callData + HTTP 200; Bank POUCHPAY_QUOTE_API pointed here";
 

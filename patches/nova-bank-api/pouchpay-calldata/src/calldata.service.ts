@@ -269,9 +269,9 @@ export class PouchpayCalldataService {
       transferable: true,
       fromToken: tokenMeta(fromToken),
       toToken: tokenMeta(toToken),
-      appVersion: '1.9.5',
-      versionCode: 31,
-      liveBuild: '1.9.5',
+      appVersion: '31.195',
+      versionCode: 31195,
+      liveBuild: '31.195',
     }
   }
 
@@ -348,8 +348,8 @@ export class PouchpayCalldataService {
       status: 'green',
       color: 'green',
       httpStatus: 200,
-      appVersion: '1.9.5',
-      versionCode: 31,
+      appVersion: '31.195',
+      versionCode: 31195,
     }
   }
 

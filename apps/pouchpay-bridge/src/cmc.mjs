@@ -6,7 +6,7 @@
  * (official coinmarketcap.com/currencies/alltra is still unlisted upstream).
  */
 
-import { TOKENS, CHAIN_ID, resolveToken } from "./tokens.mjs";
+import { TOKENS, CHAIN_ID } from "./tokens.mjs";
 
 const CMC_WEB = "https://coinmarketcap.com/currencies";
 

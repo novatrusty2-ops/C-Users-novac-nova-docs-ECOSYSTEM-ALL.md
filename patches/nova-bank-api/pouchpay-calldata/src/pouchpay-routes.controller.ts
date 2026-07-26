@@ -37,8 +37,8 @@ export class PouchpayRoutesController {
       color: 'green',
       httpStatus: 200,
       ok: true,
-      appVersion: '1.9.5',
-      versionCode: 31,
+      appVersion: '31.195',
+      versionCode: 31195,
     }
   }
 }
