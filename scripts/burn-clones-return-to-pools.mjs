@@ -224,11 +224,27 @@ async function main() {
       amount: String(AMOUNT),
     };
     const quote = await post(`${BANK}/swap/quote`, sellBody, token);
+    if (!(quote.status === 200 || quote.status === 201) || !quote.data) {
+      throw new Error(
+        `E1111 live quote failed HTTP ${quote.status}: ${JSON.stringify(quote.data)}`,
+      );
+    }
+    const quoteId = quote.data.quoteId || quote.data.id;
+    if (!quoteId) {
+      throw new Error(
+        `E1111 live quote missing quoteId: ${JSON.stringify(quote.data).slice(0, 400)}`,
+      );
+    }
     const ex = await post(
       `${BANK}/swap/execute`,
-      { ...sellBody, quoteId: quote.data?.quoteId || quote.data?.id },
+      { ...sellBody, quoteId },
       token,
     );
+    if (!(ex.status === 200 || ex.status === 201)) {
+      throw new Error(
+        `E1111 execute failed HTTP ${ex.status}: ${JSON.stringify(ex.data).slice(0, 400)}`,
+      );
+    }
     console.log("E1111 execute HTTP", ex.status, JSON.stringify(ex.data).slice(0, 300));
   }
 

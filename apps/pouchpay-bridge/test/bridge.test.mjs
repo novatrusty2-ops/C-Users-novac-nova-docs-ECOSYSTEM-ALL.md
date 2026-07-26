@@ -50,15 +50,18 @@ describe("tokens", () => {
     assert.equal(path[0].toLowerCase(), WALL.toLowerCase());
   });
 
-  it("routes clone wraps via WALL and protects real 11::11", () => {
+  it("prefers direct clone path and protects real 11::11 aliases", async () => {
+    const { buildSwapPathCandidates, isProtectedToken } = await import("../src/tokens.mjs");
     const zara = resolveToken("ZARA");
     assert.equal(zara.clone, true);
-    const { path } = buildSwapPath(zara, resolveToken("AUSDT"));
-    assert.equal(path.length, 3);
-    assert.equal(path[1].toLowerCase(), WALL.toLowerCase());
+    const candidates = buildSwapPathCandidates(zara, resolveToken("AUSDT"));
+    assert.equal(candidates[0].path.length, 2);
+    assert.equal(candidates[1].path.length, 3);
+    assert.equal(candidates[1].path[1].toLowerCase(), WALL.toLowerCase());
     const real = resolveToken("11;11");
     assert.equal(real.protected, true);
-    assert.equal(real.symbol, "11::11");
+    assert.equal(isProtectedToken(real), true);
+    assert.equal(resolveToken("1111"), null);
   });
 
   it("parses human amounts", () => {

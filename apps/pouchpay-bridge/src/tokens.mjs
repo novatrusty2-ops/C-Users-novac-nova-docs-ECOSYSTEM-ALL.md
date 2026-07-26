@@ -122,13 +122,22 @@ export function resolveToken(symbolOrAddress) {
   }
   const sym = raw.toUpperCase();
   if (TOKENS[sym]) return TOKENS[sym];
-  // Normalize 11:11 spellings → real protected token
-  if (sym === "11:11" || sym === "1111" || sym === "11;11") return TOKENS["11::11"];
+  // Normalize explicit 11:11 spellings → real protected token.
+  // Do NOT map bare "1111" (too easy to confuse with ledger clone E1111).
+  if (sym === "11:11" || sym === "11;11") return TOKENS["11::11"];
   return null;
 }
 
-/** On-chain hop path (native ALL uses WALL as WETH; clones route via WALL). */
-export function buildSwapPath(fromToken, toToken) {
+/** True only for tokens marked protected (real 11::11). Pool assets stay quotable. */
+export function isProtectedToken(token) {
+  return Boolean(token?.protected);
+}
+
+/**
+ * On-chain hop path (native ALL uses WALL as WETH).
+ * Prefers a direct pair; callers should fall back to via-WALL when direct has no liquidity.
+ */
+export function buildSwapPath(fromToken, toToken, { viaWall = false } = {}) {
   const fromIsNative = Boolean(fromToken.native) || fromToken.address.toLowerCase() === NATIVE;
   const toIsNative = Boolean(toToken.native) || toToken.address.toLowerCase() === NATIVE;
   const fromAddr = fromIsNative ? WALL : fromToken.address;
@@ -139,12 +148,24 @@ export function buildSwapPath(fromToken, toToken) {
   const wall = WALL.toLowerCase();
   const touchesWall =
     fromAddr.toLowerCase() === wall || toAddr.toLowerCase() === wall;
-  const path = touchesWall ? [fromAddr, toAddr] : [fromAddr, WALL, toAddr];
+  const path =
+    touchesWall || !viaWall ? [fromAddr, toAddr] : [fromAddr, WALL, toAddr];
   return {
     path,
     fromIsNative,
     toIsNative,
   };
+}
+
+/** Candidate paths: direct first, then WALL hop when neither side is WALL. */
+export function buildSwapPathCandidates(fromToken, toToken) {
+  const direct = buildSwapPath(fromToken, toToken, { viaWall: false });
+  const wall = WALL.toLowerCase();
+  const needsHop =
+    direct.path[0].toLowerCase() !== wall &&
+    direct.path[direct.path.length - 1].toLowerCase() !== wall;
+  if (!needsHop) return [direct];
+  return [direct, buildSwapPath(fromToken, toToken, { viaWall: true })];
 }
 
 export function parseAmountIn(amount, decimals) {

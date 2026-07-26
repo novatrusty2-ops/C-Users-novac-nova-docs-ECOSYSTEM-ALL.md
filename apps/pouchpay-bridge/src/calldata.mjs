@@ -14,7 +14,8 @@ import {
   ROUTER,
   DEFAULT_RPC,
   resolveToken,
-  buildSwapPath,
+  buildSwapPathCandidates,
+  isProtectedToken,
   parseAmountIn,
   formatUnits,
   tokenMeta,
@@ -78,14 +79,46 @@ export async function buildPouchpayRoute(input) {
     throw Object.assign(new Error("recipient must be a 0x address"), { status: 400 });
   }
 
-  const { path, fromIsNative, toIsNative } = buildSwapPath(fromToken, toToken);
+  // Refuse selling protected rails (real 11::11, WETH, natives…) unless explicitly overridden.
+  const allowProtected = process.env.ALLOW_PROTECTED_QUOTES === "1";
+  if (isProtectedToken(fromToken) && !allowProtected) {
+    throw Object.assign(
+      new Error(
+        `REFUSED: ${fromToken.symbol} is protected — will not build sell callData (set ALLOW_PROTECTED_QUOTES=1 to override)`,
+      ),
+      { status: 403 },
+    );
+  }
+
   const amountIn = parseAmountIn(amountRaw, fromToken.decimals);
-  const amountsData = encodeGetAmountsOut(amountIn, path);
-  const amountsResult = await ethCall(ROUTER, amountsData);
-  const amounts = decodeAmountsOut(amountsResult);
-  const amountOut = amounts[amounts.length - 1];
-  if (!amountOut || amountOut <= 0n) {
-    throw Object.assign(new Error("No on-chain liquidity for path"), { status: 404 });
+  const candidates = buildSwapPathCandidates(fromToken, toToken);
+  let path;
+  let fromIsNative;
+  let toIsNative;
+  let amountOut;
+  let lastErr;
+  for (const candidate of candidates) {
+    try {
+      const amountsData = encodeGetAmountsOut(amountIn, candidate.path);
+      const amountsResult = await ethCall(ROUTER, amountsData);
+      const amounts = decodeAmountsOut(amountsResult);
+      const out = amounts[amounts.length - 1];
+      if (out && out > 0n) {
+        path = candidate.path;
+        fromIsNative = candidate.fromIsNative;
+        toIsNative = candidate.toIsNative;
+        amountOut = out;
+        break;
+      }
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  if (!path || !amountOut) {
+    throw Object.assign(
+      new Error(lastErr?.message || "No on-chain liquidity for path"),
+      { status: 404 },
+    );
   }
   const amountOutMin = applySlippage(amountOut, slippageBps);
   const deadline = BigInt(Math.floor(Date.now() / 1000) + 20 * 60);
