@@ -63,7 +63,13 @@
       "playStore": "https://play.google.com/store/apps/details?id=global.alltra.app",
       "url": "https://alltra.global/",
       "chainId": 651940,
-      "integratedIn": "apps/nova"
+      "integratedIn": "apps/nova",
+      "quoteApi": "https://api.pouchpay.io/v0/quote",
+      "routesApi": "https://api.pouchpay.io/v1/advanced/routes",
+      "bridgeAppPath": "apps/pouchpay-bridge",
+      "callDataGuidePath": "docs/pouchpay-route-calldata.md",
+      "router": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
+      "note": "Upstream quote/routes omit callData (virtualLpOnly); use pouchpay-bridge until fixed"
     },
     "novaPay": {
       "name": "NovaPay Sandbox",
