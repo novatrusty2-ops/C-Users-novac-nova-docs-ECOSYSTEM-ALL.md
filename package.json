@@ -22,6 +22,8 @@
     "verify:pouchpay-routes": "node scripts/verify-pouchpay-routes.mjs",
     "verify:pouchpay-calldata-patch": "node scripts/verify-pouchpay-calldata-patch.mjs",
     "install:pouchpay-calldata": "bash scripts/install-pouchpay-calldata.sh",
+    "install:pouchpay-calldata:wire": "bash scripts/install-and-wire-pouchpay-calldata.sh",
+    "deploy:pouchpay-railway": "bash scripts/deploy-pouchpay-railway.sh",
     "set:novapay-bridge-url": "node scripts/set-novapay-bridge-url.mjs",
     "build": "npm run build -w nova-wallet",
     "build:nova": "npm run build -w nova-wallet",

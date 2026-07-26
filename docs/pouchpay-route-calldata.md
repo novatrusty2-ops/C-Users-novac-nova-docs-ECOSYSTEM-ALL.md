@@ -35,11 +35,13 @@ bash scripts/install-pouchpay-calldata.sh /path/to/nova-bank-api
 
 ### Production rollout
 
+See **[pouchpay-railway-redeploy.md](./pouchpay-railway-redeploy.md)** for Nest install + Railway steps.
+
 | Surface | Action |
 |---------|--------|
 | Nova Wallet (Pages) | Already builds callData client-side |
-| Nova Bank Railway | Install Nest patch + redeploy (`ALLTRA_RPC` only) |
-| `api.pouchpay.io` | Same Nest module on wallet host **or** point DNS/`quoteApi` at deployed `pouchpay-bridge` |
-| Optional bridge | Deploy `apps/pouchpay-bridge` and set `POUCHPAY_BRIDGE_URL` |
+| Nova Bank Railway | `bash scripts/install-and-wire-pouchpay-calldata.sh /path/to/nova-bank-api` then redeploy |
+| Bridge (no Nest checkout) | `RAILWAY_TOKEN=… bash scripts/deploy-pouchpay-railway.sh` |
+| `api.pouchpay.io` | Install Nest module on wallet host **or** point `quoteApi` at deployed bridge |
 
-Until Bank / `api.pouchpay.io` redeploy with this patch, upstream will keep returning empty `path[]`.
+Until Bank / `api.pouchpay.io` redeploy with this patch (or bridge), upstream will keep returning empty `path[]`.
