@@ -115,11 +115,12 @@ for (const from of symbols) {
       if (!hasCallData(quote.data)) {
         throw new Error("missing path/callData");
       }
-      // Also probe reverse (native → token) for external coverage
+      // Also probe reverse (native → token). Use 0.01 — dust (e.g. 0.0001 TRX→WBTC)
+      // can fail getAmountsOut on 8-decimal outs even when the pair is live.
       const rev = await post("/v0/quote", {
         fromSymbol: to,
         toSymbol: from,
-        amount: "0.0001",
+        amount: "0.01",
         recipient: RECIPIENT,
         tradeType: 0,
       });
