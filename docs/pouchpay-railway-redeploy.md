@@ -1,39 +1,36 @@
 # PouchPay Nest patch install + Railway redeploy
 
-## Blockers in Cloud Agent
+## Live (2026-07-26)
 
-This environment has:
+| Surface | Status |
+|---------|--------|
+| Bridge | **https://pouchpay-bridge-production.up.railway.app** — HTTP 200 + `callData` |
+| Nova Bank `…/alltra-chain/markets/quote` | Proxies bridge (`source: pouchpay-bridge`, non-empty `path` + `callData`) |
+| `api.pouchpay.io` | Still virtual-LP / empty `path` (separate Apache host — not Railway) |
 
-- Nest patch source in `patches/nova-bank-api/pouchpay-calldata`
-- Ready bridge in `apps/pouchpay-bridge`
-- **No** `RAILWAY_TOKEN` / Railway login
-- **No** `nova-bank-api` git checkout in the org (`novatrusty2-ops` only has this ecosystem repo)
+Bank env wired:
 
-So live `nova-bank-api-production-7311.up.railway.app` and `api.pouchpay.io` cannot be mutated until you provide a token (or clone URL).
-
-## Path A — Deploy bridge (recommended, no Nest checkout)
-
-1. Railway → open the Nova Bank project → **Settings → Tokens → Create** project token  
-2. In this environment (or GitHub Actions secret `RAILWAY_TOKEN`):
-
-```bash
-export RAILWAY_TOKEN=...
-export RAILWAY_SERVICE=pouchpay-bridge   # create empty service first if needed
-bash scripts/deploy-pouchpay-railway.sh
+```
+POUCHPAY_API_URL=https://pouchpay-bridge-production.up.railway.app
+POUCHPAY_QUOTE_API=https://pouchpay-bridge-production.up.railway.app/v0/quote
+POUCHPAY_BRIDGE_URL=https://pouchpay-bridge-production.up.railway.app
+POUCHPAY_ROUTES_API=https://pouchpay-bridge-production.up.railway.app/v1/advanced/routes
 ```
 
-3. Railway → service → **Networking → Generate Domain**  
-4. Smoke:
+## Path A — Redeploy bridge
 
 ```bash
-curl -sS https://<domain>/v0/quote -H 'content-type: application/json' \
-  -d '{"fromSymbol":"ALL","toSymbol":"AUSDT","amount":"0.01","recipient":"0x5227115Ba7c8694218f570c1EC2a680095872820"}'
-# expect path[] length >= 2 and callData 0x…
+export RAILWAY_API_TOKEN=...   # account token
+cd apps/pouchpay-bridge
+npx @railway/cli link -p nova-bank-online -e production -s pouchpay-bridge
+npx @railway/cli up --detach --service pouchpay-bridge
 ```
 
-5. Point wallet `quoteApi` / `VITE_POUCHPAY_API_BASE` at that domain (or set Bank `POUCHPAY_BRIDGE_URL`).
+Smoke:
 
-GitHub Actions: add secret `RAILWAY_TOKEN`, then run workflow **Deploy PouchPay bridge (Railway)**.
+```bash
+POUCHPAY_API_BASE=https://pouchpay-bridge-production.up.railway.app npm run verify:pouchpay-routes
+```
 
 ## Path B — Install Nest patch into Bank API + redeploy
 
