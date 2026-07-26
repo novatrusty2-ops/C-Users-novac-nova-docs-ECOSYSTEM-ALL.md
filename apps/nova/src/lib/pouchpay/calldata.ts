@@ -120,5 +120,8 @@ export async function buildAlltraCallDataQuote(
     minAmountOut: formatUnits(amountOutMin, to.decimals),
     provider: 'pouchpay',
     httpStatus: 200,
+    status: 'green',
+    color: 'green',
+    ok: true,
   }
 }

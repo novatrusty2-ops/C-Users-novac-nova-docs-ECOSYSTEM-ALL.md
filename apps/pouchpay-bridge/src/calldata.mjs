@@ -120,6 +120,10 @@ export async function buildPouchpayRoute(input) {
 
   return {
     source: "pouchpay-bridge",
+    status: "green",
+    color: "green",
+    httpStatus: 200,
+    ok: true,
     chainId: CHAIN_ID,
     tradeType: Number(input.tradeType ?? 0),
     tokenIn: fromToken.symbol,

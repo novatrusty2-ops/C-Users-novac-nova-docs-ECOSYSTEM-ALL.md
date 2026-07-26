@@ -50,7 +50,17 @@ function assertCallData(label, data) {
 }
 
 let failed = 0;
-console.log(`verify-pouchpay-routes against ${BASE}`);
+console.log(`verify-pouchpay-routes against ${BASE} (require HTTP 200 + green)`);
+
+const health = await fetch(`${BASE}/health`).then(async (r) => ({
+  status: r.status,
+  data: await r.json().catch(() => null),
+}));
+if (health.status !== 200) {
+  console.error(`FAIL health HTTP ${health.status}`);
+  process.exit(1);
+}
+console.log(`PASS health HTTP 200 status=${health.data?.status || "ok"}`);
 
 for (const [from, to] of PAIRS) {
   const label = `${from}→${to}`;
@@ -63,6 +73,9 @@ for (const [from, to] of PAIRS) {
       tradeType: 0,
     });
     if (quote.status !== 200) throw new Error(`quote HTTP ${quote.status}: ${JSON.stringify(quote.data)}`);
+    if (quote.data?.httpStatus != null && Number(quote.data.httpStatus) !== 200) {
+      throw new Error(`quote body httpStatus ${quote.data.httpStatus} != 200`);
+    }
     assertCallData(`quote ${label}`, quote.data);
 
     const routes = await post("/v1/advanced/routes", {
@@ -84,7 +97,7 @@ for (const [from, to] of PAIRS) {
       callData: route.callData || step?.callData,
       transactionRequest: route.transactionRequest || step?.transactionRequest,
     });
-    console.log(`PASS ${label} callData=${(route.callData || step.callData).slice(0, 10)}…`);
+    console.log(`PASS ${label} HTTP 200 callData=${(route.callData || step.callData).slice(0, 10)}…`);
   } catch (err) {
     failed += 1;
     console.error(`FAIL ${label}: ${err.message}`);
@@ -95,4 +108,4 @@ if (failed) {
   console.error(`FAILED ${failed}/${PAIRS.length}`);
   process.exit(1);
 }
-console.log(`PASSED: ${PAIRS.length}/${PAIRS.length} pairs have path + callData`);
+console.log(`PASSED: ${PAIRS.length}/${PAIRS.length} pairs green · HTTP 200 · callData`);

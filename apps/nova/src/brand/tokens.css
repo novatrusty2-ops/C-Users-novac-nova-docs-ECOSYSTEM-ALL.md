@@ -1,19 +1,21 @@
-/* Nova Wallet — OKX / Nova Bank dashboard palette */
+/* Nova Wallet — green live palette (HTTP 200 / ready) */
 
 :root {
-  --color-bg: #000000;
-  --color-bg-alt: #0a0a0a;
-  --color-surface: #121212;
-  --color-surface-raised: #1a1a1a;
-  --color-accent: #14b8a6;
-  --color-highlight: #2dd4bf;
-  --color-ink: #ffffff;
-  --color-muted: #8b8b8b;
-  --color-border: rgba(255, 255, 255, 0.08);
+  --color-bg: #04140f;
+  --color-bg-alt: #062018;
+  --color-surface: #0b2a1f;
+  --color-surface-raised: #123d2d;
+  --color-accent: #0ecb81;
+  --color-highlight: #34d399;
+  --color-ink: #ecfdf5;
+  --color-muted: #8fb9a4;
+  --color-border: rgba(14, 203, 129, 0.22);
   --color-danger: #f6465d;
   --color-success: #0ecb81;
-  --color-novaone: #0ea5e9;
-  --color-nrw: #14b8a6;
-  --teal-gradient: linear-gradient(135deg, #14b8a6 0%, #2dd4bf 55%, #0ea5e9 100%);
-  --okx-hairline: rgba(255, 255, 255, 0.06);
+  --color-novaone: #34d399;
+  --color-nrw: #0ecb81;
+  --teal-gradient: linear-gradient(135deg, #059669 0%, #0ecb81 45%, #34d399 100%);
+  --okx-hairline: rgba(14, 203, 129, 0.14);
+  --status-green: #0ecb81;
+  --status-http-200: #0ecb81;
 }

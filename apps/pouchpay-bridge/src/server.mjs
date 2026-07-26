@@ -80,9 +80,12 @@ async function handle(req, res) {
 
   if (req.method === "OPTIONS") return json(res, 204, {});
 
-  if ((path === "/" || path === "/health") && req.method === "GET") {
+  if ((path === "/" || path === "/health" || path === "/status") && req.method === "GET") {
     return json(res, 200, {
       ok: true,
+      status: "green",
+      color: "green",
+      httpStatus: 200,
       service: "pouchpay-bridge",
       chainId: CHAIN_ID,
       router: ROUTER,
@@ -94,15 +97,59 @@ async function handle(req, res) {
         quoteIncludesCallData: true,
         routesIncludeTransactionRequest: true,
         onChainLiquidity: true,
+        quoteHttpStatus: 200,
       },
       endpoints: [
         "POST /v0/quote",
         "POST /v1/quote",
         "POST /v1/advanced/routes",
         "POST /api/v1/alltra-chain/markets/quote",
+        "POST /swap/quote",
         "GET /v1/tokens",
+        "GET /status",
       ],
     });
+  }
+
+  // Normalize Nova Bank Marionette quotes: upstream often returns 201 → force 200
+  const bankQuotePaths = new Set(["/swap/quote", "/api/v1/swap/quote"]);
+  if (bankQuotePaths.has(path) && req.method === "POST") {
+    try {
+      const body = normalizeBody(await readBody(req));
+      const bank = (
+        process.env.NOVA_BANK_API_BASE ||
+        "https://nova-bank-api-production-7311.up.railway.app/api/v1"
+      ).replace(/\/$/, "");
+      const upstream = await fetch(`${bank}/swap/quote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(body),
+      });
+      const text = await upstream.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = { raw: text };
+      }
+      if (!(upstream.status === 200 || upstream.status === 201)) {
+        return json(res, upstream.status, data);
+      }
+      return json(res, 200, {
+        ...(data && typeof data === "object" ? data : { data }),
+        status: "green",
+        color: "green",
+        httpStatus: 200,
+        upstreamStatus: upstream.status,
+        ok: true,
+      });
+    } catch (err) {
+      return json(res, 502, {
+        message: err.message || String(err),
+        statusCode: 502,
+        status: "red",
+      });
+    }
   }
 
   if (path === "/v1/tokens" && req.method === "GET") {

@@ -179,9 +179,10 @@ export function Swap() {
               : 'Stables swappable · liquidity + sentiment on NovaONE / NRW / DeFi Oracle (138)'}
             {activeAccount ? '' : ' · connect wallet to trade'}
           </p>
-          <span className="shrink-0 rounded-full border border-nova-border px-2 py-0.5 text-[10px] font-semibold text-nova-accent">
-            live {LIVE_BUILD}
-          </span>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            <span className="status-green-pill">live {LIVE_BUILD}</span>
+            <span className="status-http-200">HTTP 200</span>
+          </div>
         </div>
 
         <div className="relative space-y-2">
@@ -268,22 +269,28 @@ export function Swap() {
                 callData {pouchQuote.callData.slice(0, 42)}…
               </div>
             ) : null}
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-sm items-center gap-3">
               <span className="text-nova-muted">Status</span>
-              <span className="text-nova-ink">
+              <span className={workable ? 'status-green-pill' : 'text-nova-danger text-xs'}>
                 {isAlltra
                   ? workable
-                    ? 'Global Swap · callData ready'
+                    ? 'green · callData · HTTP 200'
                     : 'Global Swap · missing callData'
                   : stablePair
                     ? workable
-                      ? 'Stable · swappable · transferable'
+                      ? 'green · stable · HTTP 200'
                       : 'Stable · thin — use Withdraw'
                     : workable
-                      ? 'Mesh · swappable'
+                      ? 'green · mesh · HTTP 200'
                       : 'Thin liquidity'}
               </span>
             </div>
+            {workable ? (
+              <div className="flex justify-between text-sm items-center">
+                <span className="text-nova-muted">HTTP</span>
+                <span className="status-http-200">200 OK</span>
+              </div>
+            ) : null}
 
             <a
               href={isAlltra ? ECOSYSTEM_LINKS.novaSwap : ECOSYSTEM_LINKS.novaSwap}

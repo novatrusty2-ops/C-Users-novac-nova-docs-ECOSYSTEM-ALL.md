@@ -36,6 +36,9 @@ export interface PouchpayRouteQuote {
   minAmountOut?: string
   provider: 'pouchpay'
   httpStatus: number
+  status?: 'green' | string
+  color?: 'green' | string
+  ok?: boolean
 }
 
 export class MissingCallDataError extends Error {

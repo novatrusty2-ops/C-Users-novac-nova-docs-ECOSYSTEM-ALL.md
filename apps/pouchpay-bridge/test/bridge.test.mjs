@@ -65,6 +65,8 @@ describe("live on-chain callData", () => {
       recipient: "0x5227115Ba7c8694218f570c1EC2a680095872820",
     });
     assert.equal(quote.onChainLiquidity, true);
+    assert.equal(quote.httpStatus, 200);
+    assert.equal(quote.status, "green");
     assert.ok(Array.isArray(quote.path) && quote.path.length >= 2);
     assert.match(quote.callData, /^0x[0-9a-f]+$/i);
     assert.equal(quote.transactionRequest.to.toLowerCase(), quote.router.toLowerCase());

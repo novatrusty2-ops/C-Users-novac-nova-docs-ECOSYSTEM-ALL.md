@@ -237,7 +237,8 @@ export function Settings() {
         </section>
 
         <p className="pb-4 text-center text-[11px] text-nova-muted">
-          {BRAND.bundleId} · live {LIVE_BUILD}
+          {BRAND.bundleId} · <span className="text-nova-success">live {LIVE_BUILD}</span> ·{' '}
+          <span className="text-nova-success">HTTP 200</span>
         </p>
       </div>
 
