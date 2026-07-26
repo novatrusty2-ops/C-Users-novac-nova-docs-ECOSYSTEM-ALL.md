@@ -50,6 +50,17 @@ describe("tokens", () => {
     assert.equal(path[0].toLowerCase(), WALL.toLowerCase());
   });
 
+  it("routes clone wraps via WALL and protects real 11::11", () => {
+    const zara = resolveToken("ZARA");
+    assert.equal(zara.clone, true);
+    const { path } = buildSwapPath(zara, resolveToken("AUSDT"));
+    assert.equal(path.length, 3);
+    assert.equal(path[1].toLowerCase(), WALL.toLowerCase());
+    const real = resolveToken("11;11");
+    assert.equal(real.protected, true);
+    assert.equal(real.symbol, "11::11");
+  });
+
   it("parses human amounts", () => {
     assert.equal(parseAmountIn("1", 18), 10n ** 18n);
     assert.equal(parseAmountIn("1.5", 18), 15n * 10n ** 17n);
