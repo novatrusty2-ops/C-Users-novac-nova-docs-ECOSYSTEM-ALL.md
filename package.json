@@ -1,8 +1,8 @@
 {
   "name": "nova-wallet",
-  "version": "31.195",
+  "version": "1.9.5",
   "private": true,
-  "description": "Nova Wallet — https://novablockchain.it.com/",
+  "description": "Nova Wallet \u2014 https://novablockchain.it.com/",
   "workspaces": [
     "apps/nova",
     "apps/novapay-portal",
@@ -20,7 +20,10 @@
     "dev:pouchpay-bridge": "npm run dev -w pouchpay-bridge",
     "test:pouchpay-bridge": "npm run test -w pouchpay-bridge",
     "verify:pouchpay-routes": "node scripts/verify-pouchpay-routes.mjs",
+    "verify:pouchpay-calldata-patch": "node scripts/verify-pouchpay-calldata-patch.mjs",
     "install:pouchpay-calldata": "bash scripts/install-pouchpay-calldata.sh",
+    "install:pouchpay-calldata:wire": "bash scripts/install-and-wire-pouchpay-calldata.sh",
+    "deploy:pouchpay-railway": "bash scripts/deploy-pouchpay-railway.sh",
     "set:novapay-bridge-url": "node scripts/set-novapay-bridge-url.mjs",
     "build": "npm run build -w nova-wallet",
     "build:nova": "npm run build -w nova-wallet",
@@ -37,7 +40,8 @@
     "test:novapay:to": "node scripts/novapay-to-sandbox-e2e.mjs",
     "test:novapay-accounts": "node scripts/novapay-accounts-smoke.mjs",
     "test:novapay:all": "npm run test:novapay && npm run test:novapay:to && npm run test:novapay-accounts && npm run test:novapay-bridge",
-    "check:novapay-onboarding": "python3 scripts/check-novapay-onboarding.py"
+    "check:novapay-onboarding": "python3 scripts/check-novapay-onboarding.py",
+    "set:pouchpay-bridge-url": "node scripts/set-pouchpay-bridge-url.mjs"
   },
   "engines": {
     "node": ">=20"

@@ -38,6 +38,7 @@ jobs:
         working-directory: apps/nova
         env:
           VITE_BASE: /
+          VITE_POUCHPAY_API_BASE: https://pouchpay-bridge-production.up.railway.app
         run: |
           npm run typecheck
           npm run test

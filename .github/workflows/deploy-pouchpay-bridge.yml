@@ -1,0 +1,43 @@
+name: Deploy PouchPay bridge (Railway)
+
+# Deploys apps/pouchpay-bridge — Nest-shaped /v0/quote + /alltra-chain/markets/quote with callData.
+# Requires repository secret RAILWAY_TOKEN (Railway project token).
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/pouchpay-bridge/**'
+      - '.github/workflows/deploy-pouchpay-bridge.yml'
+
+concurrency:
+  group: railway-pouchpay-bridge
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Require RAILWAY_TOKEN
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "Missing secret RAILWAY_TOKEN — add a Railway project token in repo Settings → Secrets."
+            exit 1
+          fi
+
+      - name: Deploy pouchpay-bridge
+        working-directory: apps/pouchpay-bridge
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_POUCHPAY_SERVICE }}
+        run: |
+          SERVICE="${RAILWAY_SERVICE:-pouchpay-bridge}"
+          npx --yes @railway/cli@5.28.1 up --detach --path . --service "$SERVICE"

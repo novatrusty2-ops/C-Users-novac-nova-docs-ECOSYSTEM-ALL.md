@@ -43,3 +43,11 @@ npm run verify:pouchpay-routes   # against local bridge or POUCHPAY_API_BASE
 ## Deploy
 
 Railway: set root to `apps/pouchpay-bridge`, generate domain, optionally set `VITE_POUCHPAY_API_BASE` on Nova Wallet to the bridge URL.
+
+For Nova Bank / `api.pouchpay.io` without a separate bridge service, install the embedded Nest patch instead:
+
+```bash
+bash scripts/install-pouchpay-calldata.sh /path/to/nova-bank-api
+```
+
+Version stamp: `appVersion` **1.9.5**, `versionCode` **31**.
