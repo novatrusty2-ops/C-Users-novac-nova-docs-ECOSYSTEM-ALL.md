@@ -6,7 +6,7 @@
 export const POUCHPAY_API_BASE = (
   (import.meta.env.VITE_POUCHPAY_API_BASE as string | undefined) ||
   (import.meta.env.VITE_POUCHPAY_BRIDGE_URL as string | undefined) ||
-  'https://api.pouchpay.io'
+  'https://pouchpay-bridge-production.up.railway.app'
 ).replace(/\/$/, '')
 
 export const ALLTRA_CHAIN_ID = 651940

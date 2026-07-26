@@ -153,6 +153,11 @@ async function handle(req, res) {
   }
 
   if (path === "/v1/tokens" && req.method === "GET") {
+    const origin =
+      PUBLIC_BASE ||
+      (process.env.RAILWAY_PUBLIC_DOMAIN
+        ? `https://${String(process.env.RAILWAY_PUBLIC_DOMAIN).replace(/^https?:\/\//, "")}`
+        : "");
     return json(res, 200, {
       chainId: CHAIN_ID,
       pricingMode: "on-chain-router",
@@ -161,6 +166,8 @@ async function handle(req, res) {
       appVersion: "1.9.5",
       versionCode: 31,
       liveBuild: "1.9.5",
+      quoteApi: `${origin}/v0/quote`,
+      routesApi: `${origin}/v1/advanced/routes`,
       tokens: Object.values(TOKENS).map((t) => ({
         ...t,
         tradable: true,
@@ -173,8 +180,9 @@ async function handle(req, res) {
         {
           key: "global_swap",
           name: "ALLTRA Global Swap",
-          endpoint: `${PUBLIC_BASE || ""}/v1/advanced/routes`,
-          quoteApi: `${PUBLIC_BASE || ""}/v0/quote`,
+          endpoint: `${origin}/v1/advanced/routes`,
+          quoteApi: `${origin}/v0/quote`,
+          webUrl: "https://novablockchain.it.com/",
         },
       ],
     });
