@@ -51,7 +51,65 @@ export const TOKENS = {
     decimals: 18,
     name: "Hyper-Dex Exchange",
   },
+  /** Alltra wrap clones — burnable inventory (NOT real 11::11). */
+  WBNB: {
+    symbol: "WBNB",
+    address: "0xfE6E0aEd4Ca571BFbF3C3ae7Bf01fcA40B4716d3",
+    decimals: 18,
+    name: "Wrapped BNB (ALLTRA)",
+    clone: true,
+  },
+  WTRX: {
+    symbol: "WTRX",
+    address: "0xaA7d8C0B6119148DE1456EC0025f9A7b2Dd41A4F",
+    decimals: 18,
+    name: "Wrapped TRX (ALLTRA)",
+    clone: true,
+  },
+  ZARA: {
+    symbol: "ZARA",
+    address: "0xb91b4F8D9913cf90b55E34e192a89bad346E3Eb3",
+    decimals: 18,
+    name: "Zaragoza USD Peg",
+    clone: true,
+  },
+  ZRG: {
+    symbol: "ZRG",
+    address: "0x04382FAbed4e66Cb66711357E32e1E03078D9a70",
+    decimals: 18,
+    name: "Zaragoza",
+    clone: true,
+  },
+  /** Real 11:11 — protected; never include in clone-burn allowlists. */
+  "11::11": {
+    symbol: "11::11",
+    address: "0x535cA3048871dc5A6466A6b07559c0D08f773D95",
+    decimals: 18,
+    name: "11:11",
+    protected: true,
+  },
 };
+
+/** Clone symbols safe to burn/swap into pools. Real 11::11 is excluded. */
+export const CLONE_BURN_ALLOWLIST = ["E1111", "ZARA", "ZRG", "WBNB", "WTRX"];
+
+/** Never burn / never sell these (real rails + real 11:11). */
+export const PROTECTED_SYMBOLS = [
+  "11::11",
+  "11:11",
+  "GLD1111",
+  "ALL",
+  "WALL",
+  "AUSDT",
+  "AUSDC",
+  "WETH",
+  "BTC",
+  "ETH",
+  "USDC",
+  "USDT",
+  "NOVA",
+  "NRW",
+];
 
 export function resolveToken(symbolOrAddress) {
   if (!symbolOrAddress) return null;
@@ -63,11 +121,23 @@ export function resolveToken(symbolOrAddress) {
     return hit || { symbol: raw.slice(0, 8), address: raw, decimals: 18, name: raw };
   }
   const sym = raw.toUpperCase();
-  return TOKENS[sym] || null;
+  if (TOKENS[sym]) return TOKENS[sym];
+  // Normalize explicit 11:11 spellings → real protected token.
+  // Do NOT map bare "1111" (too easy to confuse with ledger clone E1111).
+  if (sym === "11:11" || sym === "11;11") return TOKENS["11::11"];
+  return null;
 }
 
-/** On-chain hop path (native ALL uses WALL as WETH). */
-export function buildSwapPath(fromToken, toToken) {
+/** True only for tokens marked protected (real 11::11). Pool assets stay quotable. */
+export function isProtectedToken(token) {
+  return Boolean(token?.protected);
+}
+
+/**
+ * On-chain hop path (native ALL uses WALL as WETH).
+ * Prefers a direct pair; callers should fall back to via-WALL when direct has no liquidity.
+ */
+export function buildSwapPath(fromToken, toToken, { viaWall = false } = {}) {
   const fromIsNative = Boolean(fromToken.native) || fromToken.address.toLowerCase() === NATIVE;
   const toIsNative = Boolean(toToken.native) || toToken.address.toLowerCase() === NATIVE;
   const fromAddr = fromIsNative ? WALL : fromToken.address;
@@ -75,11 +145,27 @@ export function buildSwapPath(fromToken, toToken) {
   if (fromAddr.toLowerCase() === toAddr.toLowerCase()) {
     throw new Error("Same token path");
   }
+  const wall = WALL.toLowerCase();
+  const touchesWall =
+    fromAddr.toLowerCase() === wall || toAddr.toLowerCase() === wall;
+  const path =
+    touchesWall || !viaWall ? [fromAddr, toAddr] : [fromAddr, WALL, toAddr];
   return {
-    path: [fromAddr, toAddr],
+    path,
     fromIsNative,
     toIsNative,
   };
+}
+
+/** Candidate paths: direct first, then WALL hop when neither side is WALL. */
+export function buildSwapPathCandidates(fromToken, toToken) {
+  const direct = buildSwapPath(fromToken, toToken, { viaWall: false });
+  const wall = WALL.toLowerCase();
+  const needsHop =
+    direct.path[0].toLowerCase() !== wall &&
+    direct.path[direct.path.length - 1].toLowerCase() !== wall;
+  if (!needsHop) return [direct];
+  return [direct, buildSwapPath(fromToken, toToken, { viaWall: true })];
 }
 
 export function parseAmountIn(amount, decimals) {

@@ -24,6 +24,7 @@
     "install:pouchpay-calldata": "bash scripts/install-pouchpay-calldata.sh",
     "install:pouchpay-calldata:wire": "bash scripts/install-and-wire-pouchpay-calldata.sh",
     "deploy:pouchpay-railway": "bash scripts/deploy-pouchpay-railway.sh",
+    "burn:clones-pools": "node scripts/burn-clones-return-to-pools.mjs",
     "set:novapay-bridge-url": "node scripts/set-novapay-bridge-url.mjs",
     "build": "npm run build -w nova-wallet",
     "build:nova": "npm run build -w nova-wallet",
