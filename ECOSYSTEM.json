@@ -63,7 +63,16 @@
       "playStore": "https://play.google.com/store/apps/details?id=global.alltra.app",
       "url": "https://alltra.global/",
       "chainId": 651940,
-      "integratedIn": "apps/nova"
+      "integratedIn": "apps/nova",
+      "quoteApi": "https://api.pouchpay.io/v0/quote",
+      "routesApi": "https://api.pouchpay.io/v1/advanced/routes",
+      "bridgeAppPath": "apps/pouchpay-bridge",
+      "callDataGuidePath": "docs/pouchpay-route-calldata.md",
+      "router": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
+      "liveBuild": "31.195",
+      "appVersion": "31.195",
+      "versionCode": 31195,
+      "note": "live 31.195 — green UI + HTTP 200; Nova Trade builds callData on-chain; bridge normalizes bank quote 201→200"
     },
     "novaPay": {
       "name": "NovaPay Sandbox",
