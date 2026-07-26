@@ -3,7 +3,7 @@
  * Stamp deployed pouchpay-bridge origin into ECOSYSTEM.json.
  *
  * Usage:
- *   node scripts/set-pouchpay-bridge-url.mjs https://pouchpay-bridge-production.up.railway.app
+ *   node scripts/set-pouchpay-bridge-url.mjs https://pouchpay-bridge-production-f56f.up.railway.app
  */
 
 import { readFileSync, writeFileSync } from "node:fs";

@@ -3,13 +3,13 @@
  * Gate: every production Alltra token must quote ↔ ETH / BNB / TRX with callData.
  *
  * Env:
- *   POUCHPAY_API_BASE  default https://pouchpay-bridge-production.up.railway.app
+ *   POUCHPAY_API_BASE  default https://pouchpay-bridge-production-f56f.up.railway.app
  *   SAMPLE_ONLY=1      only probe a subset (faster)
  */
 
 const BASE = (
   process.env.POUCHPAY_API_BASE ||
-  "https://pouchpay-bridge-production.up.railway.app"
+  "https://pouchpay-bridge-production-f56f.up.railway.app"
 ).replace(/\/$/, "");
 const RECIPIENT =
   process.env.POUCHPAY_DEFAULT_RECIPIENT ||
