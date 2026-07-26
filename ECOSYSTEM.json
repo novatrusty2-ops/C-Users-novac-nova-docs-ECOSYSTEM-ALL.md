@@ -72,7 +72,7 @@
       "liveBuild": "31.195",
       "appVersion": "31.195",
       "versionCode": 31195,
-      "note": "live 31.195 — Nova Trade builds callData on-chain; light token picker; upstream api.pouchpay.io still virtualLpOnly"
+      "note": "live 31.195 — green UI + HTTP 200; Nova Trade builds callData on-chain; bridge normalizes bank quote 201→200"
     },
     "novaPay": {
       "name": "NovaPay Sandbox",
