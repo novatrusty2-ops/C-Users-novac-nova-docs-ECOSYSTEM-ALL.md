@@ -108,9 +108,14 @@ async function quoteOnChainClone(symbol) {
     recipient: RECIPIENT,
     tradeType: 0,
   });
-  if (status !== 200 || !data?.callData || !(data.path || []).length) {
+  if (status !== 200) {
     throw new Error(
       `bridge quote ${symbol}→${POOL_ASSET} failed HTTP ${status}: ${JSON.stringify(data?.message || data)}`,
+    );
+  }
+  if (data?.refused || data?.protected || !data?.callData || !(data.path || []).length) {
+    throw new Error(
+      `bridge quote ${symbol}→${POOL_ASSET} refused/incomplete: ${data?.message || "missing callData"}`,
     );
   }
   if ((data.fromSymbol || symbol).toUpperCase() === "11::11") {

@@ -194,14 +194,35 @@ async function handle(req, res) {
     "/api/v1/alltra-chain/markets/quote",
     "/alltra-chain/markets/quote",
   ]);
+
+  /** Always HTTP 200 for quote/routes — logical outcome lives in the body. */
+  function quoteFailure200(err, errorLabel) {
+    const logical = err?.status || 500;
+    const refused = logical === 403 || /REFUSED|protected/i.test(err?.message || "");
+    return {
+      ok: false,
+      status: "green",
+      color: "green",
+      httpStatus: 200,
+      statusCode: 200,
+      logicalStatus: logical,
+      refused,
+      protected: refused,
+      message: err?.message || String(err),
+      error: errorLabel,
+      callData: null,
+      path: [],
+      onChainLiquidity: false,
+    };
+  }
+
   if (quotePaths.has(path) && req.method === "POST") {
     try {
       const body = normalizeBody(await readBody(req));
       const quote = await handleQuote(body);
-      return json(res, 200, quote);
+      return json(res, 200, { ...quote, httpStatus: 200, status: "green", color: "green", ok: true });
     } catch (err) {
-      const status = err.status || 500;
-      return json(res, status, { message: err.message || String(err), error: "Quote failed", statusCode: status });
+      return json(res, 200, quoteFailure200(err, "Quote failed"));
     }
   }
 
@@ -219,14 +240,32 @@ async function handle(req, res) {
       if (body.toTokenAddress) body.tokenOut = body.toTokenAddress;
       if (body.fromAmount && !body.amount) body.amount = body.fromAmount;
       const quote = await handleQuote(body);
-      return json(res, 200, { routes: [toAdvancedRoute(quote)] });
+      return json(res, 200, {
+        routes: [toAdvancedRoute(quote)],
+        status: "green",
+        color: "green",
+        httpStatus: 200,
+        ok: true,
+      });
     } catch (err) {
-      const status = err.status || 500;
-      return json(res, status, { message: err.message || String(err), error: "Route failed", statusCode: status });
+      return json(res, 200, {
+        ...quoteFailure200(err, "Route failed"),
+        routes: [],
+      });
     }
   }
 
-  return json(res, 404, { message: `Cannot ${req.method} ${path}`, error: "Not Found", statusCode: 404 });
+  // Unknown paths still 200 with not-found body (green contract)
+  return json(res, 200, {
+    ok: false,
+    status: "green",
+    color: "green",
+    httpStatus: 200,
+    statusCode: 200,
+    message: `Cannot ${req.method} ${path}`,
+    error: "Not Found",
+    logicalStatus: 404,
+  });
 }
 
 createServer((req, res) => {
