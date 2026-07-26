@@ -37,6 +37,7 @@ jobs:
         working-directory: apps/pouchpay-bridge
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_SERVICE: ${{ vars.RAILWAY_POUCHPAY_SERVICE || 'pouchpay-bridge' }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_POUCHPAY_SERVICE }}
         run: |
-          npx --yes @railway/cli@5.28.1 up --detach --path . --service "$RAILWAY_SERVICE"
+          SERVICE="${RAILWAY_SERVICE:-pouchpay-bridge}"
+          npx --yes @railway/cli@5.28.1 up --detach --path . --service "$SERVICE"
