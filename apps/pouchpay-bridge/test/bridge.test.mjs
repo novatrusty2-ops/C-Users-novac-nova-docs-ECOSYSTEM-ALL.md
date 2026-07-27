@@ -80,10 +80,11 @@ describe("tokens", () => {
   });
 
   it("lists Alltra RPC fallbacks without duplicates", async () => {
-    const { EXPLORER_ETH_RPC } = await import("../src/tokens.mjs");
+    const { EXPLORER_ETH_RPC, OFFICIAL_RPC } = await import("../src/tokens.mjs");
     const list = alltraRpcEndpoints(DEFAULT_RPC + "/");
-    assert.equal(list[0], DEFAULT_RPC);
-    assert.ok(list.includes(EXPLORER_ETH_RPC));
+    assert.equal(list[0], EXPLORER_ETH_RPC);
+    assert.equal(DEFAULT_RPC, EXPLORER_ETH_RPC);
+    assert.ok(list.includes(OFFICIAL_RPC));
     assert.ok(list.includes(FALLBACK_RPC));
     assert.equal(new Set(list).size, list.length);
   });

@@ -52,7 +52,8 @@ git push
 Bank env (optional bridge):
 
 ```
-ALLTRA_RPC=https://mainnet-rpc.alltra.global
+ALLTRA_RPC=https://alltra.global/api/eth-rpc
+# fallback still tried: https://mainnet-rpc.alltra.global
 ```
 
 ## Reply in chat with either

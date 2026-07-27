@@ -4,13 +4,15 @@ export const CHAIN_ID = 651940
 export const NATIVE = '0x0000000000000000000000000000000000000000'
 export const ROUTER = '0xEd04ee8307C0656207af5afe3926Ae2380052940'
 export const WALL = '0x2da2b8f961f161ab6320acb3377e2e844a3c3ce4'
-export const DEFAULT_RPC = 'https://mainnet-rpc.alltra.global'
-/** Blockscout eth-rpc proxy on the Alltra explorer (works when official RPC 502s). */
+/** Blockscout eth-rpc proxy — preferred while official mainnet-rpc 502s. */
 export const EXPLORER_ETH_RPC = 'https://alltra.global/api/eth-rpc'
+/** Official Alltra RPC (currently intermittent 502). */
+export const OFFICIAL_RPC = 'https://mainnet-rpc.alltra.global'
+export const DEFAULT_RPC = EXPLORER_ETH_RPC
 /** Secondary Alltra RPC from ECOSYSTEM / Nova chains catalog. */
 export const FALLBACK_RPC = 'https://alltra-rpc.novablockchainsystem.com'
 
-/** Deduped Alltra RPC list: env preferred, then catalog fallbacks. */
+/** Deduped Alltra RPC list: env preferred, then explorer → official → catalog. */
 export function alltraRpcEndpoints(preferred?: string): string[] {
   const out: string[] = []
   const push = (raw: string | undefined) => {
@@ -20,8 +22,8 @@ export function alltraRpcEndpoints(preferred?: string): string[] {
   }
   push(preferred)
   push(process.env.ALLTRA_RPC)
-  push(DEFAULT_RPC)
   push(EXPLORER_ETH_RPC)
+  push(OFFICIAL_RPC)
   push(FALLBACK_RPC)
   return out
 }
