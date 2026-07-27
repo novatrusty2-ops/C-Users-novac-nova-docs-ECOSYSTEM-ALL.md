@@ -45,5 +45,7 @@ See **[pouchpay-railway-redeploy.md](./pouchpay-railway-redeploy.md)** for Nest 
 | `api.pouchpay.io` | Install Nest module on wallet host **or** point `quoteApi` at deployed bridge |
 
 **Live bridge:** https://pouchpay-bridge-production-f56f.up.railway.app  
-Bank markets quote now returns `source: "pouchpay-bridge"` with `path` + `callData`.  
+
+**Alltra RPC (2026-07-27):** default is explorer eth-rpc `https://alltra.global/api/eth-rpc` (official `mainnet-rpc.alltra.global` was 502). Nova Wallet builds callData client-side against that list; redeploy pouchpay-bridge so Railway picks up the same default.
+
 `api.pouchpay.io` is still on a separate host with empty `path[]` — point mobile `quoteApi` at the bridge (or update that host).

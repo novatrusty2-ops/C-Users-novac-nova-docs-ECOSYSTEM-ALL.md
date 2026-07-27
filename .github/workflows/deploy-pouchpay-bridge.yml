@@ -1,7 +1,7 @@
 name: Deploy PouchPay bridge (Railway)
 
 # Deploys apps/pouchpay-bridge — Nest-shaped /v0/quote + /alltra-chain/markets/quote with callData.
-# Requires repository secret RAILWAY_TOKEN (Railway project token).
+# Requires repository secret RAILWAY_TOKEN (Railway project token). Soft-skips when missing.
 on:
   workflow_dispatch:
   push:
@@ -20,24 +20,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Require RAILWAY_TOKEN
+      - name: Require Railway token
+        id: token
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           if [ -z "$RAILWAY_TOKEN" ]; then
-            echo "Missing secret RAILWAY_TOKEN — add a Railway project token in repo Settings → Secrets."
-            exit 1
+            echo "Missing secret RAILWAY_TOKEN — skipping Railway deploy."
+            echo "Add it under Repo → Settings → Secrets → Actions, then re-run this workflow"
+            echo "or: export RAILWAY_TOKEN=... && npm run deploy:pouchpay-railway"
+            echo "Also set Railway service env ALLTRA_RPC=https://alltra.global/api/eth-rpc"
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - uses: actions/setup-node@v4
+        if: steps.token.outputs.present == 'true'
+        with:
+          node-version: '22'
+
       - name: Deploy pouchpay-bridge
+        if: steps.token.outputs.present == 'true'
         working-directory: apps/pouchpay-bridge
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_SERVICE: ${{ vars.RAILWAY_POUCHPAY_SERVICE }}
+          RAILWAY_ENVIRONMENT: ${{ vars.RAILWAY_POUCHPAY_ENVIRONMENT }}
         run: |
           SERVICE="${RAILWAY_SERVICE:-pouchpay-bridge}"
-          npx --yes @railway/cli@5.28.1 up --detach --yes --path-as-root . --service "$SERVICE"
+          ENV_ARGS=()
+          if [ -n "${RAILWAY_ENVIRONMENT:-}" ]; then
+            ENV_ARGS+=(--environment "$RAILWAY_ENVIRONMENT")
+          fi
+          npx --yes @railway/cli@5.28.1 up --detach --yes --path-as-root . --service "$SERVICE" "${ENV_ARGS[@]}"
