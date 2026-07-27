@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BookingForm } from "@/components/BookingForm";
 import {
+  averageRating,
   formatMoney,
   parseJsonArray,
 } from "@/lib/listings";
@@ -22,7 +23,7 @@ export default async function ListingDetailPage({ params }: Props) {
       reviews: {
         include: { author: { select: { name: true } } },
         orderBy: { createdAt: "desc" },
-        take: 5,
+        take: 8,
       },
     },
   });
@@ -31,15 +32,28 @@ export default async function ListingDetailPage({ params }: Props) {
 
   const photos = parseJsonArray(listing.photos);
   const amenities = parseJsonArray(listing.amenities);
+  const rating = averageRating(listing.reviews);
 
   return (
     <div className="section">
-      <p className="eyebrow">{listing.city}</p>
+      <p className="eyebrow">
+        {listing.city}, {listing.country} · {listing.category} · {listing.mode}
+      </p>
       <h1 className="page-title">{listing.title}</h1>
+      {listing.tagline ? (
+        <p className="lede-line">{listing.tagline}</p>
+      ) : null}
       <p className="muted">{listing.location}</p>
       <p style={{ marginTop: "0.75rem" }}>
         <strong>{formatMoney(listing.pricePerNight)}</strong>
-        <span className="muted"> / night · up to {listing.capacity} guests</span>
+        <span className="muted">
+          {" "}
+          / night · {listing.capacity} guests · {listing.bedrooms} bed ·{" "}
+          {listing.bathrooms} bath
+        </span>
+        {rating ? (
+          <span className="muted"> · {rating}/5 from guests</span>
+        ) : null}
         <span className="muted"> · Hosted by {listing.host.name}</span>
       </p>
 
@@ -53,10 +67,31 @@ export default async function ListingDetailPage({ params }: Props) {
               ),
             )}
           </div>
+
+          <div className="fact-row">
+            <div>
+              <span className="eyebrow">Check-in</span>
+              <p>{listing.checkInText}</p>
+            </div>
+            <div>
+              <span className="eyebrow">Check-out</span>
+              <p>{listing.checkOutText}</p>
+            </div>
+            <div>
+              <span className="eyebrow">Cancellation</span>
+              <p>{listing.cancellationPolicy}</p>
+            </div>
+            <div>
+              <span className="eyebrow">Extras</span>
+              <p>
+                {listing.captainIncluded ? "Captain included · " : ""}
+                {listing.breakfastIncluded ? "Breakfast included" : "Self-catered"}
+              </p>
+            </div>
+          </div>
+
           <div style={{ marginTop: "1.75rem" }}>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.7rem" }}>
-              About this stay
-            </h2>
+            <h2 className="section-h">About this stay</h2>
             <p style={{ whiteSpace: "pre-wrap", lineHeight: 1.65 }}>
               {listing.description}
             </p>
@@ -69,9 +104,7 @@ export default async function ListingDetailPage({ params }: Props) {
 
           {listing.reviews.length > 0 ? (
             <div style={{ marginTop: "2rem" }}>
-              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.7rem" }}>
-                Reviews
-              </h2>
+              <h2 className="section-h">Guest reviews</h2>
               <div className="table-list" style={{ marginTop: "1rem" }}>
                 {listing.reviews.map((review) => (
                   <div key={review.id} className="panel">

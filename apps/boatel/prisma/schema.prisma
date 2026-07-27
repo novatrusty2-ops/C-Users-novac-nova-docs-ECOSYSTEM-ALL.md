@@ -1,4 +1,4 @@
-// Boatel MVP — SQLite for local development
+// Boatel — SQLite marketplace
 generator client {
   provider = "prisma-client-js"
 }
@@ -38,26 +38,40 @@ model User {
   listings     Listing[]
   reservations Reservation[]
   reviews      Review[]
+  messages     ContactMessage[]
 }
 
 model Listing {
-  id            String        @id @default(cuid())
-  title         String
-  description   String
-  location      String
-  city          String
-  lat           Float?
-  lng           Float?
-  pricePerNight Float
-  capacity      Int
-  amenities     String // JSON array string
-  photos        String // JSON array string
-  status        ListingStatus @default(PUBLISHED)
-  platformFee   Float         @default(0.1)
-  hostId        String
-  host          User          @relation(fields: [hostId], references: [id])
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id                 String        @id @default(cuid())
+  title              String
+  tagline            String        @default("")
+  description        String
+  location           String
+  city               String
+  country            String        @default("United Kingdom")
+  region             String        @default("")
+  category           String        @default("Boatel")
+  mode               String        @default("stay") // stay | sail | explore
+  lat                Float?
+  lng                Float?
+  pricePerNight      Float
+  capacity           Int
+  bedrooms           Int           @default(1)
+  bathrooms          Int           @default(1)
+  amenities          String
+  photos             String
+  featured           Boolean       @default(false)
+  captainIncluded    Boolean       @default(false)
+  breakfastIncluded  Boolean       @default(false)
+  cancellationPolicy String        @default("Flexible")
+  checkInText        String        @default("15:00")
+  checkOutText       String        @default("11:00")
+  status             ListingStatus @default(PUBLISHED)
+  platformFee        Float         @default(0.1)
+  hostId             String
+  host               User          @relation(fields: [hostId], references: [id])
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 
   reservations Reservation[]
   reviews      Review[]
@@ -86,5 +100,16 @@ model Review {
   author    User     @relation(fields: [authorId], references: [id])
   rating    Int
   comment   String
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  topic     String
+  message   String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }

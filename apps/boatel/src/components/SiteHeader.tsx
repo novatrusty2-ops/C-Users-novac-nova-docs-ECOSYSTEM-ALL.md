@@ -30,6 +30,15 @@ export function SiteHeader() {
           <Link href="/explore" onClick={() => setOpen(false)}>
             Explore
           </Link>
+          <Link href="/places" onClick={() => setOpen(false)}>
+            Places
+          </Link>
+          <Link href="/how-it-works" onClick={() => setOpen(false)}>
+            How it works
+          </Link>
+          <Link href="/use-cases" onClick={() => setOpen(false)}>
+            Use cases
+          </Link>
           <Link href="/list-your-boat" onClick={() => setOpen(false)}>
             List Your Boat
           </Link>

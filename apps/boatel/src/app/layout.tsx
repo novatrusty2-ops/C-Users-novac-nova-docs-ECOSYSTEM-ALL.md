@@ -21,7 +21,13 @@ export const metadata: Metadata = {
     template: "%s · Boatel",
   },
   description:
-    "Discover floating villas, yacht suites, and boutique boatels. Sail, stay, or explore.",
+    "Sail, stay, or explore. Floating villas, yacht suites, and boutique boatels across stunning locations worldwide.",
+  openGraph: {
+    title: "Boatel — Any boat, anytime",
+    description:
+      "Choose from floating villas, yacht suites, and boutique boatels across stunning locations.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
