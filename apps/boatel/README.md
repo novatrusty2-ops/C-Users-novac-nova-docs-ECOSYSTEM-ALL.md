@@ -59,19 +59,23 @@ NEXTAUTH_SECRET="replace-with-a-long-random-string"
 
 ## Deploy (Railway)
 
+### One-time setup
+1. Create a Railway project/service with root directory `apps/boatel`
+2. Attach a volume at `/data`
+3. Set variables:
+   - `NEXTAUTH_SECRET` — long random string
+   - `NEXTAUTH_URL` — public HTTPS origin
+   - `DATABASE_URL` — `file:/data/boatel.db` (optional; image default)
+4. Add GitHub Actions secret `RAILWAY_TOKEN` (Railway project token)
+
+### Deploy now
 ```bash
-export RAILWAY_TOKEN=...          # Project → Settings → Tokens
-export RAILWAY_SERVICE=boatel     # optional
-bash scripts/deploy-boatel-railway.sh
-# or: npm run deploy:boatel-railway
+export RAILWAY_TOKEN=...
+export RAILWAY_SERVICE=boatel
+npm run deploy:boatel-railway
 ```
 
-Set Railway variables:
-
-- `NEXTAUTH_SECRET` — long random string
-- `NEXTAUTH_URL` — public HTTPS origin (e.g. `https://boatel-xxx.up.railway.app`)
-- `DATABASE_URL` — `file:/data/boatel.db` (default in image)
-- Attach a **volume at `/data`** so SQLite persists across deploys
+Or push to `main` under `apps/boatel/**` — workflow `.github/workflows/deploy-boatel.yml` runs automatically when the secret exists.
 
 Health check: `GET /api/health`
 
