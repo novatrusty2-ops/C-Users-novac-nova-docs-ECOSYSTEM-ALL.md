@@ -28,3 +28,11 @@ export function formatMoney(amount: number, currency = "GBP"): string {
     maximumFractionDigits: 0,
   }).format(amount);
 }
+
+export function averageRating(
+  reviews: { rating: number }[] | undefined,
+): number | null {
+  if (!reviews?.length) return null;
+  const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+  return Math.round((sum / reviews.length) * 10) / 10;
+}
