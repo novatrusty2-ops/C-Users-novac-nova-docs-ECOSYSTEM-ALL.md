@@ -84,3 +84,5 @@ Health check: `GET /api/health`
 - Stripe Connect / real payouts
 - Live map provider
 - In-app messaging
+
+<!-- deploy kick 2026-07-27T08:54Z -->
