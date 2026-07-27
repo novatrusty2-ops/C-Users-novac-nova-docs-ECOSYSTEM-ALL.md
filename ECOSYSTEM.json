@@ -473,6 +473,7 @@
       "role": "external",
       "defaultRpcUrls": [
         "https://mainnet-rpc.alltra.global",
+        "https://alltra.global/api/eth-rpc",
         "http://103.42.59.54:8545",
         "http://103.42.59.55:8545",
         "https://alltra-rpc.novablockchainsystem.com/"
@@ -704,6 +705,7 @@
       "decimals": 18,
       "rpcUrls": [
         "https://mainnet-rpc.alltra.global",
+        "https://alltra.global/api/eth-rpc",
         "http://103.42.59.54:8545",
         "http://103.42.59.55:8545",
         "https://alltra-rpc.novablockchainsystem.com/"
@@ -3066,7 +3068,11 @@
       ],
       "dbisExplorerApi": "https://explorer.defi-oracle.io/api",
       "anakaBridge": "https://bridge.anakachain.com",
-      "alltraRpc": "https://mainnet-rpc.alltra.global"
+      "alltraRpc": "https://mainnet-rpc.alltra.global",
+      "alltraRpcFallbacks": [
+        "https://alltra.global/api/eth-rpc",
+        "https://alltra-rpc.novablockchainsystem.com/"
+      ]
     }
   },
   "integrations": {

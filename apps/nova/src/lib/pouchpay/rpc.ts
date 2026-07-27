@@ -1,6 +1,7 @@
-/** Canonical Alltra RPC endpoints (primary + listed fallback). */
+/** Canonical Alltra RPC endpoints (official + explorer eth-rpc + catalog). */
 export const ALLTRA_RPC_ENDPOINTS = [
   'https://mainnet-rpc.alltra.global',
+  'https://alltra.global/api/eth-rpc',
   'https://alltra-rpc.novablockchainsystem.com',
 ] as const
 

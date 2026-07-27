@@ -5,6 +5,7 @@ describe('alltraRpcEndpoints', () => {
   it('dedupes and puts preferred first', () => {
     const list = alltraRpcEndpoints('https://mainnet-rpc.alltra.global/')
     expect(list[0]).toBe('https://mainnet-rpc.alltra.global')
+    expect(list).toContain('https://alltra.global/api/eth-rpc')
     expect(list).toContain('https://alltra-rpc.novablockchainsystem.com')
     expect(new Set(list).size).toBe(list.length)
   })

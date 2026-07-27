@@ -79,9 +79,11 @@ describe("tokens", () => {
     assert.equal(parseAmountIn("1.5", 18), 15n * 10n ** 17n);
   });
 
-  it("lists Alltra RPC fallbacks without duplicates", () => {
+  it("lists Alltra RPC fallbacks without duplicates", async () => {
+    const { EXPLORER_ETH_RPC } = await import("../src/tokens.mjs");
     const list = alltraRpcEndpoints(DEFAULT_RPC + "/");
     assert.equal(list[0], DEFAULT_RPC);
+    assert.ok(list.includes(EXPLORER_ETH_RPC));
     assert.ok(list.includes(FALLBACK_RPC));
     assert.equal(new Set(list).size, list.length);
   });

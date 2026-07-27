@@ -124,8 +124,9 @@ export const CHAINS: ChainDefinition[] = [
     slug: 'alltra',
     nativeCurrency: { name: 'ALL', symbol: 'ALL', decimals: 18 },
     rpcUrls: [
-      'https://alltra-rpc.novablockchainsystem.com/',
       'https://mainnet-rpc.alltra.global',
+      'https://alltra.global/api/eth-rpc',
+      'https://alltra-rpc.novablockchainsystem.com/',
     ],
     blockExplorerUrls: ['https://alltra.global/'],
     iconColor: C.alltra ?? '#E8D48B',
