@@ -9,7 +9,8 @@ import {
 import {
   CHAIN_ID,
   ROUTER,
-  DEFAULT_RPC,
+  alltraRpcEndpoints,
+  trimHumanAmount,
   resolveToken,
   buildSwapPathCandidates,
   parseAmountIn,
@@ -51,32 +52,64 @@ function pickSymbol(value: QuoteInput['fromToken']): string | undefined {
 
 @Injectable()
 export class PouchpayCalldataService {
-  private rpc(): string {
-    return (process.env.ALLTRA_RPC || DEFAULT_RPC).replace(/\/$/, '')
+  private rpcList(): string[] {
+    return alltraRpcEndpoints()
   }
 
-  private async ethCall(to: string, data: string): Promise<string> {
-    const res = await fetch(this.rpc(), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'eth_call',
-        params: [{ to, data }, 'latest'],
-      }),
-    })
-    const json = (await res.json()) as { result?: string; error?: { message?: string } }
-    if (json.error) {
-      throw new HttpException(
-        json.error.message || JSON.stringify(json.error),
-        HttpStatus.BAD_GATEWAY,
-      )
+  private async ethCall(to: string, data: string): Promise<{ result: string; rpc: string }> {
+    const rpcs = this.rpcList()
+    let lastErr: unknown
+    for (const rpc of rpcs) {
+      try {
+        const res = await fetch(rpc, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'eth_call',
+            params: [{ to, data }, 'latest'],
+          }),
+        })
+        if (!res.ok) {
+          lastErr = new Error(`Alltra RPC HTTP ${res.status} at ${rpc}`)
+          continue
+        }
+        const text = await res.text()
+        let json: { result?: string; error?: { message?: string } }
+        try {
+          json = text ? (JSON.parse(text) as typeof json) : {}
+        } catch {
+          lastErr = new Error(`Alltra RPC non-JSON at ${rpc}`)
+          continue
+        }
+        if (json.error) {
+          throw new HttpException(
+            json.error.message || JSON.stringify(json.error),
+            HttpStatus.BAD_GATEWAY,
+          )
+        }
+        if (!json.result) {
+          lastErr = new Error(`Empty eth_call result at ${rpc}`)
+          continue
+        }
+        return { result: json.result, rpc }
+      } catch (err) {
+        if (err instanceof HttpException) throw err
+        lastErr = err
+        const msg = err instanceof Error ? err.message : String(err)
+        if (/502|503|504|Bad Gateway|ECONNREFUSED|ENOTFOUND|fetch failed|network|non-JSON|HTTP /i.test(msg)) {
+          continue
+        }
+        throw err
+      }
     }
-    if (!json.result) {
-      throw new HttpException('Empty eth_call result', HttpStatus.BAD_GATEWAY)
-    }
-    return json.result
+    throw new HttpException(
+      `Alltra RPC unreachable (tried ${rpcs.length} endpoints)${
+        lastErr instanceof Error ? `: ${lastErr.message}` : ''
+      }`,
+      HttpStatus.BAD_GATEWAY,
+    )
   }
 
   normalizeInput(input: QuoteInput): QuoteInput {
@@ -129,6 +162,7 @@ export class PouchpayCalldataService {
     let fromIsNative = false
     let toIsNative = false
     let amountOut: bigint | undefined
+    let usedRpc = this.rpcList()[0]
     let lastErr: unknown
     let candidates
     try {
@@ -141,7 +175,7 @@ export class PouchpayCalldataService {
     }
     for (const candidate of candidates) {
       try {
-        const amountsResult = await this.ethCall(
+        const { result: amountsResult, rpc } = await this.ethCall(
           ROUTER,
           encodeGetAmountsOut(amountIn, candidate.path),
         )
@@ -152,6 +186,7 @@ export class PouchpayCalldataService {
           fromIsNative = candidate.fromIsNative
           toIsNative = candidate.toIsNative
           amountOut = out
+          usedRpc = rpc
           break
         }
       } catch (err) {
@@ -159,13 +194,15 @@ export class PouchpayCalldataService {
       }
     }
     if (!path || amountOut == null) {
-      throw new HttpException(
+      const msg =
         lastErr instanceof Error
           ? lastErr.message
           : lastErr
             ? String(lastErr)
-            : 'No on-chain liquidity for path',
-        HttpStatus.NOT_FOUND,
+            : 'No on-chain liquidity for path'
+      throw new HttpException(
+        msg,
+        /Alltra RPC unreachable/i.test(msg) ? HttpStatus.BAD_GATEWAY : HttpStatus.NOT_FOUND,
       )
     }
 
@@ -209,13 +246,15 @@ export class PouchpayCalldataService {
     }
 
     const humanIn = formatUnits(amountIn, fromToken.decimals)
-    const humanOut = formatUnits(amountOut, toToken.decimals)
-    const humanMin = formatUnits(amountOutMin, toToken.decimals)
+    const humanOut = trimHumanAmount(formatUnits(amountOut, toToken.decimals))
+    const humanMin = trimHumanAmount(formatUnits(amountOutMin, toToken.decimals))
     const rateOut =
       amountIn > 0n
-        ? formatUnits(
-            (amountOut * 10n ** BigInt(fromToken.decimals)) / amountIn,
-            toToken.decimals,
+        ? trimHumanAmount(
+            formatUnits(
+              (amountOut * 10n ** BigInt(fromToken.decimals)) / amountIn,
+              toToken.decimals,
+            ),
           )
         : '0'
 
@@ -246,7 +285,7 @@ export class PouchpayCalldataService {
       minAmountOut: humanMin,
       path,
       router: ROUTER,
-      rpc: this.rpc(),
+      rpc: usedRpc,
       engine: 'alltra-uniswap-v2-calldata-v1',
       quoteMode: 'on-chain-getAmountsOut',
       onChainLiquidity: true,

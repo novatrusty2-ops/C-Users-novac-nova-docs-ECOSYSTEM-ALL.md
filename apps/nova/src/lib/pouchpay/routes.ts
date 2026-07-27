@@ -76,8 +76,7 @@ function pickPath(data: Record<string, unknown>): string[] {
   return []
 }
 
-/** Quote a PouchPay / ALLTRA route. Throws MissingCallDataError when call data is absent. */
-export async function quotePouchpayRoute(
+async function quotePouchpayRouteHttp(
   fromSymbol: string,
   toSymbol: string,
   amount: string,
@@ -86,19 +85,8 @@ export async function quotePouchpayRoute(
     recipient?: string
     slippageBps?: number
     requireCallData?: boolean
-    /** Prefer local UniswapV2 callData builder (default true — fixes upstream gap). */
-    preferOnChainBuilder?: boolean
-  } = {},
+  },
 ): Promise<PouchpayRouteQuote> {
-  const preferOnChain = options.preferOnChainBuilder !== false
-  if (preferOnChain) {
-    const { buildAlltraCallDataQuote } = await import('./calldata')
-    return buildAlltraCallDataQuote(fromSymbol, toSymbol, amount, {
-      recipient: options.recipient,
-      slippageBps: options.slippageBps,
-    })
-  }
-
   const base = options.base ?? POUCHPAY_API_BASE
   const requireCallData = options.requireCallData !== false
   const body: Record<string, unknown> = {
@@ -121,6 +109,15 @@ export async function quotePouchpayRoute(
     const msg =
       (data && typeof data.message === 'string' && data.message) ||
       `pouchpay quote HTTP ${res.status}`
+    throw new Error(msg)
+  }
+
+  // Bridge may return HTTP 200 with ok:false when upstream RPC is down.
+  if (data.ok === false) {
+    const msg =
+      (typeof data.message === 'string' && data.message) ||
+      (typeof data.error === 'string' && data.error) ||
+      `PouchPay quote failed for ${fromSymbol}→${toSymbol}`
     throw new Error(msg)
   }
 
@@ -160,6 +157,38 @@ export async function quotePouchpayRoute(
     provider: 'pouchpay',
     httpStatus: res.status,
   }
+}
+
+/** Quote a PouchPay / ALLTRA route. Throws MissingCallDataError when call data is absent. */
+export async function quotePouchpayRoute(
+  fromSymbol: string,
+  toSymbol: string,
+  amount: string,
+  options: {
+    base?: string
+    recipient?: string
+    slippageBps?: number
+    requireCallData?: boolean
+    /** Prefer local UniswapV2 callData builder (default true — fixes upstream gap). */
+    preferOnChainBuilder?: boolean
+  } = {},
+): Promise<PouchpayRouteQuote> {
+  const preferOnChain = options.preferOnChainBuilder !== false
+  if (preferOnChain) {
+    try {
+      const { buildAlltraCallDataQuote } = await import('./calldata')
+      return await buildAlltraCallDataQuote(fromSymbol, toSymbol, amount, {
+        recipient: options.recipient,
+        slippageBps: options.slippageBps,
+      })
+    } catch (err) {
+      const { isAlltraRpcTransportError } = await import('./rpc')
+      if (!isAlltraRpcTransportError(err)) throw err
+      // Fall through to bridge HTTP once — bridge may use a different ALLTRA_RPC.
+    }
+  }
+
+  return quotePouchpayRouteHttp(fromSymbol, toSymbol, amount, options)
 }
 
 /** Advanced routes with step-level callData (LiFi-shaped). */

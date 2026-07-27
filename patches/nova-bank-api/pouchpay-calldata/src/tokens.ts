@@ -5,6 +5,29 @@ export const NATIVE = '0x0000000000000000000000000000000000000000'
 export const ROUTER = '0xEd04ee8307C0656207af5afe3926Ae2380052940'
 export const WALL = '0x2da2b8f961f161ab6320acb3377e2e844a3c3ce4'
 export const DEFAULT_RPC = 'https://mainnet-rpc.alltra.global'
+/** Secondary Alltra RPC from ECOSYSTEM / Nova chains catalog. */
+export const FALLBACK_RPC = 'https://alltra-rpc.novablockchainsystem.com'
+
+/** Deduped Alltra RPC list: env preferred, then catalog fallbacks. */
+export function alltraRpcEndpoints(preferred?: string): string[] {
+  const out: string[] = []
+  const push = (raw: string | undefined) => {
+    if (!raw) return
+    const n = raw.replace(/\/$/, '')
+    if (n && !out.includes(n)) out.push(n)
+  }
+  push(preferred)
+  push(process.env.ALLTRA_RPC)
+  push(DEFAULT_RPC)
+  push(FALLBACK_RPC)
+  return out
+}
+
+/** Trim only fractional trailing zeros; never chop integer zeros (`110` stays `110`). */
+export function trimHumanAmount(value: string): string {
+  if (!value.includes('.')) return value
+  return value.replace(/\.?0+$/, '')
+}
 
 export const WETH = '0x798f6762bb40d6801a593459d08f890603d3979c'
 export const WBNB = '0xfE6E0aEd4Ca571BFbF3C3ae7Bf01fcA40B4716d3'
