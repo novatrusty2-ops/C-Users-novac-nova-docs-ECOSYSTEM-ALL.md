@@ -1,0 +1,90 @@
+// Boatel MVP — SQLite for local development
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  GUEST
+  HOST
+  BOTH
+}
+
+enum ListingStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(GUEST)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  listings     Listing[]
+  reservations Reservation[]
+  reviews      Review[]
+}
+
+model Listing {
+  id            String        @id @default(cuid())
+  title         String
+  description   String
+  location      String
+  city          String
+  lat           Float?
+  lng           Float?
+  pricePerNight Float
+  capacity      Int
+  amenities     String // JSON array string
+  photos        String // JSON array string
+  status        ListingStatus @default(PUBLISHED)
+  platformFee   Float         @default(0.1)
+  hostId        String
+  host          User          @relation(fields: [hostId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  reservations Reservation[]
+  reviews      Review[]
+}
+
+model Reservation {
+  id        String            @id @default(cuid())
+  listingId String
+  listing   Listing           @relation(fields: [listingId], references: [id])
+  guestId   String
+  guest     User              @relation(fields: [guestId], references: [id])
+  checkIn   DateTime
+  checkOut  DateTime
+  guests    Int
+  total     Float
+  status    ReservationStatus @default(CONFIRMED)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+}

@@ -7,11 +7,16 @@
     "apps/nova",
     "apps/novapay-portal",
     "apps/novapay-bridge",
-    "apps/pouchpay-bridge"
+    "apps/pouchpay-bridge",
+    "apps/boatel"
   ],
   "scripts": {
     "dev": "npm run dev -w nova-wallet",
     "dev:nova": "npm run dev -w nova-wallet",
+    "dev:boatel": "npm run dev -w boatel",
+    "build:boatel": "npm run build -w boatel",
+    "db:boatel:migrate": "npm run db:migrate -w boatel",
+    "db:boatel:seed": "npm run db:seed -w boatel",
     "dev:novapay-portal": "npm run dev -w novapay-portal",
     "start:novapay-bridge": "npm run start -w novapay-bridge",
     "dev:novapay-bridge": "npm run dev -w novapay-bridge",
