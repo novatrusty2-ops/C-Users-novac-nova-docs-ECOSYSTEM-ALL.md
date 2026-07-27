@@ -17,6 +17,7 @@
     "build:boatel": "npm run build -w boatel",
     "db:boatel:migrate": "npm run db:migrate -w boatel",
     "db:boatel:seed": "npm run db:seed -w boatel",
+    "deploy:boatel-railway": "bash scripts/deploy-boatel-railway.sh",
     "dev:novapay-portal": "npm run dev -w novapay-portal",
     "start:novapay-bridge": "npm run start -w novapay-bridge",
     "dev:novapay-bridge": "npm run dev -w novapay-bridge",

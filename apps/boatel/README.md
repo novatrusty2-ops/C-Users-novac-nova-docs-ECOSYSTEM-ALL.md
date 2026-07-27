@@ -57,6 +57,24 @@ NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="replace-with-a-long-random-string"
 ```
 
+## Deploy (Railway)
+
+```bash
+export RAILWAY_TOKEN=...          # Project → Settings → Tokens
+export RAILWAY_SERVICE=boatel     # optional
+bash scripts/deploy-boatel-railway.sh
+# or: npm run deploy:boatel-railway
+```
+
+Set Railway variables:
+
+- `NEXTAUTH_SECRET` — long random string
+- `NEXTAUTH_URL` — public HTTPS origin (e.g. `https://boatel-xxx.up.railway.app`)
+- `DATABASE_URL` — `file:/data/boatel.db` (default in image)
+- Attach a **volume at `/data`** so SQLite persists across deploys
+
+Health check: `GET /api/health`
+
 ## Out of scope (MVP)
 
 - Stripe Connect / real payouts
