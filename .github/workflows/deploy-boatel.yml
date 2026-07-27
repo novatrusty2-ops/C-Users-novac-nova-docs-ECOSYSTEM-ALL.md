@@ -44,7 +44,10 @@ jobs:
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_SERVICE: ${{ vars.RAILWAY_BOATEL_SERVICE || 'boatel' }}
-          RAILWAY_ENVIRONMENT: ${{ vars.RAILWAY_BOATEL_ENVIRONMENT || 'production' }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_BOATEL_SERVICE }}
+          RAILWAY_ENVIRONMENT: ${{ vars.RAILWAY_BOATEL_ENVIRONMENT }}
         working-directory: .
-        run: bash scripts/deploy-boatel-railway.sh
+        run: |
+          export RAILWAY_SERVICE="${RAILWAY_SERVICE:-boatel}"
+          export RAILWAY_ENVIRONMENT="${RAILWAY_ENVIRONMENT:-production}"
+          bash scripts/deploy-boatel-railway.sh
