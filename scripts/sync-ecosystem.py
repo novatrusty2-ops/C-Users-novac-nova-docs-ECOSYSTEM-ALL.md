@@ -26,8 +26,9 @@ NOVA_PRODUCTION_RPC = f"{NOVA_BANK_UI}/rpc"
 NOVA_PRODUCTION_PROXY = f"{NOVA_BANK_API}/production-node/rpc"
 NOVA_PRODUCTION_VPS_RPC = "http://51.75.64.28:28545/rpc"
 NOVA_PRODUCTION_EXPLORER = "http://51.75.64.28:28545/explorer/"
-ALLTRA_RPC_PRIMARY = "https://mainnet-rpc.alltra.global"
+ALLTRA_RPC_PRIMARY = "https://alltra.global/api/eth-rpc"
 ALLTRA_RPC_FALLBACKS = [
+    "https://mainnet-rpc.alltra.global",
     "http://103.42.59.54:8545",
     "http://103.42.59.55:8545",
     "https://alltra-rpc.novablockchainsystem.com/",

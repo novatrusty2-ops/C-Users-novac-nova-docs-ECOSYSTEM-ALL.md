@@ -4,7 +4,36 @@ export const CHAIN_ID = 651940;
 export const NATIVE = "0x0000000000000000000000000000000000000000";
 export const ROUTER = "0xEd04ee8307C0656207af5afe3926Ae2380052940";
 export const WALL = "0x2da2b8f961f161ab6320acb3377e2e844a3c3ce4";
-export const DEFAULT_RPC = "https://mainnet-rpc.alltra.global";
+/** Blockscout eth-rpc proxy — preferred while official mainnet-rpc 502s. */
+export const EXPLORER_ETH_RPC = "https://alltra.global/api/eth-rpc";
+/** Official Alltra RPC (currently intermittent 502). */
+export const OFFICIAL_RPC = "https://mainnet-rpc.alltra.global";
+export const DEFAULT_RPC = EXPLORER_ETH_RPC;
+/** Secondary Alltra RPC from ECOSYSTEM / Nova chains catalog. */
+export const FALLBACK_RPC = "https://alltra-rpc.novablockchainsystem.com";
+
+/** Deduped Alltra RPC list: env preferred, then explorer → official → catalog. */
+export function alltraRpcEndpoints(preferred) {
+  const out = [];
+  const push = (raw) => {
+    if (!raw) return;
+    const n = String(raw).replace(/\/$/, "");
+    if (n && !out.includes(n)) out.push(n);
+  };
+  push(preferred);
+  push(process.env.ALLTRA_RPC);
+  push(EXPLORER_ETH_RPC);
+  push(OFFICIAL_RPC);
+  push(FALLBACK_RPC);
+  return out;
+}
+
+/** Trim only fractional trailing zeros; never chop integer zeros (`110` stays `110`). */
+export function trimHumanAmount(value) {
+  const s = String(value);
+  if (!s.includes(".")) return s;
+  return s.replace(/\.?0+$/, "");
+}
 
 /** Native wrap rails used as ETH / BNB / TRX on Alltra. */
 export const WETH = "0x798f6762bb40d6801a593459d08f890603d3979c";

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Modal } from '@/components/common/Modal'
 import { isMeshStable } from '@/lib/tokenCapabilities'
+import { tokenMatchesSearch } from './tokenSearch'
 
 interface TokenPickerProps {
   open: boolean
@@ -16,9 +17,7 @@ export function TokenPicker({ open, title, symbols, value, onClose, onSelect }: 
   const [q, setQ] = useState('')
 
   const filtered = useMemo(() => {
-    const needle = q.trim().toUpperCase()
-    if (!needle) return symbols
-    return symbols.filter((s) => s.toUpperCase().includes(needle))
+    return symbols.filter((s) => tokenMatchesSearch(s, q))
   }, [q, symbols])
 
   return (

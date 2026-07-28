@@ -33,7 +33,7 @@ For `api.pouchpay.io` style hosts, register the module **without** a global `api
 ## Env
 
 ```
-ALLTRA_RPC=https://mainnet-rpc.alltra.global
+ALLTRA_RPC=https://alltra.global/api/eth-rpc
 POUCHPAY_DEFAULT_RECIPIENT=0x5227115Ba7c8694218f570c1EC2a680095872820
 # optional
 POUCHPAY_BRIDGE_URL=https://<your-pouchpay-bridge>.up.railway.app

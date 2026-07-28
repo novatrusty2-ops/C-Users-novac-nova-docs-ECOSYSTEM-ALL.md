@@ -5,13 +5,14 @@ import {
   type PouchpayRouteQuote,
   type PouchpayTransactionRequest,
 } from './routes'
+import { trimHumanAmount } from './amounts'
+import { alltraRpcEndpoints, isAlltraRpcTransportError } from './rpc'
 
 const NATIVE = '0x0000000000000000000000000000000000000000'
 const WALL = '0x2da2b8f961f161ab6320acb3377e2e844a3c3ce4'
 const WETH = '0x798f6762bb40d6801a593459d08f890603d3979c'
 const WBNB = '0xfE6E0aEd4Ca571BFbF3C3ae7Bf01fcA40B4716d3'
 const WTRX = '0xaA7d8C0B6119148DE1456EC0025f9A7b2Dd41A4F'
-const DEFAULT_RPC = 'https://mainnet-rpc.alltra.global'
 
 type TokenEntry = { address: string; decimals: number; native?: boolean; aliasOf?: string }
 
@@ -96,6 +97,31 @@ function pathCandidates(from: TokenEntry, to: TokenEntry): string[][] {
   return [direct, [fromAddr, WALL, toAddr]]
 }
 
+async function quoteAmountsOut(
+  provider: JsonRpcProvider,
+  amountIn: bigint,
+  candidates: string[][],
+): Promise<{ path: string[]; amountOut: bigint } | { lastErr: unknown }> {
+  let lastErr: unknown
+  for (const candidate of candidates) {
+    try {
+      const amounts: bigint[] = await provider
+        .call({
+          to: ALLTRA_ROUTER,
+          data: iface.encodeFunctionData('getAmountsOut', [amountIn, candidate]),
+        })
+        .then((data) => iface.decodeFunctionResult('getAmountsOut', data)[0] as bigint[])
+      const out = amounts[amounts.length - 1]
+      if (out && out > 0n) {
+        return { path: candidate, amountOut: out }
+      }
+    } catch (err) {
+      lastErr = err
+    }
+  }
+  return { lastErr }
+}
+
 /** Build on-chain UniswapV2 callData for ALLTRA Global Swap (fixes missing callData). */
 export async function buildAlltraCallDataQuote(
   fromSymbol: string,
@@ -108,35 +134,52 @@ export async function buildAlltraCallDataQuote(
   const recipient =
     options.recipient || '0x5227115Ba7c8694218f570c1EC2a680095872820'
   const slippageBps = options.slippageBps ?? 100
-  const rpc = options.rpc || DEFAULT_RPC
+  const rpcs = alltraRpcEndpoints(options.rpc)
 
   const fromIsNative = Boolean(from.native)
   const toIsNative = Boolean(to.native)
   const amountIn = parseUnits(amount, from.decimals)
-  const provider = new JsonRpcProvider(rpc, ALLTRA_CHAIN_ID)
+  const candidates = pathCandidates(from, to)
 
   let path: string[] | undefined
   let amountOut: bigint | undefined
   let lastErr: unknown
-  for (const candidate of pathCandidates(from, to)) {
+  let rpcTransportFailures = 0
+
+  for (const rpc of rpcs) {
     try {
-      const amounts: bigint[] = await provider
-        .call({
-          to: ALLTRA_ROUTER,
-          data: iface.encodeFunctionData('getAmountsOut', [amountIn, candidate]),
-        })
-        .then((data) => iface.decodeFunctionResult('getAmountsOut', data)[0] as bigint[])
-      const out = amounts[amounts.length - 1]
-      if (out && out > 0n) {
-        path = candidate
-        amountOut = out
+      const provider = new JsonRpcProvider(rpc, ALLTRA_CHAIN_ID)
+      const result = await quoteAmountsOut(provider, amountIn, candidates)
+      if ('path' in result && result.path && result.amountOut) {
+        path = result.path
+        amountOut = result.amountOut
         break
       }
+      lastErr = result.lastErr
+      if (lastErr && isAlltraRpcTransportError(lastErr)) {
+        rpcTransportFailures += 1
+        continue
+      }
+      // Liquidity/revert on a live RPC — no point rotating further for the same state.
+      if (lastErr) break
     } catch (err) {
       lastErr = err
+      if (isAlltraRpcTransportError(err)) {
+        rpcTransportFailures += 1
+        continue
+      }
+      throw err
     }
   }
+
   if (!path || !amountOut) {
+    if (rpcTransportFailures >= rpcs.length) {
+      throw new Error(
+        `Alltra RPC unreachable (tried ${rpcs.length} endpoints)${
+          lastErr instanceof Error ? `: ${lastErr.message}` : ''
+        }`,
+      )
+    }
     throw new Error(
       lastErr instanceof Error ? lastErr.message : 'No on-chain liquidity for path',
     )
@@ -189,14 +232,14 @@ export async function buildAlltraCallDataQuote(
     fromSymbol: from.symbol,
     toSymbol: to.symbol,
     amountIn: humanIn,
-    amountOut: humanOut.replace(/\.?0+$/, ''),
+    amountOut: trimHumanAmount(humanOut),
     path,
     router: ALLTRA_ROUTER,
     callData,
     transactionRequest: tx,
     onChainLiquidity: true,
     method,
-    minAmountOut: formatUnits(amountOutMin, to.decimals),
+    minAmountOut: trimHumanAmount(formatUnits(amountOutMin, to.decimals)),
     provider: 'pouchpay',
     httpStatus: 200,
     status: 'green',

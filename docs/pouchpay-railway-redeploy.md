@@ -1,11 +1,12 @@
 # PouchPay Nest patch install + Railway redeploy
 
-## Live (2026-07-26)
+## Live (2026-07-27)
 
 | Surface | Status |
 |---------|--------|
-| Bridge | **https://pouchpay-bridge-production-f56f.up.railway.app** — HTTP 200 + `callData` |
-| Nova Bank `…/alltra-chain/markets/quote` | Proxies bridge (`source: pouchpay-bridge`, non-empty `path` + `callData`) |
+| Bridge code (this repo) | Defaults to explorer RPC `https://alltra.global/api/eth-rpc` — green / HTTP 200 + `callData` |
+| Bridge production Railway | Redeploy required after merge (`RAILWAY_TOKEN` secret + optional `ALLTRA_RPC`) |
+| Nova Bank `…/alltra-chain/markets/quote` | Proxies bridge when bridge is healthy |
 | `api.pouchpay.io` | Still virtual-LP / empty `path` (separate Apache host — not Railway) |
 
 Bank env wired:
@@ -52,7 +53,8 @@ git push
 Bank env (optional bridge):
 
 ```
-ALLTRA_RPC=https://mainnet-rpc.alltra.global
+ALLTRA_RPC=https://alltra.global/api/eth-rpc
+# fallback still tried: https://mainnet-rpc.alltra.global
 ```
 
 ## Reply in chat with either

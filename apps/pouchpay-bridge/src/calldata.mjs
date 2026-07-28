@@ -12,7 +12,8 @@ import {
 import {
   CHAIN_ID,
   ROUTER,
-  DEFAULT_RPC,
+  alltraRpcEndpoints,
+  trimHumanAmount,
   resolveToken,
   buildSwapPathCandidates,
   isProtectedToken,
@@ -21,27 +22,69 @@ import {
   tokenMeta,
 } from "./tokens.mjs";
 
-const RPC = (process.env.ALLTRA_RPC || DEFAULT_RPC).replace(/\/$/, "");
+const RPC_LIST = alltraRpcEndpoints();
 const DEFAULT_RECIPIENT =
   process.env.POUCHPAY_DEFAULT_RECIPIENT ||
   "0x5227115Ba7c8694218f570c1EC2a680095872820";
 
+/**
+ * eth_call with multi-RPC failover. Returns `{ result, rpc }`.
+ * @param {string} to
+ * @param {string} data
+ */
 async function ethCall(to, data) {
-  const res = await fetch(RPC, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: 1,
-      method: "eth_call",
-      params: [{ to, data }, "latest"],
-    }),
-  });
-  const json = await res.json();
-  if (json.error) {
-    throw new Error(json.error.message || JSON.stringify(json.error));
+  let lastErr;
+  for (const rpc of RPC_LIST) {
+    try {
+      const res = await fetch(rpc, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 1,
+          method: "eth_call",
+          params: [{ to, data }, "latest"],
+        }),
+      });
+      if (!res.ok) {
+        lastErr = new Error(`Alltra RPC HTTP ${res.status} at ${rpc}`);
+        continue;
+      }
+      const text = await res.text();
+      let json;
+      try {
+        json = text ? JSON.parse(text) : null;
+      } catch {
+        lastErr = new Error(`Alltra RPC non-JSON at ${rpc}`);
+        continue;
+      }
+      if (!json || typeof json !== "object") {
+        lastErr = new Error(`Alltra RPC empty body at ${rpc}`);
+        continue;
+      }
+      if (json.error) {
+        // Contract/revert errors are not transport failures — surface immediately.
+        throw new Error(json.error.message || JSON.stringify(json.error));
+      }
+      if (!json.result) {
+        lastErr = new Error(`Empty eth_call result at ${rpc}`);
+        continue;
+      }
+      return { result: json.result, rpc };
+    } catch (err) {
+      lastErr = err;
+      const msg = err instanceof Error ? err.message : String(err);
+      if (/502|503|504|Bad Gateway|ECONNREFUSED|ENOTFOUND|fetch failed|network|non-JSON|HTTP /i.test(msg)) {
+        continue;
+      }
+      throw err;
+    }
   }
-  return json.result;
+  throw new Error(
+    `Alltra RPC unreachable (tried ${RPC_LIST.length} endpoints)${
+      lastErr?.message ? `: ${lastErr.message}` : ""
+    }`,
+  );
 }
 
 function applySlippage(amountOut, slippageBps) {
@@ -96,11 +139,12 @@ export async function buildPouchpayRoute(input) {
   let fromIsNative;
   let toIsNative;
   let amountOut;
+  let usedRpc = RPC_LIST[0];
   let lastErr;
   for (const candidate of candidates) {
     try {
       const amountsData = encodeGetAmountsOut(amountIn, candidate.path);
-      const amountsResult = await ethCall(ROUTER, amountsData);
+      const { result: amountsResult, rpc } = await ethCall(ROUTER, amountsData);
       const amounts = decodeAmountsOut(amountsResult);
       const out = amounts[amounts.length - 1];
       if (out && out > 0n) {
@@ -108,6 +152,7 @@ export async function buildPouchpayRoute(input) {
         fromIsNative = candidate.fromIsNative;
         toIsNative = candidate.toIsNative;
         amountOut = out;
+        usedRpc = rpc;
         break;
       }
     } catch (err) {
@@ -115,10 +160,9 @@ export async function buildPouchpayRoute(input) {
     }
   }
   if (!path || !amountOut) {
-    throw Object.assign(
-      new Error(lastErr?.message || "No on-chain liquidity for path"),
-      { status: 404 },
-    );
+    const msg = lastErr?.message || "No on-chain liquidity for path";
+    const status = /Alltra RPC unreachable/i.test(msg) ? 502 : 404;
+    throw Object.assign(new Error(msg), { status });
   }
   const amountOutMin = applySlippage(amountOut, slippageBps);
   const deadline = BigInt(Math.floor(Date.now() / 1000) + 20 * 60);
@@ -148,8 +192,8 @@ export async function buildPouchpayRoute(input) {
   };
 
   const humanIn = formatUnits(amountIn, fromToken.decimals);
-  const humanOut = formatUnits(amountOut, toToken.decimals);
-  const humanMin = formatUnits(amountOutMin, toToken.decimals);
+  const humanOut = trimHumanAmount(formatUnits(amountOut, toToken.decimals));
+  const humanMin = trimHumanAmount(formatUnits(amountOutMin, toToken.decimals));
 
   return {
     source: "pouchpay-bridge",
@@ -178,7 +222,7 @@ export async function buildPouchpayRoute(input) {
     minAmountOut: humanMin,
     path,
     router: ROUTER,
-    rpc: RPC,
+    rpc: usedRpc,
     engine: "alltra-uniswap-v2-calldata-v1",
     quoteMode: "on-chain-getAmountsOut",
     onChainLiquidity: true,

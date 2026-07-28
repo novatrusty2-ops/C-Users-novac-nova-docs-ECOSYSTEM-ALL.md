@@ -165,7 +165,7 @@
     ],
     "dbisExplorerApi": "https://explorer.defi-oracle.io/api",
     "anakaBridge": "https://bridge.anakachain.com",
-    "alltraRpc": "https://mainnet-rpc.alltra.global",
+    "alltraRpc": "https://alltra.global/api/eth-rpc",
     "novaPaySandbox": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox"
   },
   "novaPay": {
@@ -472,6 +472,7 @@
       "chainId": 651940,
       "role": "external",
       "defaultRpcUrls": [
+        "https://alltra.global/api/eth-rpc",
         "https://mainnet-rpc.alltra.global",
         "http://103.42.59.54:8545",
         "http://103.42.59.55:8545",
@@ -703,6 +704,7 @@
       "nativeSymbol": "ALL",
       "decimals": 18,
       "rpcUrls": [
+        "https://alltra.global/api/eth-rpc",
         "https://mainnet-rpc.alltra.global",
         "http://103.42.59.54:8545",
         "http://103.42.59.55:8545",
@@ -3066,7 +3068,11 @@
       ],
       "dbisExplorerApi": "https://explorer.defi-oracle.io/api",
       "anakaBridge": "https://bridge.anakachain.com",
-      "alltraRpc": "https://mainnet-rpc.alltra.global"
+      "alltraRpc": "https://alltra.global/api/eth-rpc",
+      "alltraRpcFallbacks": [
+        "https://mainnet-rpc.alltra.global",
+        "https://alltra-rpc.novablockchainsystem.com/"
+      ]
     }
   },
   "integrations": {

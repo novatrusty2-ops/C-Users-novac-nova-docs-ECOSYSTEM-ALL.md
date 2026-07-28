@@ -16,14 +16,14 @@
  *
  * Env:
  *   PORT                      default 4082
- *   ALLTRA_RPC                default https://mainnet-rpc.alltra.global
+ *   ALLTRA_RPC                default https://alltra.global/api/eth-rpc
  *   POUCHPAY_DEFAULT_RECIPIENT  used when body omits recipient
  *   PUBLIC_BASE_URL           optional public origin
  */
 
 import { createServer } from "node:http";
 import { buildPouchpayRoute, toAdvancedRoute } from "./calldata.mjs";
-import { TOKENS, CHAIN_ID, ROUTER } from "./tokens.mjs";
+import { TOKENS, CHAIN_ID, ROUTER, DEFAULT_RPC, alltraRpcEndpoints } from "./tokens.mjs";
 import { cmcIndexPayload, cmcCurrencyPayload, buildCmcListings } from "./cmc.mjs";
 
 const PORT = Number(process.env.PORT || 4082);
@@ -91,6 +91,8 @@ async function handle(req, res) {
       service: "pouchpay-bridge",
       chainId: CHAIN_ID,
       router: ROUTER,
+      rpc: DEFAULT_RPC,
+      rpcEndpoints: alltraRpcEndpoints(),
       appVersion: "31.195",
       versionCode: 31195,
       liveBuild: "31.195",

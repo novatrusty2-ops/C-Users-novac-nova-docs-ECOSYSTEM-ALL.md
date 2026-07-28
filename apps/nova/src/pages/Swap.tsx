@@ -180,8 +180,16 @@ export function Swap() {
             {activeAccount ? '' : ' · connect wallet to trade'}
           </p>
           <div className="flex shrink-0 flex-col items-end gap-1">
-            <span className="status-green-pill">live {LIVE_BUILD}</span>
-            <span className="status-http-200">HTTP 200</span>
+            <span className={error ? 'text-[11px] text-nova-muted' : 'status-green-pill'}>
+              live {LIVE_BUILD}
+            </span>
+            {error ? (
+              <span className="text-[11px] font-semibold text-nova-danger">quote failed</span>
+            ) : quote ? (
+              <span className="status-http-200">HTTP 200</span>
+            ) : (
+              <span className="text-[11px] text-nova-muted">awaiting quote</span>
+            )}
           </div>
         </div>
 

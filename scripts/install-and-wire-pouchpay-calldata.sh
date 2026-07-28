@@ -77,6 +77,6 @@ fi
 echo
 echo "Installed patch into $TARGET"
 echo "Env for Railway / Nest host:"
-echo "  ALLTRA_RPC=https://mainnet-rpc.alltra.global"
+echo "  ALLTRA_RPC=https://alltra.global/api/eth-rpc"
 echo "  # optional: POUCHPAY_BRIDGE_URL=https://<pouchpay-bridge>.up.railway.app"
 echo "Redeploy the Nova Bank service after commit/push of this checkout."
