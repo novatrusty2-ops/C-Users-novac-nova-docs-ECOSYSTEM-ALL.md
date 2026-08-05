@@ -1,4 +1,5 @@
 import { isStablecoin, resolveUsdPrice } from '@/lib/prices'
+import { trimHumanAmount } from '@/lib/pouchpay/amounts'
 
 export interface SwapQuote {
   fromSymbol: string
@@ -37,9 +38,9 @@ export async function quoteSwap(
       fromSymbol: fromSym,
       toSymbol: toSym,
       amountIn: amount,
-      amountOut: out.toFixed(6).replace(/\.?0+$/, ''),
+      amountOut: trimHumanAmount(out.toFixed(6)),
       feeBps: SWAP_FEE_BPS,
-      feeAmount: fee.toFixed(6).replace(/\.?0+$/, ''),
+      feeAmount: trimHumanAmount(fee.toFixed(6)),
       provider: 'internal',
       rate: 1,
     }
@@ -61,9 +62,9 @@ export async function quoteSwap(
     fromSymbol: fromSym,
     toSymbol: toSym,
     amountIn: amount,
-    amountOut: out.toFixed(6).replace(/\.?0+$/, ''),
+    amountOut: trimHumanAmount(out.toFixed(6)),
     feeBps: SWAP_FEE_BPS,
-    feeAmount: fee.toFixed(6).replace(/\.?0+$/, ''),
+    feeAmount: trimHumanAmount(fee.toFixed(6)),
     provider: 'internal',
     rate,
   }

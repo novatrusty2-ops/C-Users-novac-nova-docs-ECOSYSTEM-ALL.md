@@ -63,7 +63,20 @@
       "playStore": "https://play.google.com/store/apps/details?id=global.alltra.app",
       "url": "https://alltra.global/",
       "chainId": 651940,
-      "integratedIn": "apps/nova"
+      "integratedIn": "apps/nova",
+      "quoteApi": "https://pouchpay-bridge-production-f56f.up.railway.app/v0/quote",
+      "routesApi": "https://pouchpay-bridge-production-f56f.up.railway.app/v1/advanced/routes",
+      "bridgeAppPath": "apps/pouchpay-bridge",
+      "callDataGuidePath": "docs/pouchpay-route-calldata.md",
+      "router": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
+      "liveBuild": "31.195",
+      "appVersion": "31.195",
+      "versionCode": 31195,
+      "note": "Railway pouchpay-bridge on triumphant-abundance \u2014 Android live 31.195 / versionCode 31195; quotes return path + callData + HTTP 200; CMC /v1/cmc HTTP 200",
+      "bridgeUrl": "https://pouchpay-bridge-production-f56f.up.railway.app",
+      "healthUrl": "https://pouchpay-bridge-production-f56f.up.railway.app/health",
+      "railwayProject": "triumphant-abundance",
+      "railwayProjectId": "4e9507a6-1791-465a-a3ec-160d7f63a7bb"
     },
     "novaPay": {
       "name": "NovaPay Sandbox",
@@ -152,7 +165,7 @@
     ],
     "dbisExplorerApi": "https://explorer.defi-oracle.io/api",
     "anakaBridge": "https://bridge.anakachain.com",
-    "alltraRpc": "https://mainnet-rpc.alltra.global",
+    "alltraRpc": "https://alltra.global/api/eth-rpc",
     "novaPaySandbox": "https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox"
   },
   "novaPay": {
@@ -226,7 +239,7 @@
         "bic": "TRWIBEB1XXX",
         "currency": "EUR",
         "bank": "Wise",
-        "address": "Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium",
+        "address": "Rue du Tr\u00f4ne 100, 3rd floor, Brussels, 1050, Belgium",
         "role": "EUR Wise business account for NovaPay sandbox / onboarding"
       },
       {
@@ -242,7 +255,7 @@
       }
     ],
     "statusAsOf": "2026-07-22",
-    "probeNotes": "status enabled; receive accepted NOVA-PAY-SANDBOX-…; send loopback completed; events=3"
+    "probeNotes": "status enabled; receive accepted NOVA-PAY-SANDBOX-\u2026; send loopback completed; events=3"
   },
   "walletProductSplit": {
     "product": "novaWallet",
@@ -459,6 +472,7 @@
       "chainId": 651940,
       "role": "external",
       "defaultRpcUrls": [
+        "https://alltra.global/api/eth-rpc",
         "https://mainnet-rpc.alltra.global",
         "http://103.42.59.54:8545",
         "http://103.42.59.55:8545",
@@ -690,6 +704,7 @@
       "nativeSymbol": "ALL",
       "decimals": 18,
       "rpcUrls": [
+        "https://alltra.global/api/eth-rpc",
         "https://mainnet-rpc.alltra.global",
         "http://103.42.59.54:8545",
         "http://103.42.59.55:8545",
@@ -3053,7 +3068,11 @@
       ],
       "dbisExplorerApi": "https://explorer.defi-oracle.io/api",
       "anakaBridge": "https://bridge.anakachain.com",
-      "alltraRpc": "https://mainnet-rpc.alltra.global"
+      "alltraRpc": "https://alltra.global/api/eth-rpc",
+      "alltraRpcFallbacks": [
+        "https://mainnet-rpc.alltra.global",
+        "https://alltra-rpc.novablockchainsystem.com/"
+      ]
     }
   },
   "integrations": {

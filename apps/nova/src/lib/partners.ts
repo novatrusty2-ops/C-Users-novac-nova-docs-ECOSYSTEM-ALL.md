@@ -22,7 +22,7 @@ export const PARTNERS: PartnerWallet[] = [
     accent: '#E8D48B',
     sharedChains: [651940, 22016, 33001, 138],
     notes:
-      'PouchPay-Alltra is the ALLTRA ecosystem wallet. Enable Alltra Global World (651940) and DeFi Oracle (138) in Nova Networks, then use the same EVM address for PouchPay / custody deposits when supported.',
+      'PouchPay-Alltra is the ALLTRA ecosystem wallet. Enable Alltra Global World (651940) and DeFi Oracle (138) in Nova Networks, then use the same EVM address for PouchPay / custody deposits when supported. Swap quotes use pouchpay-bridge (callData + path) at pouchpay-bridge-production-f56f.up.railway.app.',
   },
   {
     id: 'novapay',
@@ -51,6 +51,10 @@ export const ECOSYSTEM_LINKS = {
   novaPaySandbox:
     'https://nova-bank-api-production-7311.up.railway.app/api/v1/partners/novapay/sandbox/status',
   defiOracleWallet: 'https://wallet.defi-oracle.io/wallet/',
+  pouchPayQuote: 'https://pouchpay-bridge-production-f56f.up.railway.app/v0/quote',
+  pouchPayRoutes: 'https://pouchpay-bridge-production-f56f.up.railway.app/v1/advanced/routes',
+  alltraMarketsQuote:
+    'https://nova-bank-api-production-7311.up.railway.app/api/v1/alltra-chain/markets/quote',
 } as const
 
 export function getPartner(id: string): PartnerWallet | undefined {

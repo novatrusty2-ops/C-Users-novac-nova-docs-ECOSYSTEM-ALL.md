@@ -1,0 +1,57 @@
+name: Deploy Boatel (Railway)
+
+# Deploys apps/boatel when RAILWAY_TOKEN is configured as a repo secret.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "apps/boatel/**"
+      - "scripts/deploy-boatel-railway.sh"
+      - ".github/workflows/deploy-boatel.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-boatel
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/boatel
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Require Railway token
+        id: token
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "Missing secret RAILWAY_TOKEN — skipping Railway deploy."
+            echo "Add it under Repo → Settings → Secrets → Actions to go live permanently."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.token.outputs.present == 'true'
+        with:
+          node-version: "22"
+
+      - name: Deploy to Railway
+        if: steps.token.outputs.present == 'true'
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_BOATEL_SERVICE }}
+          RAILWAY_ENVIRONMENT: ${{ vars.RAILWAY_BOATEL_ENVIRONMENT }}
+        working-directory: .
+        run: |
+          export RAILWAY_SERVICE="${RAILWAY_SERVICE:-boatel}"
+          export RAILWAY_ENVIRONMENT="${RAILWAY_ENVIRONMENT:-production}"
+          bash scripts/deploy-boatel-railway.sh

@@ -10,7 +10,8 @@ export function Landing() {
   return (
     <section className="relative flex min-h-[100dvh] flex-col hero-gradient">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-16 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-nova-accent/15 blur-3xl" />
+        <div className="absolute -top-16 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-nova-success/25 blur-3xl" />
+        <div className="absolute top-32 right-0 h-40 w-40 rounded-full bg-nova-highlight/15 blur-3xl" />
       </div>
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">

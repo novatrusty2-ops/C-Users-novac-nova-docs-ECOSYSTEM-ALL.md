@@ -63,7 +63,7 @@ const required = [
   },
   {
     name: "Alltra RPC",
-    url: eco.productionUrls.alltraRpc || "https://mainnet-rpc.alltra.global",
+    url: eco.productionUrls.alltraRpc || "https://alltra.global/api/eth-rpc",
     method: "POST",
     body: RPC_BODY,
     expectRpc: true,

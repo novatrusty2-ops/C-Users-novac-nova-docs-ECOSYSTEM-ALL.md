@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Boat placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7eb6c4"/>
+      <stop offset="55%" stop-color="#dfe7d8"/>
+      <stop offset="100%" stop-color="#0f4c5c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <ellipse cx="600" cy="560" rx="420" ry="60" fill="#0a3440" opacity="0.35"/>
+  <path d="M280 470c80-40 280-70 420-40 90 20 180 55 240 70l-40 55c-180 10-420 5-560-25z" fill="#10262a"/>
+  <path d="M520 300v170h36V320l120 40v-34z" fill="#f3efe6"/>
+  <circle cx="900" cy="180" r="48" fill="#f7f1df" opacity="0.85"/>
+</svg>

@@ -121,7 +121,10 @@ export const CHAINS: ChainDefinition[] = [
     name: 'ALLTRA',
     slug: 'alltra',
     nativeCurrency: { name: 'ALLTRA', symbol: 'ALL', decimals: 18 },
-    rpcUrls: ['https://mainnet-rpc.alltra.global'],
+    rpcUrls: [
+      'https://alltra.global/api/eth-rpc',
+      'https://mainnet-rpc.alltra.global',
+    ],
     blockExplorerUrls: ['https://alltra.global'],
     iconColor: BRAND.chainColors.alltra,
     category: 'partner',

@@ -20,6 +20,50 @@ export function findToken(chainId: number, symbol: string): ChainToken | undefin
 /** Always surface core stables for Trade even if catalog import is empty */
 const CORE_STABLES = ['USDC', 'USDT', 'CUSDC', 'CUSDT', 'AUSDT', 'KUSD'] as const
 
+/** ALLTRA / PouchPay Global Swap inter-token set (chain 651940) — full production + ETH/BNB/TRX */
+export const ALLTRA_SWAP_SYMBOLS = [
+  'ALL',
+  'WALL',
+  'AUSDT',
+  'AUSDC',
+  'USDC',
+  'WETH',
+  'ETH',
+  'WBNB',
+  'BNB',
+  'WTRX',
+  'TRX',
+  'HYDX',
+  'WBTC',
+  'ZARA',
+  'ZRG',
+  'USDT-TRC20',
+  'USDT-BNB',
+  'USDT-LEGACY',
+  '$BUCKS',
+  '11::11',
+  'ACX',
+  'AUDA',
+  'BRK',
+  'CHT',
+  'FIRE',
+  'FLKR',
+  'FSH',
+  'GLD1111',
+  'HYBX',
+  'ICX',
+  'MONEEZ',
+  'NSB-AUSDT',
+  'PAYINQ',
+  'PSS',
+  'SFY',
+  'SHIVA',
+  'SKSH',
+  'SON',
+  'TN8',
+  'VCE',
+] as const
+
 /** Tradable + swappable symbols for Trade tab (stables + mesh natives) */
 export function swapableSymbols(chainId: number): string[] {
   const chain = getChain(chainId)
@@ -36,6 +80,10 @@ export function swapableSymbols(chainId: number): string[] {
   // Ensure stable rails stay swappable on every production chain
   for (const s of CORE_STABLES) {
     if (MESH_STABLE_SYMBOLS.has(s) || isMeshStable(s)) set.add(s)
+  }
+  // Global Swap inter-tokens on Alltra
+  if (chainId === 651940) {
+    for (const s of ALLTRA_SWAP_SYMBOLS) set.add(s)
   }
   // Keep native first when present
   const native = chain.nativeCurrency.symbol.toUpperCase()
