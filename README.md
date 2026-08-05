@@ -26,7 +26,8 @@ NovaPay sandbox (Railway): [`docs/novapay-sandbox-live-links.md`](docs/novapay-s
 NovaPay ↔ Nova Bank wiring: [`docs/NOVAPAY-NOVA-BANK-WIRING.md`](docs/NOVAPAY-NOVA-BANK-WIRING.md).  
 NovaPay onboarding (Step 2 pack): [`docs/novapay-onboarding.md`](docs/novapay-onboarding.md).  
 NovaPay portal (Railway): [`docs/novapay-portal-railway.md`](docs/novapay-portal-railway.md) · app [`apps/novapay-portal`](apps/novapay-portal).  
-NovaPay bridge (NestJS-shaped proxy): [`apps/novapay-bridge`](apps/novapay-bridge).
+NovaPay bridge (NestJS-shaped proxy): [`apps/novapay-bridge`](apps/novapay-bridge).  
+BTC canary evidence (Aseret / ZStack, post-only): [`docs/btc-canary-evidence.md`](docs/btc-canary-evidence.md).
 
 ```bash
 npm run test:novapay                  # status → manifest → receive → send → events
@@ -41,6 +42,8 @@ npm run dev:novapay-portal            # http://localhost:5180
 npm run build:novapay-portal
 # NestJS patch (needs local API checkout):
 # NOVA_API_ROOT=/path/to/api bash scripts/install-novapay-partner.sh
+# After on-chain canary (≥6 confs); does not send BTC:
+# npm run canary:btc-evidence -- <txid> <vout> <amount_sats> <block_height> <confirmations> [ledger_reference]
 ```
 
 App source: [`apps/nova`](apps/nova)
